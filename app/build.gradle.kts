@@ -40,11 +40,11 @@ android {
     }
 
 }
-/* hilt 관련 에러 시 주석 제거 후 사용
+
 hilt {
     enableAggregatingTask = false
 }
- */
+
 
 dependencies {
 
