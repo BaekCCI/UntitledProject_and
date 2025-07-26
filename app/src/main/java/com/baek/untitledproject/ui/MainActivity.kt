@@ -38,6 +38,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        setSupportActionBar(binding.toolbar)
+
         //루트 화면을 제외한 나머지 상단바에 뒤로가기 자동 추가
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.homeFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment)
