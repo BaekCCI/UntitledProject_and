@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.baek.untitledproject.ui.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_boardDetailFragment"
+            app:destination="@id/boardDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myRecruitsFragment"
         android:name="com.baek.untitledproject.ui.recruit.MyRecruitsFragment"
@@ -25,4 +29,9 @@
         android:name="com.baek.untitledproject.ui.mypage.MyPageFragment"
         android:label="fragment_mypage"
         tools:layout="@layout/fragment_mypage" />
+    <fragment
+        android:id="@+id/boardDetailFragment"
+        android:name="com.baek.untitledproject.ui.home.BoardDetailFragment"
+        android:label="fragment_board_detail"
+        tools:layout="@layout/fragment_board_detail" />
 </navigation>

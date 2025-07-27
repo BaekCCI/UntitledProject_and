@@ -87,4 +87,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.56.2")
     ksp("com.google.dagger:hilt-android-compiler:2.56.2")
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
+
+    //ViewPager2
+    implementation("androidx.viewpager2:viewpager2:1.1.0")
+
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
