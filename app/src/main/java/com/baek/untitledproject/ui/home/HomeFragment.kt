@@ -16,6 +16,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentHomeBinding
@@ -59,6 +60,7 @@ class HomeFragment : Fragment() {
         boardRVAdapter = BoardRVAdapter { board ->
             // TODO: 클릭 시 상세 페이지 이동 처리
             Log.d("HomeFragment", "${board.title} clicked!")
+            findNavController().navigate(R.id.action_homeFragment_to_boardDetailFragment)
         }
 
         //recyclerView 설정

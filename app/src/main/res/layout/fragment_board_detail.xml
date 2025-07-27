@@ -47,7 +47,11 @@
                 android:layout_height="wrap_content"
                 android:text="단체 이름" />
 
-            <!--TODO: 이미지 슬라이드-->
+            <!--커스텀 이미지 슬라이드 뷰-->
+            <com.baek.untitledproject.ui.custom.ImageSliderView
+                android:id="@+id/imageSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <TextView
                 android:id="@+id/contentTxt"
