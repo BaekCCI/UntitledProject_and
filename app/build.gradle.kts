@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.devtools.ksp") version "2.0.21-1.0.27"
     id("com.google.dagger.hilt.android") version "2.56.2"
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
