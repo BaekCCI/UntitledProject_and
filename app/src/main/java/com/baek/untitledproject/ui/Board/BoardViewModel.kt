@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.home
+package com.baek.untitledproject.ui.Board
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

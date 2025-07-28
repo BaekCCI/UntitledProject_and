@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/bottom_nav_graph"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/boardFragment">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.baek.untitledproject.ui.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:id="@+id/boardFragment"
+        android:name="com.baek.untitledproject.ui.Board.BoardFragment"
+        android:label="fragment_board"
+        tools:layout="@layout/fragment_board" >
         <action
-            android:id="@+id/action_homeFragment_to_boardDetailFragment"
+            android:id="@+id/action_boardFragment_to_boardDetailFragment"
             app:destination="@id/boardDetailFragment" />
     </fragment>
     <fragment
@@ -31,7 +31,7 @@
         tools:layout="@layout/fragment_mypage" />
     <fragment
         android:id="@+id/boardDetailFragment"
-        android:name="com.baek.untitledproject.ui.home.BoardDetailFragment"
+        android:name="com.baek.untitledproject.ui.Board.BoardDetailFragment"
         android:label="fragment_board_detail"
         tools:layout="@layout/fragment_board_detail" />
 </navigation>

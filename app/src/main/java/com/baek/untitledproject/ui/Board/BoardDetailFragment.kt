@@ -1,13 +1,11 @@
-package com.baek.untitledproject.ui.home
+package com.baek.untitledproject.ui.Board
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardDetailBinding
-import com.baek.untitledproject.databinding.FragmentHomeBinding
 
 class BoardDetailFragment : Fragment() {
 
