@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         //각 탭의 루트화면에서만 하단탭 보이도록(나머지는 숨김)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.homeFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment -> {
+                R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment -> {
                     bottomNav.visibility = View.VISIBLE
                 }
 
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
 
         //루트 화면을 제외한 나머지 상단바에 뒤로가기 자동 추가
         val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.homeFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment)
+            setOf(R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment)
         )
 
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)

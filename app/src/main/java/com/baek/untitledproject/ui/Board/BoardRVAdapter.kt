@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.home
+package com.baek.untitledproject.ui.Board
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.home
+package com.baek.untitledproject.ui.Board
 
 import android.os.Bundle
 import android.util.Log
@@ -19,14 +19,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
-import com.baek.untitledproject.databinding.FragmentHomeBinding
+import com.baek.untitledproject.databinding.FragmentBoardBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class BoardFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentBoardBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: BoardViewModel by viewModels()
@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentBoardBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
@@ -59,8 +59,8 @@ class HomeFragment : Fragment() {
         //adapter 초기화 및 게시물 클릭 시 이벤트
         boardRVAdapter = BoardRVAdapter { board ->
             // TODO: 클릭 시 상세 페이지 이동 처리
-            Log.d("HomeFragment", "${board.title} clicked!")
-            findNavController().navigate(R.id.action_homeFragment_to_boardDetailFragment)
+            Log.d("BoardFragment", "${board.title} clicked!")
+            findNavController().navigate(R.id.action_boardFragment_to_boardDetailFragment)
         }
 
         //recyclerView 설정
@@ -83,7 +83,7 @@ class HomeFragment : Fragment() {
 
     //toolbar 설정
     private fun setToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "HomeFragment"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "BoardFragment"
 
         val menuHost: MenuHost = requireActivity()
 
@@ -97,13 +97,13 @@ class HomeFragment : Fragment() {
                 return when (menuItem.itemId) {
                     R.id.action_alert -> {
                         // TODO: 클릭 시 알림
-                        Log.d("HomeFragment", "알림 버튼 클릭!")
+                        Log.d("BoardFragment", "알림 버튼 클릭!")
                         true
                     }
 
                     R.id.action_search -> {
                         // TODO: 클릭 시 검색
-                        Log.d("HomeFragment", "검색 버튼 클릭!")
+                        Log.d("BoardFragment", "검색 버튼 클릭!")
                         true
                     }
 
