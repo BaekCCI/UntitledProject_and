@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.Board
+package com.baek.untitledproject.ui.board
 
 import android.os.Bundle
 import android.util.Log
@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardBinding
+import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,9 +59,10 @@ class BoardFragment : Fragment() {
     private fun initAdapter() {
         //adapter 초기화 및 게시물 클릭 시 이벤트
         boardRVAdapter = BoardRVAdapter { board ->
-            // TODO: 클릭 시 상세 페이지 이동 처리
+            //클릭 시 상세 페이지 이동
             Log.d("BoardFragment", "${board.title} clicked!")
-            findNavController().navigate(R.id.action_boardFragment_to_boardDetailFragment)
+            val action = BoardFragmentDirections.actionBoardFragmentToBoardDetailFragment(board.id)
+            findNavController().navigate(action)
         }
 
         //recyclerView 설정
@@ -74,8 +76,21 @@ class BoardFragment : Fragment() {
         //boardList 수집하여 adapter에 넘김
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.boardList.collect { list ->
-                    boardRVAdapter.submitList(list)
+                viewModel.boardList.collect { state ->
+                    when (state) {
+                        is Result.Success -> {
+                            boardRVAdapter.submitList(state.data)
+                        }
+
+                        is Result.Loading -> {
+                            //TODO: loading ui 적용
+                        }
+
+                        is Result.Error -> {
+                            //TODO: Error 처리
+                        }
+                    }
+
                 }
             }
         }
