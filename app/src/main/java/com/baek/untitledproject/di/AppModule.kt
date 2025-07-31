@@ -1,7 +1,9 @@
 package com.baek.untitledproject.di
 
 import com.baek.untitledproject.data.repository.BoardRepositoryImpl
+import com.baek.untitledproject.data.repository.MyRecruitsRepositoryImpl
 import com.baek.untitledproject.domain.repository.BoardRepository
+import com.baek.untitledproject.domain.repository.MyRecruitsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ abstract class AppModule {
     abstract fun bindBoardRepository(
         boardRepositoryImpl: BoardRepositoryImpl
     ): BoardRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMyRecruitsRepository(
+        myRecruitsRepositoryImpl: MyRecruitsRepositoryImpl
+    ): MyRecruitsRepository
 }
