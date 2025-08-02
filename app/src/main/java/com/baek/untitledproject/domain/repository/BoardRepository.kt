@@ -8,4 +8,6 @@ interface BoardRepository {
     suspend fun getBoardList() : Result<List<BoardSummary>>
 
     suspend fun getBoard(id:String) : Result<Board>
+
+    suspend fun searchBoard(keyword: String):Result<List<BoardSummary>>
 }

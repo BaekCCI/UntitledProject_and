@@ -10,17 +10,26 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentSearchBinding
+import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: SearchViewModel by viewModels()
 
     private lateinit var adapter: SearchRVAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +50,7 @@ class SearchFragment : Fragment() {
         initRecyclerView()
         initSearchBar()
         handleSearchAction()
-
+        observeSearchResult()
     }
 
     private fun initRecyclerView() {
@@ -76,7 +85,8 @@ class SearchFragment : Fragment() {
             if (i == EditorInfo.IME_ACTION_SEARCH) {
                 val input = binding.searchInput.text.toString()
 
-                //TODO: 검색 기능
+                viewModel.searchBoard(input)
+
                 Log.d("SearchFragment", "Search: $input")
                 val imm =
                     requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -86,6 +96,41 @@ class SearchFragment : Fragment() {
                 true
             } else {
                 false
+            }
+        }
+    }
+
+    //검색결과 observe
+    private fun observeSearchResult() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.searchedBoards.collect { state ->
+                    when (state) {
+                        is Result.Success -> {
+                            val boardList = state.data
+                            adapter.submitList(boardList)
+
+                            if (boardList.isEmpty()) {
+                                binding.emptyResultText.visibility = View.VISIBLE
+                                binding.searchResultRecyclerView.visibility = View.GONE
+                            } else {
+                                binding.emptyResultText.visibility = View.GONE
+                                binding.searchResultRecyclerView.visibility = View.VISIBLE
+                            }
+
+                        }
+
+                        is Result.Loading -> {
+                            //TODO: loading ui 적용
+                        }
+
+                        is Result.Error -> {
+                            //TODO: Error 처리
+                        }
+
+                        else -> {}//None일 때는 아무 처리도 하지 않음
+                    }
+                }
             }
         }
     }
