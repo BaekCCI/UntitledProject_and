@@ -31,4 +31,23 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
             Result.Error("$id: 게시글을 불러오는데 실패하였습니다.", e)
         }
     }
+
+    override suspend fun searchBoard(keyword: String): Result<List<BoardSummary>> {
+        return try {
+
+            val rawBoard = BoardSampleData.boardSummaryList //서버에서 받아온 데이터
+
+            //제목, 단체명 기준 필터링
+            val filteredBoard = rawBoard.filter {
+                it.title.contains(keyword) || it.category.contains(keyword)
+            }
+
+            Log.d("BoardRepository", filteredBoard.joinToString { it.title })
+            Result.Success(filteredBoard)
+
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 검색 실패", e)
+            Result.Error("게시글 검색에 실패하였습니다.", e)
+        }
+    }
 }

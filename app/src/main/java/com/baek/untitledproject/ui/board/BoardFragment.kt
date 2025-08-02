@@ -89,6 +89,8 @@ class BoardFragment : Fragment() {
                         is Result.Error -> {
                             //TODO: Error 처리
                         }
+
+                        else -> {} //None일 때는 아무 처리도 하지 않음
                     }
 
                 }
@@ -98,6 +100,7 @@ class BoardFragment : Fragment() {
 
     //toolbar 설정
     private fun setToolbar() {
+        (requireActivity() as AppCompatActivity).supportActionBar?.show()
         (requireActivity() as AppCompatActivity).supportActionBar?.title = "BoardFragment"
 
         val menuHost: MenuHost = requireActivity()
@@ -117,8 +120,9 @@ class BoardFragment : Fragment() {
                     }
 
                     R.id.action_search -> {
-                        // TODO: 클릭 시 검색
                         Log.d("BoardFragment", "검색 버튼 클릭!")
+                        val action = BoardFragmentDirections.actionBoardFragmentToSearchFragment()
+                        findNavController().navigate(action)
                         true
                     }
 
