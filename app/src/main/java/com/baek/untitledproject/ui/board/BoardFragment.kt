@@ -89,6 +89,8 @@ class BoardFragment : Fragment() {
                         is Result.Error -> {
                             //TODO: Error 처리
                         }
+
+                        else -> {} //None일 때는 아무 처리도 하지 않음
                     }
 
                 }
