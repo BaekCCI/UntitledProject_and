@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_boardFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_boardFragment_to_write_board_nav_graph"
+            app:destination="@id/write_board_nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/myRecruitsFragment"
@@ -45,9 +48,10 @@
         android:id="@+id/searchFragment"
         android:name="com.baek.untitledproject.ui.board.SearchFragment"
         android:label="fragment_search"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_boardDetailFragment"
             app:destination="@id/boardDetailFragment" />
     </fragment>
+    <include app:graph="@navigation/write_board_nav_graph" />
 </navigation>
