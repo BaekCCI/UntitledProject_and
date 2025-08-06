@@ -9,5 +9,21 @@
         android:id="@+id/infoWriteFragment"
         android:name="com.baek.untitledproject.ui.board.write.InfoWriteFragment"
         android:label="fragment_info_write"
-        tools:layout="@layout/fragment_info_write" />
+        tools:layout="@layout/fragment_info_write" >
+        <action
+            android:id="@+id/action_infoWriteFragment_to_interviewSettingFragment"
+            app:destination="@id/interviewSettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/interviewSettingFragment"
+        android:name="com.baek.untitledproject.ui.board.write.InterviewSettingFragment"
+        android:label="InterviewSettingFragment" >
+        <action
+            android:id="@+id/action_interviewSettingFragment_to_recruitFormSettingFragment"
+            app:destination="@id/recruitFormSettingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recruitFormSettingFragment"
+        android:name="com.baek.untitledproject.ui.board.write.RecruitFormSettingFragment"
+        android:label="RecruitFormSettingFragment" />
 </navigation>
