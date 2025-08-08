@@ -9,15 +9,23 @@
         android:id="@+id/infoWriteFragment"
         android:name="com.baek.untitledproject.ui.board.write.InfoWriteFragment"
         android:label="fragment_info_write"
-        tools:layout="@layout/fragment_info_write" >
+        tools:layout="@layout/fragment_info_write">
         <action
             android:id="@+id/action_infoWriteFragment_to_interviewSettingFragment"
             app:destination="@id/interviewSettingFragment" />
+        <argument
+            android:name="postId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_infoWriteFragment_to_recruitDateSelectDialogFragment"
+            app:destination="@id/recruitDateSelectDialogFragment" />
     </fragment>
     <fragment
         android:id="@+id/interviewSettingFragment"
         android:name="com.baek.untitledproject.ui.board.write.InterviewSettingFragment"
-        android:label="InterviewSettingFragment" >
+        android:label="InterviewSettingFragment">
         <action
             android:id="@+id/action_interviewSettingFragment_to_recruitFormSettingFragment"
             app:destination="@id/recruitFormSettingFragment" />
@@ -26,4 +34,10 @@
         android:id="@+id/recruitFormSettingFragment"
         android:name="com.baek.untitledproject.ui.board.write.RecruitFormSettingFragment"
         android:label="RecruitFormSettingFragment" />
+    <dialog
+        android:id="@+id/recruitDateSelectDialogFragment"
+        android:name="com.baek.untitledproject.ui.board.write.RecruitDateSelectDialogFragment"
+        android:label="fragment_recruit_date_select_dialog"
+        app:theme="@style/ThemeOverlay.Untitled.FullscreenDialog"
+        tools:layout="@layout/fragment_recruit_date_select_dialog" />
 </navigation>

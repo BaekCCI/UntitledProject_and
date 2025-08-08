@@ -1,19 +1,25 @@
 package com.baek.untitledproject.ui.board.write
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentRecruitDateSelectDialogBinding
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.datepicker.MaterialDatePicker
+import dagger.hilt.android.AndroidEntryPoint
+import androidx.core.graphics.drawable.toDrawable
 
-class RecruitDateSelectDialogFragment : BottomSheetDialogFragment() {
+@AndroidEntryPoint
+class RecruitDateSelectDialogFragment : DialogFragment() {
 
     private var _binding: FragmentRecruitDateSelectDialogBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: BoardWriteViewModel by hiltNavGraphViewModels(R.id.write_board_nav_graph)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +36,17 @@ class RecruitDateSelectDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.apply {
+            setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            setBackgroundDrawable(Color.WHITE.toDrawable()) // 여백·라운드 제거
+        }
     }
 
     override fun onDestroyView() {
