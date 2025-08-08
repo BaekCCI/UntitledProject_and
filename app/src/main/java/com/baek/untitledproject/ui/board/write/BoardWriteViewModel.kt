@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +35,12 @@ class BoardWriteViewModel @Inject constructor(
                 _editingPost.value = result.data.copy()
             }
         }
+    }
+    fun updateRecruitPeriod(startDate:LocalDate, endDate: LocalDate){
+        _editingPost.value = _editingPost.value.copy(
+            recruitmentStart = startDate,
+            recruitmentEnd = endDate
+        )
     }
 }
 /*

@@ -17,6 +17,7 @@
 
         <!-- 아이콘으로 바꿀 예정-->
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelBtn"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@android:color/transparent"
@@ -33,6 +34,7 @@
             android:text="모집 기간 선택" />
 
         <TextView
+            android:id="@+id/completeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
