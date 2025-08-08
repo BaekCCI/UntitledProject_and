@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import com.baek.untitledproject.R
@@ -58,17 +59,19 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
     }
 
     //이전 선택값이 있으면 해당 날짜로 초기화
-    private fun initField(){
+    private fun initField() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.editingPost.collect { post ->
                     post.recruitmentStart?.let {
                         binding.startDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
-                        startMillis = it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        startMillis =
+                            it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     }
                     post.recruitmentEnd?.let {
                         binding.endDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
-                        endMillis = it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        endMillis =
+                            it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     }
                 }
             }
@@ -169,8 +172,18 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
             dismiss()
         }
         binding.completeBtn.setOnClickListener {
-            val startDate = binding.startDateBtn.text.toString().toLocalDate()
-            val endDate = binding.endDateBtn.text.toString().toLocalDate()
+            val s = startMillis
+            val e = endMillis
+            if (s == null) {
+                Toast.makeText(requireContext(), "시작 날짜를 설정해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (e == null) {
+                Toast.makeText(requireContext(), "종료 날짜를 설정해주세요.", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            val startDate = Instant.ofEpochMilli(s).atZone(ZoneId.systemDefault()).toLocalDate()
+            val endDate = Instant.ofEpochMilli(e).atZone(ZoneId.systemDefault()).toLocalDate()
             viewModel.updateRecruitPeriod(startDate, endDate)
             dismiss()
         }
