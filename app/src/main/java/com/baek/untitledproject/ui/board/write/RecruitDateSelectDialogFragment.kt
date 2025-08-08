@@ -13,12 +13,16 @@ import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentRecruitDateSelectDialogBinding
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.baek.untitledproject.domain.utils.toLocalDate
 import com.baek.untitledproject.domain.utils.toStringWithDayOfWeekAndSplitter
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -48,8 +52,27 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initField()
         setupDateBtn()
         setupToolBarBtn()
+    }
+
+    //이전 선택값이 있으면 해당 날짜로 초기화
+    private fun initField(){
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.editingPost.collect { post ->
+                    post.recruitmentStart?.let {
+                        binding.startDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
+                        startMillis = it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    }
+                    post.recruitmentEnd?.let {
+                        binding.endDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
+                        endMillis = it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                    }
+                }
+            }
+        }
     }
 
     private fun setupDateBtn() {
@@ -83,7 +106,7 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
                 endMillis?.let { end ->
                     if (end < selection) {
                         endMillis = null
-                        binding.endDateBtn.text = ""
+                        binding.endDateBtn.text = null
                     }
                 }
             }
@@ -140,7 +163,6 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
             picker.show(parentFragmentManager, tag)
         }
     }
-
 
     private fun setupToolBarBtn() {
         binding.cancelBtn.setOnClickListener {
