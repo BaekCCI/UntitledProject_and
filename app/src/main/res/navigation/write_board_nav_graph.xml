@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_interviewSettingFragment_to_recruitFormSettingFragment"
             app:destination="@id/recruitFormSettingFragment" />
+        <action
+            android:id="@+id/action_interviewSettingFragment_to_interviewScheduleFragment"
+            app:destination="@id/interviewScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/recruitFormSettingFragment"
@@ -40,4 +43,9 @@
         android:label="fragment_recruit_date_select_dialog"
         app:theme="@style/ThemeOverlay.Untitled.FullscreenDialog"
         tools:layout="@layout/fragment_recruit_date_select_dialog" />
+    <fragment
+        android:id="@+id/interviewScheduleFragment"
+        android:name="com.baek.untitledproject.ui.board.write.InterviewScheduleFragment"
+        android:label="fragment_interview_schedule"
+        tools:layout="@layout/fragment_interview_schedule" />
 </navigation>

@@ -47,47 +47,99 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/interviewYesBtn"
+                        style="@style/Widget.Untitled.Button.Base"
                         android:layout_width="0dp"
                         android:layout_height="56dp"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
+                        android:checkable="true"
                         android:text="예"
                         android:textColor="@color/white" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/interviewNoBtn"
+                        style="@style/Widget.Untitled.Button.Base"
                         android:layout_width="0dp"
                         android:layout_height="56dp"
                         android:layout_weight="1"
+                        android:checkable="true"
                         android:text="아니오"
                         android:textColor="@color/white" />
 
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/interviewSettingLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="면접 일정"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="면접 일정"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="추후 설정 가능"
+                            android:textColor="#808080"
+                            android:textSize="14sp" />
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/recruitDateSelectBtn"
+                        android:id="@+id/interviewDateSelectBtn"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginBottom="32dp"
                         android:text="시작일~마감일 선택" />
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="면접 장소"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="추후 설정 가능"
+                            android:textColor="#808080"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/interviewLocInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginBottom="32dp"
+                        android:background="@drawable/input_selector_bg"
+                        android:hint="장소를 입력해주세요"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:padding="18dp"
+                        android:textSize="16sp" />
+
                 </LinearLayout>
-
-
             </LinearLayout>
         </ScrollView>
     </LinearLayout>
@@ -115,10 +167,10 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nextBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
-            android:enabled="false"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="다음" />
     </LinearLayout>
 

@@ -10,13 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="일" />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
         android:text="월" />
 
     <TextView
@@ -53,5 +46,12 @@
         android:layout_weight="1"
         android:gravity="center"
         android:text="토" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="일" />
 
 </LinearLayout>

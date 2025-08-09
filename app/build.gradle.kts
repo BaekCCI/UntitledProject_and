@@ -100,5 +100,5 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     //Kizitonwose CalendarView
-    implementation("com.kizitonwose.calendar:view:2.8.0")
+    implementation("com.kizitonwose.calendar:view:2.6.1")
 }
