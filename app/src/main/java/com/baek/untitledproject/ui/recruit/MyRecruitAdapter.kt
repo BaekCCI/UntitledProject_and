@@ -50,39 +50,12 @@ class MyRecruitAdapter(
             //     .load(item.thumbnailUrl)
             //     .into(binding.thumbnailImg)
 
-            // 이미지 개수 표시
-            setupImageCount(item)
-
-            // 페이지 인디케이터 설정
-            setupPageIndicator(item)
-
             // 버튼 클릭 이벤트
             setupButtonClickEvents(item)
 
             // 카드 클릭 이벤트
             binding.root.setOnClickListener {
                 onCardClick(item.id)
-            }
-        }
-
-        private fun setupImageCount(item: MyRecruitSummary) {
-            val imageCount = item.imageUrls.size
-            if (imageCount > 1) {
-                binding.imageCountTxt.visibility = View.VISIBLE
-                binding.imageCountTxt.text = "${item.currentImageIndex + 1}/$imageCount"
-            } else {
-                binding.imageCountTxt.visibility = View.GONE
-            }
-        }
-
-        private fun setupPageIndicator(item: MyRecruitSummary) {
-            val imageCount = item.imageUrls.size
-            if (imageCount > 1) {
-                binding.pageIndicatorLayout.visibility = View.VISIBLE
-                // TODO: 동적으로 점들 생성
-                // 현재는 정적으로 2개 점만 있음
-            } else {
-                binding.pageIndicatorLayout.visibility = View.GONE
             }
         }
 

@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="12dp"
-    android:gravity="center_vertical">
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:background="?android:attr/selectableItemBackground">
 
     <!-- 좌측: 날짜/시간 -->
     <LinearLayout
@@ -12,15 +13,16 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:minWidth="60dp">
 
         <TextView
             android:id="@+id/dateTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="7.24 목"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:text="7/24 목요일"
+            android:textColor="#666666"
+            android:textSize="11sp" />
 
         <TextView
             android:id="@+id/timeTxt"
@@ -28,9 +30,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:text="15:00"
-            android:textColor="@android:color/black"
+            android:textColor="#333333"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/timeEndTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:30"
+            android:textColor="#333333"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -45,19 +55,10 @@
             android:id="@+id/organizationTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="댄스 동아리"
-            android:textColor="@android:color/black"
+            android:text="동아리이름1"
+            android:textColor="#333333"
             android:textSize="14sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/contentTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="OOO"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
 
     </LinearLayout>
 

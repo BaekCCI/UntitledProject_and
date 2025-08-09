@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- 상단 헤더 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF"
+        android:paddingBottom="16dp">
+
+        <!-- 뒤로가기 + 제목 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/backBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:text="←"
+                android:textColor="#333333"
+                android:textSize="24sp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="8dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="동아리명"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/titleTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="댄스 동아리 OO 모집합니다"
+                    android:textColor="#333333"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 태그들 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/statusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/tag_green"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="모집중"
+                android:textColor="#4CAF50"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/interviewStatusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tag_blue"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="면접 진행"
+                android:textColor="#2196F3"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- 모집 기간 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginHorizontal="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="모집 기간"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/recruitPeriodTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8월 1일 - 9월 30일"
+                android:textColor="#666666"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 탭 영역 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/applicantManageTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="지원자 관리"
+            android:textColor="#333333"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
+            android:background="#EEEEEE" />
+
+        <TextView
+            android:id="@+id/applicantListTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="지원자 리스트"
+            android:textColor="#999999"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:background="?android:attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+    <!-- 탭 하단 선 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#EEEEEE">
+
+        <View
+            android:id="@+id/tabIndicator"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="#333333" />
+
+    </FrameLayout>
+
+    <!-- 필터 버튼들 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="16dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/filterAllBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="#333333"
+            android:text="지원서 제출"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/filterInterviewBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="@null"
+            android:text="면접 대기"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/filterReviewBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="@null"
+            android:text="상사 대기"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/filterCompleteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="@null"
+            android:text="심사 완료"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            android:minWidth="0dp"
+            android:paddingHorizontal="12dp" />
+
+    </LinearLayout>
+
+    <!-- 검색/선택 영역 (내용이 동적으로 바뀜) -->
+    <LinearLayout
+        android:id="@+id/searchHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:gravity="center_vertical">
+
+        <!-- 기본 모드: 검색 -->
+        <TextView
+            android:id="@+id/searchLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="검색"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/searchIcon"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@android:drawable/ic_menu_search"
+            app:tint="#666666" />
+
+        <!-- 선택 모드: 전체 선택 (처음엔 숨김) -->
+        <TextView
+            android:id="@+id/selectAllBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="전체 선택"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- 기본 모드: 선택 버튼 -->
+        <Button
+            android:id="@+id/selectModeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="선택"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            style="?android:attr/borderlessButtonStyle"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:padding="8dp" />
+
+        <!-- 선택 모드: 취소 버튼 (처음엔 숨김) -->
+        <TextView
+            android:id="@+id/cancelSelectionBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="취소"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="8dp"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- 구분선 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#F5F5F5" />
+
+    <!-- 지원자 목록 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/applicantRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#F5F5F5"
+        android:padding="16dp" />
+
+    <!-- 하단 고정 바 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- 일반 모드 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/notifyAllBtn"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_margin="16dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="#333333"
+            android:text="모두에게 심사 결과 알리기"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- 선택 모드 액션 바 -->
+        <LinearLayout
+            android:id="@+id/selectionActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:elevation="8dp"
+            android:visibility="gone">
+
+            <!-- 선택된 지원자 개수 -->
+            <TextView
+                android:id="@+id/selectedCountText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="1명의 지원자가 선택되었습니다"
+                android:textColor="#666666"
+                android:textSize="14sp"
+                android:gravity="center" />
+
+            <!-- 액션 버튼들 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- 왼쪽 버튼 (보통 취소/부정적 액션) -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/leftActionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="@null"
+                    android:text="불합격"
+                    android:textColor="#333333"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <!-- 오른쪽 버튼 (보통 확인/긍정적 액션) -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/rightActionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="#333333"
+                    android:text="면접 제안"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+                <!-- 단일 버튼 -->
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/singleActionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="#333333"
+                    android:text="심사 결과 알리기"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

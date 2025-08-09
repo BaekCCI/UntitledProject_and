@@ -1,5 +1,6 @@
 package com.baek.untitledproject.ui.recruit
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -65,7 +66,11 @@ class MyRecruitsFragment : Fragment() {
             },
             onApplicantManageClick = { recruitId ->
                 Log.d("MyRecruitsFragment", "지원자 관리 클릭: $recruitId")
-                viewModel.onApplicantManageClick(recruitId)
+
+                // ApplicantManagementActivity로 이동
+                val intent = Intent(requireContext(), ApplicantManagementActivity::class.java)
+                intent.putExtra("recruitId", recruitId)
+                startActivity(intent)
             },
             onPostManageClick = { recruitId ->
                 Log.d("MyRecruitsFragment", "작성글 관리 클릭: $recruitId")

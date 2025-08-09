@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@drawable/bottom_sheet_background">
+
+    <!-- 메시지 -->
+    <TextView
+        android:id="@+id/confirmMessageTxt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="선택한 지원자에게\n면접을 제안하시겠어요?"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp" />
+
+    <!-- 확인 버튼 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/confirmBtn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/button_outline"
+        android:backgroundTint="#333333"
+        android:text="면접 제안"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <!-- 취소 버튼 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancelBtn"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/button_outline"
+        android:backgroundTint="@null"
+        android:text="취소"
+        android:textColor="#666666"
+        android:textSize="16sp" />
+
+</LinearLayout>
