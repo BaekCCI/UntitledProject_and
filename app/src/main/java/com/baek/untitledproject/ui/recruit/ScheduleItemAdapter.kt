@@ -36,7 +36,6 @@ class ScheduleItemAdapter : ListAdapter<ScheduleItemSummary, ScheduleItemAdapter
             binding.dateTxt.text = item.date
             binding.timeTxt.text = item.time
             binding.organizationTxt.text = item.organization
-            binding.contentTxt.text = item.content
         }
     }
 
