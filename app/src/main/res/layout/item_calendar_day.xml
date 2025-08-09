@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?><?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless">
+
+    <!-- 저장된 날짜-->
+    <View
+        android:id="@+id/savedBg"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:background="@drawable/day_saved_bg"
+        android:visibility="gone" />
+
+    <!-- 선택된 날짜 -->
+    <View
+        android:id="@+id/selectedBg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/day_selected_bg"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center" />
+</FrameLayout>
