@@ -1,225 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.board.write.InfoWriteFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
 
-        <ScrollView
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="none">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/stepIndicator"
+                layout="@layout/step_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="32dp"
+                android:text="공고 상세정보를 입력해주세요"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
                 android:orientation="vertical">
-
-                <include
-                    android:id="@+id/stepIndicator"
-                    layout="@layout/step_indicator"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="32dp"
-                    android:text="공고 상세정보를 입력해주세요"
-                    android:textSize="24sp"
+                    android:layout_marginBottom="8dp"
+                    android:text="공고 제목"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/titleInput"
                     android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/input_selector_bg"
+                    android:hint="공고 제목을 적어주세요"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="18dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
+                    android:layout_marginBottom="8dp"
+                    android:text="단체명"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/groupNameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/input_selector_bg"
+                    android:hint="단체 이름을 적어주세요"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="18dp"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="모집기간"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/recruitDateSelectBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="32dp"
+                    android:text="시작일~마감일 선택" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="4dp"
                         android:layout_marginBottom="8dp"
-                        android:text="공고 제목"
+                        android:text="사진"
                         android:textSize="14sp"
                         android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/titleInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="32dp"
-                        android:background="@drawable/input_selector_bg"
-                        android:hint="공고 제목을 적어주세요"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:padding="18dp"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="단체명"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/groupNameInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="32dp"
-                        android:background="@drawable/input_selector_bg"
-                        android:hint="단체 이름을 적어주세요"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:padding="18dp"
-                        android:textSize="16sp" />
-
+                        android:text="최대 5장"
+                        android:textColor="#808080"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
-                <LinearLayout
+
+                <HorizontalScrollView
+                    android:id="@+id/imageScrollView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="모집기간"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <Button
-                        android:id="@+id/recruitDateSelectBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="32dp"
-                        android:text="시작일~마감일 선택" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
+                    android:scrollbars="none">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/imgContainer"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="사진"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="최대 5장"
-                            android:textColor="#808080"
-                            android:textSize="14sp" />
+                        <ImageView
+                            android:id="@+id/selectImgBtn"
+                            android:layout_width="84dp"
+                            android:layout_height="84dp"
+                            android:layout_margin="4dp"
+                            android:src="@drawable/ic_launcher_background" />
                     </LinearLayout>
 
+                </HorizontalScrollView>
 
-                    <HorizontalScrollView
-                        android:id="@+id/imageScrollView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:scrollbars="none">
+            </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/imgContainer"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/selectImgBtn"
-                                android:layout_width="84dp"
-                                android:layout_height="84dp"
-                                android:layout_margin="4dp"
-                                android:src="@drawable/ic_launcher_background" />
-                        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:text="모집 내용"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-                    </HorizontalScrollView>
-
-                </LinearLayout>
-
-                <LinearLayout
+                <EditText
+                    android:id="@+id/contentInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="모집 내용"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <EditText
-                        android:id="@+id/contentInput"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="162dp"
-                        android:background="@drawable/input_selector_bg"
-                        android:gravity="start"
-                        android:hint="활동 목적, 모집 인원, 활동 일정, 지원 자격 등을 자유롭게 작성해주세요"
-                        android:inputType="textMultiLine"
-                        android:minLines="10"
-                        android:padding="18dp"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                    android:background="@drawable/input_selector_bg"
+                    android:gravity="start"
+                    android:hint="활동 목적, 모집 인원, 활동 일정, 지원 자격 등을 자유롭게 작성해주세요"
+                    android:inputType="textMultiLine"
+                    android:minLines="10"
+                    android:padding="18dp"
+                    android:textSize="16sp" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="162dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/gradient_button_container_bg"
-        android:gravity="center"
-        android:paddingStart="16dp"
-        android:paddingTop="53dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="53dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="162dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradient_button_container_bg"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingTop="53dp"
+                android:paddingEnd="16dp"
+                android:paddingBottom="53dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/nextBtn"
-            style="@style/Widget.Untitled.Button.StateToggle"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:enabled="false"
-            android:text="다음" />
-    </LinearLayout>
-
-</FrameLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/nextBtn"
+                    style="@style/Widget.Untitled.Button.StateToggle"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:enabled="false"
+                    android:text="다음" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

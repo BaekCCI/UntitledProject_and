@@ -14,7 +14,7 @@ data class Post(
     val recruitmentEnd: LocalDate? = null, //모집 마감일
     val imageUris: List<Uri> = emptyList(), //업로드한 이미지
 
-    val hasInterview: Boolean = false, //면접 진행 여부
+    val hasInterview: Boolean? = null, //면접 진행 여부
     val interviewSlot: Map<LocalDate, String> = emptyMap(), // 인터뷰 시간대 <yy/MM/dd, HH:mm>
     val interviewLocation: String? = null,//면접 장소
 
