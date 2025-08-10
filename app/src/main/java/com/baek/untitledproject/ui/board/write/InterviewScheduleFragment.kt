@@ -18,6 +18,7 @@ import java.time.DayOfWeek
 import java.time.YearMonth
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.navigation.fragment.findNavController
 import com.kizitonwose.calendar.core.yearMonth
 import java.time.LocalDate
 
@@ -53,6 +54,7 @@ class InterviewScheduleFragment : Fragment() {
         setupCalendar()
         setupDayBinder()
         setupCalendarHeader()
+        setupToolBarBtn()
     }
 
     //캘린더 설정
@@ -155,6 +157,20 @@ class InterviewScheduleFragment : Fragment() {
             calendar.findFirstVisibleMonth()?.yearMonth?.let {
                 calendar.smoothScrollToMonth(it.plusMonths(1))
             }
+        }
+    }
+
+    private fun setupToolBarBtn(){
+        binding.cancelBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        binding.completeBtn.setOnClickListener {
+            //TODO: ViewModel에 값 저장?
+            findNavController().popBackStack()
+        }
+
+        binding.doNextBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
