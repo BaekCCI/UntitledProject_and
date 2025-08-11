@@ -24,7 +24,7 @@ class NotificationFragment : Fragment() {
     private var _binding: FragmentNotificationBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel : NotificationViewModel by viewModels()
+    private val viewModel: NotificationViewModel by viewModels()
 
     private val adapter = NotificationAdapter()
 
@@ -45,12 +45,14 @@ class NotificationFragment : Fragment() {
         loadNotifications()
         observeNotification()
         initAdapter()
+        //TODO: is_read = true 로 변경하는 로직(기준=?)
     }
-    private fun loadNotifications(){
+
+    private fun loadNotifications() {
         viewModel.load()
     }
 
-    private fun observeNotification(){
+    private fun observeNotification() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.notifications.collect { result ->
@@ -60,6 +62,7 @@ class NotificationFragment : Fragment() {
                             binding.notificationList.isVisible = false
                             //TODO: 로딩 UI 적용
                         }
+
                         is Result.Success -> {
                             val list = result.data
                             binding.emptyState.isVisible = list.isEmpty()
@@ -68,11 +71,13 @@ class NotificationFragment : Fragment() {
                             adapter.nowMillis = System.currentTimeMillis()
                             adapter.submitList(list)
                         }
+
                         is Result.Error -> {
                             binding.emptyState.isVisible = true
                             binding.notificationList.isVisible = false
                             //TODO: ERROR 처리
                         }
+
                         else -> {}
                     }
                 }

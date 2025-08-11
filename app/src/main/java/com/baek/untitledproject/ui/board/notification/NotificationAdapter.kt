@@ -49,6 +49,8 @@ class NotificationAdapter() :
             binding.timeTxt.text = item.timeText(nowMillis)
             binding.titleTxt.text = item.title
             binding.contentTxt.text = item.message
+
+            applyReadBackground(item.isRead)
         }
 
         fun bindRead(isRead: Boolean) = applyReadBackground(isRead)
