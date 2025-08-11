@@ -92,14 +92,7 @@ class BoardWriteViewModel @Inject constructor(
     //면접 여부 설정 시 업데이트
     fun setHasInterview(hasInterview: Boolean) {
         _editingPost.update { cur ->
-            if (hasInterview) cur.copy(hasInterview = true)
-            else {
-                cur.copy(
-                    hasInterview = false,
-                    interviewLocation = null,
-                    interviewSlot = emptyMap()
-                )
-            }
+            cur.copy(hasInterview = hasInterview)
         }
     }
 
