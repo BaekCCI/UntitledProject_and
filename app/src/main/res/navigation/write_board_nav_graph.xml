@@ -36,7 +36,11 @@
     <fragment
         android:id="@+id/recruitFormSettingFragment"
         android:name="com.baek.untitledproject.ui.board.write.RecruitFormSettingFragment"
-        android:label="RecruitFormSettingFragment" />
+        android:label="RecruitFormSettingFragment" >
+        <action
+            android:id="@+id/action_recruitFormSettingFragment_to_postCompleteFragment"
+            app:destination="@id/postCompleteFragment" />
+    </fragment>
     <dialog
         android:id="@+id/recruitDateSelectDialogFragment"
         android:name="com.baek.untitledproject.ui.board.write.RecruitDateSelectDialogFragment"
@@ -48,4 +52,9 @@
         android:name="com.baek.untitledproject.ui.board.write.InterviewScheduleFragment"
         android:label="fragment_interview_schedule"
         tools:layout="@layout/fragment_interview_schedule" />
+    <fragment
+        android:id="@+id/postCompleteFragment"
+        android:name="com.baek.untitledproject.ui.board.write.PostCompleteFragment"
+        android:label="fragment_post_complete"
+        tools:layout="@layout/fragment_post_complete" />
 </navigation>

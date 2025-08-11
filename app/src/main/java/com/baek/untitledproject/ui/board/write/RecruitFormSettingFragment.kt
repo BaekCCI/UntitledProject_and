@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentRecruitFormSettingBinding
 import com.baek.untitledproject.databinding.ItemCustomQuestionBinding
@@ -46,6 +47,7 @@ class RecruitFormSettingFragment : Fragment() {
         observeEditingPost()
         setupBottomNav()
         observeSubmitState()
+        setCompleteBtnEnable()
     }
 
     private fun observeEditingPost() {
@@ -110,6 +112,24 @@ class RecruitFormSettingFragment : Fragment() {
         }
     }
 
+    //완료 버튼 활성화 여부 설정
+    private fun setCompleteBtnEnable() = with(binding){
+        val boxes = listOf(
+            nameCheckBox, genderCheckBox, ageCheckBox,
+            majorCheckBox, studentNumberCheckBox, phoneCheckBox
+        )
+
+        fun updateEnable() {
+            completeBtn.isEnabled = boxes.any { it.isChecked }
+        }
+
+        // 체크 상태 변할 때마다 enable 갱신
+        boxes.forEach { cb ->
+            cb.addOnCheckedStateChangedListener { _, _ -> updateEnable() }
+        }
+
+    }
+
 
     //이전/다음 버튼 이동 설정
     private fun setupBottomNav() {
@@ -120,7 +140,6 @@ class RecruitFormSettingFragment : Fragment() {
         binding.completeBtn.setOnClickListener {
             updateData()
             viewModel.completePost()
-            //TODO: 화면 이동
         }
     }
 
@@ -161,7 +180,15 @@ class RecruitFormSettingFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-                            //TODO: 다음 화면으로 이동
+                            findNavController().navigate(
+                                R.id.postCompleteFragment,
+                                null,
+                                navOptions {
+                                    //backstack 제거
+                                    popUpTo(R.id.infoWriteFragment) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            )
                         }
 
                         is Result.Error -> {
