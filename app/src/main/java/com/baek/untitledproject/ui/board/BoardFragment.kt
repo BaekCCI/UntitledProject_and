@@ -54,6 +54,7 @@ class BoardFragment : Fragment() {
         observeBoardList()
         setToolbar()
         viewModel.loadBoardList()
+        setupWriteBoardBtn()
     }
 
     private fun initAdapter() {
@@ -131,6 +132,13 @@ class BoardFragment : Fragment() {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+    }
+
+    private fun setupWriteBoardBtn() {
+        binding.writeBoardBtn.setOnClickListener {
+            val action = BoardFragmentDirections.actionBoardFragmentToWriteBoardNavGraph()
+            findNavController().navigate(action)
+        }
     }
 
     override fun onDestroyView() {

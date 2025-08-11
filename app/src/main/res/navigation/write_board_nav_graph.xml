@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/write_board_nav_graph"
+    app:startDestination="@id/infoWriteFragment">
+
+    <fragment
+        android:id="@+id/infoWriteFragment"
+        android:name="com.baek.untitledproject.ui.board.write.InfoWriteFragment"
+        android:label="fragment_info_write"
+        tools:layout="@layout/fragment_info_write">
+        <action
+            android:id="@+id/action_infoWriteFragment_to_interviewSettingFragment"
+            app:destination="@id/interviewSettingFragment" />
+        <argument
+            android:name="postId"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_infoWriteFragment_to_recruitDateSelectDialogFragment"
+            app:destination="@id/recruitDateSelectDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/interviewSettingFragment"
+        android:name="com.baek.untitledproject.ui.board.write.InterviewSettingFragment"
+        android:label="InterviewSettingFragment">
+        <action
+            android:id="@+id/action_interviewSettingFragment_to_recruitFormSettingFragment"
+            app:destination="@id/recruitFormSettingFragment" />
+        <action
+            android:id="@+id/action_interviewSettingFragment_to_interviewScheduleFragment"
+            app:destination="@id/interviewScheduleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recruitFormSettingFragment"
+        android:name="com.baek.untitledproject.ui.board.write.RecruitFormSettingFragment"
+        android:label="RecruitFormSettingFragment" >
+        <action
+            android:id="@+id/action_recruitFormSettingFragment_to_postCompleteFragment"
+            app:destination="@id/postCompleteFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/recruitDateSelectDialogFragment"
+        android:name="com.baek.untitledproject.ui.board.write.RecruitDateSelectDialogFragment"
+        android:label="fragment_recruit_date_select_dialog"
+        app:theme="@style/ThemeOverlay.Untitled.FullscreenDialog"
+        tools:layout="@layout/fragment_recruit_date_select_dialog" />
+    <fragment
+        android:id="@+id/interviewScheduleFragment"
+        android:name="com.baek.untitledproject.ui.board.write.InterviewScheduleFragment"
+        android:label="fragment_interview_schedule"
+        tools:layout="@layout/fragment_interview_schedule" />
+    <fragment
+        android:id="@+id/postCompleteFragment"
+        android:name="com.baek.untitledproject.ui.board.write.PostCompleteFragment"
+        android:label="fragment_post_complete"
+        tools:layout="@layout/fragment_post_complete" />
+</navigation>

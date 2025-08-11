@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Point -->
+    <color name="point_purple">#6046F4</color>
+    <color name="point_purple_tinted">#266046F4</color>
+
+    <!-- Gray Scale -->
     <color name="black">#FF000000</color>
+    <color name="gray_700">#404048</color>
+    <color name="gray_600">#696E7C</color>
+    <color name="gray_500">#7E8394</color>
+    <color name="gray_400">#9299A9</color>
+    <color name="gray_300">#B3B9C7</color>
+    <color name="gray_200">#C7CEDE</color>
+    <color name="gray_100">#E8EDF6</color>
+    <color name="gray_50">#F7F9FC</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Accent -->
+    <color name="accent_red">#F26B6B</color>
+
+    <!-- Primary -->
+    <color name="primary_black">#1c1d1c</color>
+
 </resources>

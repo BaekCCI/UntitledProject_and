@@ -94,4 +94,13 @@ dependencies {
 
     //Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation("com.google.firebase:firebase-firestore")
+
+    //Kizitonwose CalendarView
+    implementation("com.kizitonwose.calendar:view:2.6.1")
+
+    implementation ("androidx.activity:activity-ktx:1.10.1")
 }

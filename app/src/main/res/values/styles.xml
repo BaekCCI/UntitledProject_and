@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Widget.Untitled.[Component].[역할 또는 특징] -->
+<resources>
+
+    <!-- Radius가 적용된 기본 버튼 베이스 -->
+    <style name="Widget.Untitled.Button.Base" parent="Widget.Material3.Button">
+        <item name="cornerRadius">10dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- 버튼 활성화 여부에 따라 배경색이 바뀌는 버튼 -->
+    <style name="Widget.Untitled.Button.StateToggle" parent="Widget.Untitled.Button.Base">
+        <item name="backgroundTint">@color/btn_state_toggle_bg</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- fullScreen 다이얼로그-->
+    <style name="ThemeOverlay.Untitled.FullscreenDialog" parent="Theme.Material3.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+</resources>
