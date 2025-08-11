@@ -6,6 +6,8 @@ import com.baek.untitledproject.domain.repository.BoardRepository
 import com.baek.untitledproject.domain.repository.MyRecruitsRepository
 import com.baek.untitledproject.domain.repository.ApplicantRepository
 import com.baek.untitledproject.data.repository.ApplicantRepositoryImpl
+import com.baek.untitledproject.data.repository.NotificationRepositoryImpl
+import com.baek.untitledproject.domain.repository.NotificationRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ abstract class AppModule {
     abstract fun bindApplicantRepository(
         applicantRepositoryImpl: ApplicantRepositoryImpl
     ): ApplicantRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(
+        notificationRepositoryImpl: NotificationRepositoryImpl
+    ): NotificationRepository
 }
