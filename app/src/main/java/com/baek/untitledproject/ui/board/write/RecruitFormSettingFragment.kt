@@ -1,18 +1,31 @@
 package com.baek.untitledproject.ui.board.write
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
-import com.baek.untitledproject.databinding.FragmentRecruitDateSelectDialogBinding
 import com.baek.untitledproject.databinding.FragmentRecruitFormSettingBinding
+import com.baek.untitledproject.databinding.ItemCustomQuestionBinding
+import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.utils.Result
+import kotlinx.coroutines.launch
 
 class RecruitFormSettingFragment : Fragment() {
 
     private var _binding: FragmentRecruitFormSettingBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: BoardWriteViewModel by hiltNavGraphViewModels(R.id.write_board_nav_graph)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +38,151 @@ class RecruitFormSettingFragment : Fragment() {
         _binding = FragmentRecruitFormSettingBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupCustomQuestions()
+        observeEditingPost()
+        setupBottomNav()
+        observeSubmitState()
+    }
+
+    private fun observeEditingPost() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.editingPost.collect { post ->
+                    render(post)
+                }
+            }
+
+        }
+    }
+
+    //화면 초기화
+    private fun render(post: Post) = with(binding) {
+        // 체크 박스 초기화
+        nameCheckBox.isChecked = post.requiresName
+        genderCheckBox.isChecked = post.requiresGender
+        ageCheckBox.isChecked = post.requiresAge
+        majorCheckBox.isChecked = post.requiresDepartment
+        studentNumberCheckBox.isChecked = post.requiresStudentId
+        phoneCheckBox.isChecked = post.requiresPhone
+
+        // 커스텀 질문 초기화
+        customQuestionContainer.removeAllViews()
+        post.customQuestions.forEach { q -> addCustomQuestion(q) }
+
+        // 완료 버튼 상태 : 1개 이상 선택 시
+        completeBtn.isEnabled = listOf(
+            post.requiresName,
+            post.requiresGender,
+            post.requiresAge,
+            post.requiresDepartment,
+            post.requiresStudentId,
+            post.requiresPhone
+        ).any { it }
+
+    }
+
+    private fun setupCustomQuestions() {
+        binding.addQuestionBtn.setOnClickListener {
+            //TODO: 추천 질문?
+            addCustomQuestion("추천 질문", true)
+        }
+    }
+
+    private fun addCustomQuestion(recommendedQ: String = "", requestFocus: Boolean = false) {
+        val itemBinding = ItemCustomQuestionBinding.inflate(
+            layoutInflater, binding.customQuestionContainer, true
+        )
+
+        val input = itemBinding.questionInput
+        input.hint = recommendedQ
+
+        if (requestFocus) {
+            input.post {
+                input.requestFocus()
+                val imm = requireContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
+            }
+        }
+    }
+
+
+    //이전/다음 버튼 이동 설정
+    private fun setupBottomNav() {
+        binding.prevBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding.completeBtn.setOnClickListener {
+            updateData()
+            viewModel.completePost()
+            //TODO: 화면 이동
+        }
+    }
+
+    //viewModel에 저장
+    private fun updateData() = with(binding) {
+        viewModel.updateRequirements(
+            name = nameCheckBox.isChecked,
+            gender = genderCheckBox.isChecked,
+            age = ageCheckBox.isChecked,
+            dept = majorCheckBox.isChecked,
+            studentId = studentNumberCheckBox.isChecked,
+            phone = phoneCheckBox.isChecked
+        )
+        viewModel.updateCustomQuestions(collectQuestions())
+    }
+
+    //작성한 내용이 있는 질문들만 수집
+    private fun collectQuestions(): List<String> {
+        val result = mutableListOf<String>()
+        val container = binding.customQuestionContainer
+
+        for (i in 0 until container.childCount) {
+            val child = container.getChildAt(i)
+            val input = child.findViewById<EditText>(R.id.questionInput)
+            val text = input.text?.toString()?.trim().orEmpty()
+            if (text.isNotBlank()) result.add(text)
+        }
+        return result
+    }
+
+    private fun observeSubmitState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.submitResult.collect { result ->
+                    when (result) {
+                        is Result.Loading -> {
+                            //TODO: 로딩 UI 적용
+                        }
+
+                        is Result.Success -> {
+                            //TODO: 다음 화면으로 이동
+                        }
+
+                        is Result.Error -> {
+                            //TODO: 에러 표시
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        //뒤로가기로 화면이 사라질때
+        if (isRemoving && !requireActivity().isChangingConfigurations) {
+            updateData()
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

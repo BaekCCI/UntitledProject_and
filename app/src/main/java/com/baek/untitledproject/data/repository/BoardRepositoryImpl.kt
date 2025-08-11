@@ -70,4 +70,14 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
             Result.Error("$postId: 게시글을 불러오는데 실패하였습니다.", e)
         }
     }
+
+    override suspend fun submitPost(postId: String?): Result<String> {
+        return try {
+            //TODO: 파이어베이스에 업로드 작업
+            return Result.Success("postId")
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 저장 실패", e)
+            Result.Error("게시글을 저장하는데 실패하였습니다.", e)
+        }
+    }
 }

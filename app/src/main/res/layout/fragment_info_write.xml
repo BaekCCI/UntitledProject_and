@@ -199,7 +199,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="162dp"
                 android:layout_gravity="bottom"
-                android:background="@drawable/gradient_button_container_bg"
                 android:gravity="center"
                 android:paddingStart="16dp"
                 android:paddingTop="53dp"

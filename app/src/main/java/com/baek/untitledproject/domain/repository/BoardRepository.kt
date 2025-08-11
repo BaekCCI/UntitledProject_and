@@ -13,4 +13,6 @@ interface BoardRepository {
     suspend fun searchBoard(keyword: String): Result<List<BoardSummary>>
 
     suspend fun getPost(postId: String): Result<Post>
+
+    suspend fun submitPost(postId: String?) : Result<String>
 }

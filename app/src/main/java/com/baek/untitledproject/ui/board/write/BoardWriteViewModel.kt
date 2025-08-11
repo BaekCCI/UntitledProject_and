@@ -19,16 +19,19 @@ import javax.inject.Inject
 class BoardWriteViewModel @Inject constructor(
     private val boardRepository: BoardRepository
 ) : ViewModel() {
+
+    private var loadedPostId: String? = null
+
     private val _prevPost = MutableStateFlow<Result<Post>>(Result.None)
     val prevPost: StateFlow<Result<Post>> = _prevPost
 
     private val _editingPost = MutableStateFlow(Post())
     val editingPost: StateFlow<Post> = _editingPost
 
-
     //첫번째 화면 진입 시 데이터 불러오기(수정 버튼으로 접근시)
     fun initPostData(postId: String?) {
         if (postId == null) return
+
 
         viewModelScope.launch {
             _prevPost.value = Result.Loading
@@ -36,6 +39,7 @@ class BoardWriteViewModel @Inject constructor(
             Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
             _prevPost.value = result
             if (result is Result.Success) {
+                loadedPostId = postId
                 _editingPost.value = result.data.copy()
                 initUiImagesFromPost()
             }
@@ -97,6 +101,42 @@ class BoardWriteViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    //세번째 페이지
+    private val _submitResult = MutableStateFlow<Result<String>>(Result.None)
+    val submitResult: StateFlow<Result<String>> = _submitResult
+
+    fun completePost() {
+        if (_submitResult.value is Result.Loading) return
+
+        viewModelScope.launch {
+            _submitResult.value = Result.Loading
+            _submitResult.value = boardRepository.submitPost(loadedPostId)
+        }
+    }
+
+    //수집 항목 체크 시 업데이트
+    fun updateRequirements(
+        name: Boolean? = null,
+        gender: Boolean? = null,
+        age: Boolean? = null,
+        dept: Boolean? = null,
+        studentId: Boolean? = null,
+        phone: Boolean? = null
+    ) {
+        _editingPost.value = _editingPost.value.copy(
+            requiresName = name ?: _editingPost.value.requiresName,
+            requiresGender = gender ?: _editingPost.value.requiresGender,
+            requiresAge = age ?: _editingPost.value.requiresAge,
+            requiresDepartment = dept ?: _editingPost.value.requiresDepartment,
+            requiresStudentId = studentId ?: _editingPost.value.requiresStudentId,
+            requiresPhone = phone ?: _editingPost.value.requiresPhone
+        )
+    }
+
+    fun updateCustomQuestions(questions: List<String>) {
+        _editingPost.value = _editingPost.value.copy(customQuestions = questions)
     }
 
 }

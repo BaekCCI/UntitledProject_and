@@ -101,4 +101,6 @@ dependencies {
 
     //Kizitonwose CalendarView
     implementation("com.kizitonwose.calendar:view:2.6.1")
+
+    implementation ("androidx.activity:activity-ktx:1.10.1")
 }
