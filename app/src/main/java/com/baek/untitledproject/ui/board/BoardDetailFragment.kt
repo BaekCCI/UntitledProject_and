@@ -19,6 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.baek.untitledproject.R
@@ -63,6 +64,13 @@ class BoardDetailFragment : Fragment() {
 
         initData()
         observeBoard()
+
+        //toolbar 적용
+        val navController = findNavController()
+
+        binding.detailToolbar.setNavigationOnClickListener {
+            navController.popBackStack()
+        }
     }
 
 
