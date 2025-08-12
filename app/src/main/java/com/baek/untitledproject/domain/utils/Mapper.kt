@@ -17,9 +17,17 @@ fun LocalDate.toUiString(
     locale: Locale = Locale.KOREA
 ): String = DateTimeFormatter.ofPattern(style.pattern(separator), locale).format(this)
 
-fun String.toLocalDate():LocalDate{
+fun String.toLocalDate(): LocalDate {
     val formatter = DateTimeFormatter.ofPattern("yy/MM/dd/E", Locale.KOREAN)
     return LocalDate.parse(this, formatter)
+}
+
+fun toDateRange(
+    start: LocalDate, end: LocalDate, style: DateUiStyle
+): String {
+    val formattedStart = start.toUiString(style)
+    val formattedEnd = end.toUiString(style)
+    return "$formattedStart ~ $formattedEnd"
 }
 
 fun Notification.timeText(now: Long): String {
@@ -28,10 +36,10 @@ fun Notification.timeText(now: Long): String {
     val hr = min / 60
     val day = hr / 24
     return when {
-        min < 1   -> "방금 전"
-        min < 60  -> "${min}분 전"
-        hr  < 24  -> "${hr}시간 전"
-        day < 7   -> "${day}일 전"
+        min < 1 -> "방금 전"
+        min < 60 -> "${min}분 전"
+        hr < 24 -> "${hr}시간 전"
+        day < 7 -> "${day}일 전"
         else -> java.text.SimpleDateFormat("yyyy/MM/dd", Locale.KOREA)
             .format(java.util.Date(createdAt))
     }

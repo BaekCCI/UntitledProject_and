@@ -20,6 +20,7 @@ fun PostResponse.toDomain(
     val sortedCustomQuestions: List<String> =
         customQuestions.sortedBy { it.question_order }.map { it.question_text }
 
+
     return Post(
         postId = post_id,
         title = title,
@@ -31,7 +32,9 @@ fun PostResponse.toDomain(
 
         hasInterview = has_interview,
         interviewSlot = interviewSlots.toInterviewSlotMap(),
-        interviewLocation = null,
+        interviewStart = interviewSlots.earliestInterviewDate(),
+        interviewEnd = interviewSlots.latestInterviewDate(),
+        interviewLocation = interview_location,
 
         requiresName = requires_name,
         requiresStudentId = requires_student_id,
@@ -55,3 +58,9 @@ fun List<InterviewSlotResponse>.toInterviewSlotMap(): Map<LocalDate, String> {
             localDate to slot.interview_time
         }
 }
+
+fun List<InterviewSlotResponse>.earliestInterviewDate(): LocalDate? =
+    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.minOrNull()
+
+fun List<InterviewSlotResponse>.latestInterviewDate(): LocalDate? =
+    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.maxOrNull()

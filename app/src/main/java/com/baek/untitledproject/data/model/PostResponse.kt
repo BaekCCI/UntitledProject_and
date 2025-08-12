@@ -13,6 +13,7 @@ data class PostResponse(
     val recruitment_start: Timestamp? = null,
     val recruitment_end: Timestamp? = null,
     val has_interview: Boolean = false,
+    val interview_location: String? = null,
     val status: String = "",
 
     val requires_name: Boolean = false,
