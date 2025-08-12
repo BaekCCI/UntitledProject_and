@@ -8,6 +8,7 @@
     tools:context=".ui.board.BoardDetailFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomBarContainer"
@@ -244,7 +245,7 @@
             android:background="@drawable/bottom_action_container_bg"
             android:paddingHorizontal="16dp"
             android:paddingVertical="20dp"
-            app:layout_constraintBottom_toBottomOf="@+id/scrollView2">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/endRecruitBtn"
@@ -262,7 +263,7 @@
     </FrameLayout>
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/rootToolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@android:color/transparent"
