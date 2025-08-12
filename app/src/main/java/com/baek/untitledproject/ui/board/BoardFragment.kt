@@ -115,8 +115,8 @@ class BoardFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_alert -> {
-                        // TODO: 클릭 시 알림
-                        Log.d("BoardFragment", "알림 버튼 클릭!")
+                        val action = BoardFragmentDirections.actionBoardFragmentToNotificationFragment()
+                        findNavController().navigate(action)
                         true
                     }
 

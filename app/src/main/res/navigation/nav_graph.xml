@@ -19,6 +19,9 @@
         <action
             android:id="@+id/action_boardFragment_to_write_board_nav_graph"
             app:destination="@id/write_board_nav_graph" />
+        <action
+            android:id="@+id/action_boardFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
     </fragment>
     <fragment
         android:id="@+id/myRecruitsFragment"
@@ -54,4 +57,9 @@
             app:destination="@id/boardDetailFragment" />
     </fragment>
     <include app:graph="@navigation/write_board_nav_graph" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.baek.untitledproject.ui.board.notification.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" />
 </navigation>

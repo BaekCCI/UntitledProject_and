@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.board.notification.NotificationFragment">
+
+    <!-- 빈 상태 -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="234dp"
+            android:layout_height="207dp"
+            android:src="@drawable/ic_launcher_background" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="알림함이 비어있어요" />
+    </LinearLayout>
+    <!-- 알림 목록 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notificationList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_notification"
+        tools:visibility="gone" />
+
+</FrameLayout>
