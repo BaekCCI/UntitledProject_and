@@ -30,6 +30,7 @@
                     android:id="@+id/imagePager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:background="@color/gray_300"
                     android:overScrollMode="never"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -210,6 +211,7 @@
             android:background="@drawable/bottom_action_container_bg"
             android:paddingHorizontal="16dp"
             android:paddingVertical="20dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
@@ -245,6 +247,7 @@
             android:background="@drawable/bottom_action_container_bg"
             android:paddingHorizontal="16dp"
             android:paddingVertical="20dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
 
             <com.google.android.material.button.MaterialButton
@@ -261,11 +264,22 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
+
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/detailToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_chevron_left"
+        android:background="@android:color/transparent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/transparent"/>
+        app:navigationIcon="@drawable/ic_chevron_left">
+
+        <ImageView
+            android:id="@+id/moreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:src="@drawable/ic_more" />
+    </com.google.android.material.appbar.MaterialToolbar>
 </androidx.constraintlayout.widget.ConstraintLayout>

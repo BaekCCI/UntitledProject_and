@@ -64,6 +64,7 @@ class BoardDetailFragment : Fragment() {
 
         initData()
         observeBoard()
+        setupMoreBtn()
 
         //toolbar 적용
         val navController = findNavController()
@@ -135,6 +136,7 @@ class BoardDetailFragment : Fragment() {
 
         contentTxt.text = post.content
 
+        //TODO: post.imageUris == empty -> 기본 이미지로 설정
         val uris = post.imageUris
         setupImageSlider(uris)
         setupPagerBadge(uris.size)
@@ -177,6 +179,12 @@ class BoardDetailFragment : Fragment() {
         pageCallback?.let { binding.imagePager.unregisterOnPageChangeCallback(it) }
         pageCallback = null
         binding.imagePager.adapter = null
+    }
+
+    private fun setupMoreBtn(){
+        binding.moreBtn.setOnClickListener {
+            ReportBottomSheetFragment().show(parentFragmentManager, "ReportBottomSheet")
+        }
     }
 
     override fun onResume() {
