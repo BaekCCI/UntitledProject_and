@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,48 +7,72 @@
     android:orientation="vertical"
     tools:context=".ui.board.BoardDetailFragment">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@android:color/transparent" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomBarContainer"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="50dp">
 
             <!--이미지 영역-->
-            <FrameLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp">
 
-                <!-- 전체 화면 이미지 뷰페이저 -->
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/imagePager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never" />
+                    android:layout_height="0dp"
+                    android:overScrollMode="never"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <!-- 우하단 페이지네이션 칩 (navigationBar 인셋만큼 marginBottom 적용 예정) -->
-                <TextView
+                <LinearLayout
                     android:id="@+id/pagerBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
                     android:layout_margin="10dp"
                     android:background="@drawable/pager_chip_bg"
+                    android:orientation="horizontal"
                     android:paddingHorizontal="13dp"
                     android:paddingVertical="2dp"
-                    android:text="1/5"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
 
-            </FrameLayout>
+                    <TextView
+                        android:id="@+id/curPg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"
+                        android:textColor="@color/gray_200"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/totalPg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray_200"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -61,7 +85,6 @@
                     android:id="@+id/organizationTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="댄스월드"
                     android:textColor="@color/gray_600"
                     android:textSize="14sp" />
 
@@ -69,7 +92,6 @@
                     android:id="@+id/titleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="제목ㅇㅁㄴㅇ렘ㄴㅇ롬;니아홈ㄴ;이하ㅗㄴㅁㅇ;ㅣ한아호"
                     android:textColor="@color/gray_700"
                     android:textSize="22sp" />
 
@@ -86,7 +108,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="모집 마감" />
+                        android:text="모집 마감"
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/recruitOpenChip"
@@ -94,7 +117,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="모집 중" />
+                        android:text="모집 중"
+                        android:visibility="gone" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/interviewChip"
@@ -102,7 +126,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="면접 진행" />
+                        android:text="면접 진행"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -124,7 +149,6 @@
                         android:id="@+id/recruitDateTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="8/1/토 ~ 9/30/월"
                         android:textColor="@color/gray_700"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -146,7 +170,6 @@
                         android:id="@+id/interviewScheduleTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="추후 공지 예정"
                         android:textColor="@color/gray_700"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -160,6 +183,7 @@
                 android:background="@color/gray_50" />
 
             <TextView
+                android:id="@+id/contentTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
@@ -169,61 +193,78 @@
         </LinearLayout>
     </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/recruitingBottomBar"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/bottomBarContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
-        android:visibility="gone">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/askBtn"
-            style="@style/Widget.Untitled.Button.Base"
-            android:layout_width="173dp"
-            android:layout_height="56dp"
-            android:layout_gravity="start"
-            android:text="문의하기"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/recruitBtn"
-            style="@style/Widget.Untitled.Button.Base"
-            android:layout_width="173dp"
-            android:layout_height="56dp"
-            android:layout_gravity="end"
-            android:text="지원하기"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ClosedBottomBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="20dp"
-        android:visibility="gone">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/endRecruitBtn"
-            style="@style/Widget.Untitled.Button.Base"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recruitingBottomBar"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_gravity="start"
-            android:enabled="false"
-            android:text="모집 마감"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_action_container_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="20dp"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/askBtn"
+                style="@style/Widget.Untitled.Button.Base"
+                android:layout_width="173dp"
+                android:layout_height="56dp"
+                android:layout_gravity="start"
+                android:text="문의하기"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/recruitBtn"
+                style="@style/Widget.Untitled.Button.Base"
+                android:layout_width="173dp"
+                android:layout_height="56dp"
+                android:layout_gravity="end"
+                android:text="지원하기"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/closedBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_action_container_bg"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="20dp"
+            app:layout_constraintBottom_toBottomOf="@+id/scrollView2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/endRecruitBtn"
+                style="@style/Widget.Untitled.Button.Base"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_gravity="start"
+                android:enabled="false"
+                android:text="모집 마감"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
