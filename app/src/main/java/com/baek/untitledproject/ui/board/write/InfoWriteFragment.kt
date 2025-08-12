@@ -21,6 +21,7 @@ import com.baek.untitledproject.databinding.FragmentInfoWriteBinding
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.toUiString
+import com.baek.untitledproject.ui.MainActivity
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -212,6 +213,10 @@ class InfoWriteFragment : Fragment() {
         viewModel.updateInfoWrite(title, groupName, content)
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setDetailTitle("공고 올리기")
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -54,4 +54,18 @@
         <item name="android:textColor">#249C7A</item>
     </style>
 
+
+    <!--rootToolbar text Style-->
+    <style name="ToolbarTitle.Root" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <!--datailToolbar text Style-->
+    <style name="ToolbarTitle.Detail" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
 </resources>

@@ -28,6 +28,7 @@ import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.toDateRange
+import com.baek.untitledproject.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate

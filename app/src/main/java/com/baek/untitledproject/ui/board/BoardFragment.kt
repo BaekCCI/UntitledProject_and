@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardBinding
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -141,6 +142,10 @@ class BoardFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setRootTitle("전북대학교 구인공고")
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
