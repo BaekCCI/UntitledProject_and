@@ -45,7 +45,9 @@ class PostCompleteFragment : Fragment() {
                 R.id.myRecruitsFragment,
                 null,
                 navOptions {
-                    popUpTo(R.id.write_board_nav_graph) { inclusive = true }
+                    popUpTo(R.id.boardFragment) {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 }
             )
