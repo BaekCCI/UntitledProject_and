@@ -102,6 +102,10 @@ class RecruitFormSettingFragment : Fragment() {
         val input = itemBinding.questionInput
         input.hint = recommendedQ
 
+        itemBinding.removeBtn.setOnClickListener {
+            binding.customQuestionContainer.removeView(itemBinding.root)
+        }
+
         if (requestFocus) {
             input.post {
                 input.requestFocus()

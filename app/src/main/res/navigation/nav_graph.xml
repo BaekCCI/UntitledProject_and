@@ -46,6 +46,9 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_write_board_nav_graph"
+            app:destination="@id/write_board_nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"

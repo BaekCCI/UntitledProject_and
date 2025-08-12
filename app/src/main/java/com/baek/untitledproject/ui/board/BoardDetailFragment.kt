@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -205,7 +206,10 @@ class BoardDetailFragment : Fragment() {
         ) { _, bundle ->
             when (bundle.getString(KEY_ACTION)) {
                 ACTION_EDIT -> {
-                    //수정 페이지로 이동
+                    findNavController().navigate(
+                        BoardDetailFragmentDirections.actionBoardDetailFragmentToWriteBoardNavGraph().actionId,
+                        bundleOf("postId" to args.id)
+                    )
                 }
 
                 ACTION_DELETE -> {
