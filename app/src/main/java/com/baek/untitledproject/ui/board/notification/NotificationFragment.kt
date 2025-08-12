@@ -104,7 +104,7 @@ class NotificationFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setDetailTitle("알림")
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title="알림")
     }
 
     override fun onDestroyView() {

@@ -47,16 +47,23 @@ class MainActivity : AppCompatActivity() {
             binding.bottomNav.visibility = if (isRoot) View.VISIBLE else View.GONE
 
             binding.rootToolbar.visibility = if (isRoot) View.VISIBLE else View.GONE
-            binding.detailToolbar.visibility = if (isRoot) View.GONE else View.VISIBLE
-
         }
     }
 
-    fun setRootTitle(title:String){
-        binding.rootToolbar.title = title
-    }
-    fun setDetailTitle(title: String) {
-        binding.detailToolbar.title = title
+    //그냥 호출 시 toolbar 사라지도록
+    fun setToolbar(
+        rootVisible: Boolean = false,
+        detailVisible: Boolean = false,
+        title: String? = null
+    ) {
+        binding.rootToolbar.visibility = if (rootVisible) View.VISIBLE else View.GONE
+        binding.detailToolbar.visibility = if (detailVisible) View.VISIBLE else View.GONE
+        title?.let {
+            when {
+                rootVisible -> binding.rootToolbar.title = it
+                detailVisible -> binding.detailToolbar.title = it
+            }
+        }
     }
 
 }

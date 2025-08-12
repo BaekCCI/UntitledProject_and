@@ -171,6 +171,11 @@ class BoardDetailFragment : Fragment() {
         binding.imagePager.adapter = null
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar()
+    }
+
     override fun onDestroyView() {
         cleanupPager()
         super.onDestroyView()

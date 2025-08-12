@@ -215,7 +215,7 @@ class InfoWriteFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setDetailTitle("공고 올리기")
+        (activity as? MainActivity)?.setToolbar(detailVisible = true,title="공고 올리기")
     }
 
     override fun onDestroyView() {

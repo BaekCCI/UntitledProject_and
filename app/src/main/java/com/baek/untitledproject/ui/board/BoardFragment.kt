@@ -144,7 +144,7 @@ class BoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setRootTitle("전북대학교 구인공고")
+        (activity as? MainActivity)?.setToolbar(rootVisible = true, title = "전북대학교 구인공고")
     }
     override fun onDestroyView() {
         super.onDestroyView()
