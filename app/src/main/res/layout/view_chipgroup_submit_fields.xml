@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.chip.ChipGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:chipSpacing="8dp">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/nameChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:clickable="false"
+            android:text="이름"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/departmentChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:checked="false"
+            android:clickable="false"
+            android:text="학과 / 전공"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/ageChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:checked="false"
+            android:clickable="false"
+            android:text="나이"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/phoneChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:checked="false"
+            android:clickable="false"
+            android:text="연락처"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/studentIdChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:checked="false"
+            android:clickable="false"
+            android:text="학번"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/genderChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@null"
+            android:checkable="true"
+            android:checked="false"
+            android:clickable="false"
+            android:text="성별"
+            android:textColor="@color/chip_submit_field_selector"
+            app:chipBackgroundColor="@color/chip_submit_field_bg_selector"
+            app:chipCornerRadius="100dp"
+            app:chipEndPadding="15dp"
+            app:chipStartPadding="15dp"
+            app:chipStrokeColor="@color/chip_submit_field_selector"
+            app:chipStrokeWidth="1dp"
+            app:ensureMinTouchTargetSize="false" />
+    </com.google.android.material.chip.ChipGroup>
+</LinearLayout>

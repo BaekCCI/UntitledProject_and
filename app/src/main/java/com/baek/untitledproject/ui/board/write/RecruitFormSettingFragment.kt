@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -84,7 +85,9 @@ class RecruitFormSettingFragment : Fragment() {
             post.requiresStudentId,
             post.requiresPhone
         ).any { it }
-
+        if (viewModel.loadedPostId != null) {
+            completeBtn.text = "수정 저장하기"
+        }
     }
 
     private fun setupCustomQuestions() {
@@ -117,7 +120,7 @@ class RecruitFormSettingFragment : Fragment() {
     }
 
     //완료 버튼 활성화 여부 설정
-    private fun setCompleteBtnEnable() = with(binding){
+    private fun setCompleteBtnEnable() = with(binding) {
         val boxes = listOf(
             nameCheckBox, genderCheckBox, ageCheckBox,
             majorCheckBox, studentNumberCheckBox, phoneCheckBox
@@ -184,15 +187,25 @@ class RecruitFormSettingFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-                            findNavController().navigate(
-                                R.id.postCompleteFragment,
-                                null,
-                                navOptions {
-                                    //backstack 제거
-                                    popUpTo(R.id.infoWriteFragment) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            )
+                            if (viewModel.loadedPostId != null) {
+                                Toast.makeText(requireContext(), "공고가 수정 되었어요", Toast.LENGTH_SHORT)
+                                    .show()
+                                findNavController().popBackStack(
+                                    R.id.write_board_nav_graph, /*inclusive=*/
+                                    true
+                                )
+                            } else {
+                                findNavController().navigate(
+                                    R.id.postCompleteFragment,
+                                    null,
+                                    navOptions {
+                                        //backstack 제거
+                                        popUpTo(R.id.infoWriteFragment) { inclusive = true }
+                                        launchSingleTop = true
+                                    }
+                                )
+                            }
+
                         }
 
                         is Result.Error -> {

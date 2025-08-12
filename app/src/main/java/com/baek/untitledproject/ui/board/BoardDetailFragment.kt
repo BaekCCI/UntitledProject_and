@@ -142,6 +142,17 @@ class BoardDetailFragment : Fragment() {
         setupImageSlider(uris)
         setupPagerBadge(uris.size)
         registerPagerCallback(uris.size)
+
+        //TODO: 작성자이면
+        if (true) {
+            submitInfoView.visibility = View.VISIBLE
+            chipgruopView.nameChip.isChecked = post.requiresName
+            chipgruopView.departmentChip.isChecked = post.requiresDepartment
+            chipgruopView.ageChip.isChecked = post.requiresAge
+            chipgruopView.phoneChip.isChecked = post.requiresPhone
+            chipgruopView.studentIdChip.isChecked = post.requiresStudentId
+            chipgruopView.genderChip.isChecked = post.requiresGender
+        }
     }
 
     private fun setupImageSlider(uris: List<Uri>) {
