@@ -19,7 +19,8 @@ import androidx.navigation.fragment.navArgs
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentInfoWriteBinding
 import com.baek.untitledproject.domain.data.Post
-import com.baek.untitledproject.domain.utils.toStringWithDayOfWeekAndSplitter
+import com.baek.untitledproject.domain.utils.DateUiStyle
+import com.baek.untitledproject.domain.utils.toUiString
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -102,8 +103,8 @@ class InfoWriteFragment : Fragment() {
             }
         }
         if (post.recruitmentStart != null && post.recruitmentEnd != null) {
-            val startDate = post.recruitmentStart.toStringWithDayOfWeekAndSplitter()
-            val endDate = post.recruitmentEnd.toStringWithDayOfWeekAndSplitter()
+            val startDate = post.recruitmentStart.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
+            val endDate = post.recruitmentEnd.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
             binding.recruitDateSelectBtn.text = "$startDate ~ $endDate"
         }
         post.content?.let {

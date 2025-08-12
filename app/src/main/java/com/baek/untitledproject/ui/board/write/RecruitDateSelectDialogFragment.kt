@@ -1,9 +1,7 @@
 package com.baek.untitledproject.ui.board.write
 
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +15,8 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.baek.untitledproject.domain.utils.toLocalDate
-import com.baek.untitledproject.domain.utils.toStringWithDayOfWeekAndSplitter
+import com.baek.untitledproject.domain.utils.DateUiStyle
+import com.baek.untitledproject.domain.utils.toUiString
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CompositeDateValidator
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -64,12 +62,12 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.editingPost.collect { post ->
                     post.recruitmentStart?.let {
-                        binding.startDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
+                        binding.startDateBtn.text = it.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
                         startMillis =
                             it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     }
                     post.recruitmentEnd?.let {
-                        binding.endDateBtn.text = it.toStringWithDayOfWeekAndSplitter()
+                        binding.endDateBtn.text = it.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
                         endMillis =
                             it.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
                     }
@@ -103,7 +101,7 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
                 val date = Instant.ofEpochMilli(selection)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
-                binding.startDateBtn.text = date.toStringWithDayOfWeekAndSplitter()
+                binding.startDateBtn.text = date.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
 
                 // 시작일 변경 시 종료일이 더 앞서면 종료일 초기화
                 endMillis?.let { end ->
@@ -152,7 +150,7 @@ class RecruitDateSelectDialogFragment : DialogFragment() {
                 val date = Instant.ofEpochMilli(selection)
                     .atZone(ZoneId.systemDefault())
                     .toLocalDate()
-                binding.endDateBtn.text = date.toStringWithDayOfWeekAndSplitter()
+                binding.endDateBtn.text = date.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
             }
 
             showPickerSafely("endDatePicker", picker)

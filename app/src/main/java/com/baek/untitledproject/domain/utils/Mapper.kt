@@ -5,12 +5,17 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-
-
-fun LocalDate.toStringWithDayOfWeekAndSplitter(): String {
-    val formatter = DateTimeFormatter.ofPattern("yy/MM/dd/E", Locale.KOREAN)
-    return this.format(formatter)
+enum class DateUiStyle(val pattern: (Char) -> String) {
+    YMD_WITH_WEEKDAY({ sep -> "yy${sep}MM${sep}dd${sep}E" }),//  yy/MM/dd/E
+    MD_WITH_WEEKDAY({ sep -> "MM${sep}dd${sep}E" }),// MM/dd/E
+    MD_KR({ _ -> "MM'월' dd'일'" })
 }
+
+fun LocalDate.toUiString(
+    style: DateUiStyle,
+    separator: Char = '/',
+    locale: Locale = Locale.KOREA
+): String = DateTimeFormatter.ofPattern(style.pattern(separator), locale).format(this)
 
 fun String.toLocalDate():LocalDate{
     val formatter = DateTimeFormatter.ofPattern("yy/MM/dd/E", Locale.KOREAN)
