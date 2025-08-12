@@ -6,15 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsCompat.Type
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -22,18 +13,25 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
-import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardDetailBinding
-import com.baek.untitledproject.domain.data.Board
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.toDateRange
 import com.baek.untitledproject.ui.MainActivity
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.ACTION_DELETE
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.ACTION_EDIT
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.KEY_ACTION
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.KEY_CONFIRMED
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.KEY_REPORTED
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_CONFIRM_DELETE
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_MORE_ACTION
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_REPORT
+import com.baek.untitledproject.ui.board.dialogs.ConfirmDeleteFragment
+import com.baek.untitledproject.ui.board.dialogs.MoreActionBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.util.Locale
 
 @AndroidEntryPoint
 class BoardDetailFragment : Fragment() {
@@ -65,7 +63,9 @@ class BoardDetailFragment : Fragment() {
         initData()
         observeBoard()
         setupMoreBtn()
+        setupDialogs(
 
+        )
         //toolbar 적용
         val navController = findNavController()
 
@@ -181,11 +181,48 @@ class BoardDetailFragment : Fragment() {
         binding.imagePager.adapter = null
     }
 
-    private fun setupMoreBtn(){
+    private fun setupMoreBtn() {
+
         binding.moreBtn.setOnClickListener {
-            ReportBottomSheetFragment().show(parentFragmentManager, "ReportBottomSheet")
+            //TODO: 작성자 여부에 따라 dialog 변경
+            //ReportBottomSheetFragment().show(parentFragmentManager, "repost_dialog")
+            MoreActionBottomSheetFragment().show(parentFragmentManager, "more_action_dialog")
         }
     }
+
+    private fun setupDialogs() {
+        parentFragmentManager.setFragmentResultListener(
+            REQ_REPORT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(KEY_REPORTED, false)) {
+                // 신고 화면으로 이동
+            }
+        }
+        parentFragmentManager.setFragmentResultListener(
+            REQ_MORE_ACTION,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            when (bundle.getString(KEY_ACTION)) {
+                ACTION_EDIT -> {
+                    //수정 페이지로 이동
+                }
+
+                ACTION_DELETE -> {
+                    ConfirmDeleteFragment().show(parentFragmentManager, "confirm_dialog")
+                }
+            }
+        }
+        parentFragmentManager.setFragmentResultListener(
+            REQ_CONFIRM_DELETE,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(KEY_CONFIRMED, false)) {
+                //삭제 로직
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()

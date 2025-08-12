@@ -1,37 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bottom_sheet_background"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="31dp"
-    tools:context=".ui.board.dialogs.ReportBottomSheetFragment">
+    android:paddingVertical="48dp"
+    tools:context=".ui.board.dialogs.ConfirmDeleteFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center_horizontal"
+        android:text="정말 공고를 삭제하시겠어요?\n삭제한 뒤에는 되돌릴 수 없어요"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/reportBtn"
+        android:id="@+id/deleteBtn"
         style="@style/Widget.Untitled.Button.Base"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
+        android:layout_height="56dp"
         android:layout_marginBottom="28dp"
-        android:backgroundTint="@color/gray_50"
-        android:text="신고하기"
-        android:textColor="@color/accent_red"
-        android:textSize="18sp"
-        app:icon="@drawable/ic_report"
-        app:iconGravity="textStart"
-        app:iconSize="24dp"
-        app:iconTint="@color/accent_red" />
+        android:backgroundTint="@color/accent_red"
+        android:text="삭제"
+        android:textColor="@color/white"
+        android:textSize="18dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/closeBtn"
+        android:id="@+id/cancelBtn"
         style="@style/Widget.Untitled.Button.Base"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
-        android:text="닫기"
+        android:text="취소"
         android:textColor="@color/gray_500"
         android:textSize="18sp" />
 

@@ -273,13 +273,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_chevron_left">
 
-        <ImageView
-            android:id="@+id/moreBtn"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
-            android:background="@null"
-            android:src="@drawable/ic_more" />
+            android:layout_marginEnd="10dp">
+
+            <ImageView
+                android:id="@+id/moreBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="10dp"
+                android:background="@null"
+                android:src="@drawable/ic_more" />
+        </FrameLayout>
     </com.google.android.material.appbar.MaterialToolbar>
 </androidx.constraintlayout.widget.ConstraintLayout>
