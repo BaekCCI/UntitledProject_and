@@ -232,7 +232,7 @@
                     </LinearLayout>
 
                     <include
-                        android:id="@+id/chipgruopView"
+                        android:id="@+id/chipGroupView"
                         layout="@layout/view_chipgroup_submit_fields"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />

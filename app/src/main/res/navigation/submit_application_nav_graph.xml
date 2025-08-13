@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/submit_application_nav"
+    app:startDestination="@id/applicationFormFragment">
+
+    <fragment
+        android:id="@+id/applicationFormFragment"
+        android:name="com.baek.untitledproject.ui.board.apply.ApplicationFormFragment"
+        android:label="fragment_application_form"
+        tools:layout="@layout/fragment_application_form">
+        <argument
+            android:name="postId"
+            app:nullable="false"
+            app:argType="string" />
+    </fragment>
+</navigation>

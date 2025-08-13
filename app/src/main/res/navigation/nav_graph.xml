@@ -52,6 +52,9 @@
         <action
             android:id="@+id/action_boardDetailFragment_to_imageViewerDialogFragment"
             app:destination="@id/imageViewerDialogFragment" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_applicationFormFragment"
+            app:destination="@id/applicationFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -81,4 +84,5 @@
             android:name="imageUris"
             app:argType="android.net.Uri[]" />
     </dialog>
+    <include app:graph="@navigation/submit_application_nav_graph" />
 </navigation>

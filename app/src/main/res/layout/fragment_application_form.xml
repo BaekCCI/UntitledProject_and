@@ -48,7 +48,7 @@
                 </LinearLayout>
 
                 <include
-                    android:id="@+id/chipgruopView"
+                    android:id="@+id/chipGroupView"
                     layout="@layout/view_chipgroup_submit_fields" />
             </LinearLayout>
 
@@ -63,9 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="8dp">
-
-            </LinearLayout>
+                android:paddingHorizontal="8dp"/>
         </LinearLayout>
 
     </ScrollView>

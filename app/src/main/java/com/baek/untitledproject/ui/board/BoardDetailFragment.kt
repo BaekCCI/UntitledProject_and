@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
+import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardDetailBinding
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.utils.DateUiStyle
@@ -65,9 +66,8 @@ class BoardDetailFragment : Fragment() {
         initData()
         observeBoard()
         setupMoreBtn()
-        setupDialogs(
-
-        )
+        setupDialogs()
+        setupBottomBtn()
         //toolbar 적용
         val navController = findNavController()
 
@@ -147,12 +147,12 @@ class BoardDetailFragment : Fragment() {
         //작성자이면
         if (viewModel.isWriter) {
             submitInfoView.visibility = View.VISIBLE
-            chipgruopView.nameChip.isChecked = post.requiresName
-            chipgruopView.departmentChip.isChecked = post.requiresDepartment
-            chipgruopView.ageChip.isChecked = post.requiresAge
-            chipgruopView.phoneChip.isChecked = post.requiresPhone
-            chipgruopView.studentIdChip.isChecked = post.requiresStudentId
-            chipgruopView.genderChip.isChecked = post.requiresGender
+            chipGroupView.nameChip.isChecked = post.requiresName
+            chipGroupView.departmentChip.isChecked = post.requiresDepartment
+            chipGroupView.ageChip.isChecked = post.requiresAge
+            //chipGroupView.phoneChip.isChecked = post.requiresPhone
+            chipGroupView.studentIdChip.isChecked = post.requiresStudentId
+            chipGroupView.genderChip.isChecked = post.requiresGender
         }
     }
 
@@ -209,6 +209,15 @@ class BoardDetailFragment : Fragment() {
         pageCallback?.let { binding.imagePager.unregisterOnPageChangeCallback(it) }
         pageCallback = null
         binding.imagePager.adapter = null
+    }
+
+    private fun setupBottomBtn(){
+        binding.recruitBtn.setOnClickListener {
+            findNavController().navigate(
+                R.id.submit_application_nav,
+                bundleOf("postId" to args.id)
+            )
+        }
     }
 
     private fun setupMoreBtn() {
