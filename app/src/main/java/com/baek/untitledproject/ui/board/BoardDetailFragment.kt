@@ -156,11 +156,28 @@ class BoardDetailFragment : Fragment() {
     }
 
     private fun setupImageSlider(uris: List<Uri>) {
-        sliderAdapter = ImageSliderAdapter(uris) { pos, uri, imageView ->
-            //TODO: 클릭시 디테일 이미지 뷰
+        //이미지가 없으면
+        if(uris.isEmpty()){
+            sliderAdapter = ImageSliderAdapter(emptyList())
+            binding.imagePager.adapter = sliderAdapter
+            binding.pagerBadge.visibility = View.GONE
+            return
+        }
+
+        sliderAdapter = ImageSliderAdapter(uris) { pos ->
+            openImageViewer(uris, pos)
         }
         binding.imagePager.adapter = sliderAdapter
         binding.imagePager.setCurrentItem(0, false)
+    }
+    private fun openImageViewer(uris:List<Uri>,startIdx : Int){
+        if(uris.isEmpty()) return
+
+        val action = BoardDetailFragmentDirections.actionBoardDetailFragmentToImageViewerDialogFragment(
+            imageUris = uris.toTypedArray(),
+            startIndex = startIdx
+        )
+        findNavController().navigate(action)
     }
 
     private fun setupPagerBadge(total: Int) {

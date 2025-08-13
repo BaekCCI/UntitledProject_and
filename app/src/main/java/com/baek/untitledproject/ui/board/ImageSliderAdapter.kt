@@ -11,7 +11,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class ImageSliderAdapter(
     private val items: List<Uri>,
-    private val onClick: ((position: Int, uri: Uri, imageView: ImageView) -> Unit)? = null
+    private val onClick: ((position: Int) -> Unit)? = null
 ) : RecyclerView.Adapter<ImageSliderAdapter.ViewHolder>() {
     inner class ViewHolder(val binding: ItemImageSliderBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -29,7 +29,7 @@ class ImageSliderAdapter(
             root.setOnClickListener {
                 val pos = bindingAdapterPosition
                 if (pos != RecyclerView.NO_POSITION) {
-                    onClick?.invoke(pos, uri, imageView)
+                    onClick?.invoke(pos)
                 }
             }
         }
