@@ -4,7 +4,6 @@ package com.baek.untitledproject.domain.data
 import android.net.Uri
 import java.time.LocalDate
 
-//읽기 전용 post 모델
 data class Post(
     val postId: String? = "",
     val title: String? = null, //공고 제목
@@ -16,6 +15,8 @@ data class Post(
 
     val hasInterview: Boolean? = null, //면접 진행 여부
     val interviewSlot: Map<LocalDate, String> = emptyMap(), // 인터뷰 시간대 <yy/MM/dd, HH:mm>
+    val interviewStart : LocalDate?=null,
+    val interviewEnd:LocalDate?=null,
     val interviewLocation: String? = null,//면접 장소
 
     val requiresName: Boolean = false,

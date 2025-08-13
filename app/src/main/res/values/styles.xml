@@ -26,4 +26,46 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <!--상태 칩 -->
+    <style name="Widget.Untitled.Chip.StateBase" parent="Widget.Material3.Chip.Assist">
+        <item name="cornerRadius">5dp</item>
+        <item name="chipStrokeWidth">0dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="checkedIconVisible">false</item>
+        <item name="android:checkable">false</item>
+        <item name="android:paddingHorizontal">10dp</item>
+        <item name="android:paddingVertical">6dp</item>
+        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+
+    <!--면접 진행 칩-->
+    <style name="Widget.Untitled.Chip.Interview" parent="Widget.Untitled.Chip.StateBase">
+        <item name="chipBackgroundColor">#E1EEF9</item>
+        <item name="android:textColor">#487CE3</item>
+    </style>
+    <!--모집 마감 칩-->
+    <style name="Widget.Untitled.Chip.Closed" parent="Widget.Untitled.Chip.StateBase">
+        <item name="chipBackgroundColor">#FAE1E1</item>
+        <item name="android:textColor">#D75E5E</item>
+    </style>
+    <!--면접 진행 칩-->
+    <style name="Widget.Untitled.Chip.Open" parent="Widget.Untitled.Chip.StateBase">
+        <item name="chipBackgroundColor">#DFEFE5</item>
+        <item name="android:textColor">#249C7A</item>
+    </style>
+
+
+    <!--rootToolbar text Style-->
+    <style name="ToolbarTitle.Root" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">22sp</item>
+    </style>
+
+    <!--datailToolbar text Style-->
+    <style name="ToolbarTitle.Detail" parent="@style/TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
 </resources>
