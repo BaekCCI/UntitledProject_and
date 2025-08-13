@@ -30,6 +30,7 @@ import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_MORE_ACTION
 import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_REPORT
 import com.baek.untitledproject.ui.board.dialogs.ConfirmDeleteFragment
 import com.baek.untitledproject.ui.board.dialogs.MoreActionBottomSheetFragment
+import com.baek.untitledproject.ui.board.dialogs.ReportBottomSheetFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -143,8 +144,8 @@ class BoardDetailFragment : Fragment() {
         setupPagerBadge(uris.size)
         registerPagerCallback(uris.size)
 
-        //TODO: 작성자이면
-        if (true) {
+        //작성자이면
+        if (viewModel.isWriter) {
             submitInfoView.visibility = View.VISIBLE
             chipgruopView.nameChip.isChecked = post.requiresName
             chipgruopView.departmentChip.isChecked = post.requiresDepartment
@@ -213,9 +214,11 @@ class BoardDetailFragment : Fragment() {
     private fun setupMoreBtn() {
 
         binding.moreBtn.setOnClickListener {
-            //TODO: 작성자 여부에 따라 dialog 변경
-            //ReportBottomSheetFragment().show(parentFragmentManager, "repost_dialog")
-            MoreActionBottomSheetFragment().show(parentFragmentManager, "more_action_dialog")
+            if(viewModel.isWriter){
+                MoreActionBottomSheetFragment().show(parentFragmentManager, "more_action_dialog")
+            }else{
+                ReportBottomSheetFragment().show(parentFragmentManager, "repost_dialog")
+            }
         }
     }
 
