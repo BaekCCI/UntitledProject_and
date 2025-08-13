@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 단일 버튼 -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/singleButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/button_outline"
+        android:text="심사 결과 공유"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <!-- 좌우 버튼 컨테이너 -->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 왼쪽 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/leftButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/button_outline"
+            android:text="불합격"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <!-- 오른쪽 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/rightButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_outline"
+            android:text="면접 제안"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F5F5">
+
+    <!-- 상단 헤더 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFFFFF">
+
+        <!-- X 버튼 -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✕"
+                android:textColor="#333333"
+                android:textSize="20sp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="8dp" />
+
+        </FrameLayout>
+
+        <!-- 지원자 기본 정보 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+            <!-- 이름 -->
+            <TextView
+                android:id="@+id/nameTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="제이름"
+                android:textColor="#333333"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <!-- 성별, 나이, 상태 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/genderAgeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="남자, 24세"
+                    android:textColor="#666666"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/statusTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/tag_blue"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="4dp"
+                    android:text="지원서 제출 완료"
+                    android:textColor="#2196F3"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- 정보 테이블 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 연락처 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="연락처"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/phoneNumberTxt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="010-1234-5678"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <!-- 학번 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="학번"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/studentIdTxt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="B022071"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <!-- 학과 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="학과"
+                        android:textColor="#666666"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/departmentTxt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="커뮤니케이션학부학과"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 쪽지 보내기 버튼 -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendMessageBtn"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/button_outline"
+            android:backgroundTint="#333333"
+            android:drawableStart="@android:drawable/ic_menu_send"
+            android:drawablePadding="8dp"
+            android:text="쪽지하기"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:drawableTint="#FFFFFF" />
+
+    </LinearLayout>
+
+    <!-- 구분선 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="#F5F5F5" />
+
+    <!-- 지원동기 섹션 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="#FFFFFF">
+
+        <!-- 지원동기 헤더 -->
+        <LinearLayout
+            android:id="@+id/motivationHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="24dp"
+            android:background="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="지원동기가 무엇인가요?"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/motivationArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/arrow_up_float"
+                app:tint="#666666" />
+
+        </LinearLayout>
+
+        <!-- 지원동기 내용 -->
+        <ScrollView
+            android:id="@+id/motivationContent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/motivationTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lorem ipsum dolor sit amet consectetur. At interdum at consectetur faucibus potenti blandit lorem. Amet amet sollicitudin habitant pharetra malesuada vitae. Ut diam placerat mauris cursus mus egestas mattis eget aliquam. Aliquam sed id semper faucibus consectetur. Quisque in dui faucibus sed tempor vitae nulla present. Egestas in cras pellentesque massa cursus."
+                android:textColor="#333333"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <!-- 하단 액션 버튼 영역 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/actionButtonsPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:padding="24dp" />
+
+</LinearLayout>
