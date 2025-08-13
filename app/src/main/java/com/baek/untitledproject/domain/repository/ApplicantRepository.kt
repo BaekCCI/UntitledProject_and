@@ -15,4 +15,6 @@ interface ApplicantRepository {
     suspend fun failApplicants(applicantIds: List<String>): Boolean
 
     suspend fun notifyResults(applicantIds: List<String>): Boolean
+
+    suspend fun getApplicantDetail(applicantId: String): ApplicantSummary
 }

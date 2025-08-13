@@ -35,4 +35,12 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
         // TODO: 실제 API 호출하여 결과 알림 발송
         return true
     }
+
+    override suspend fun getApplicantDetail(applicantId: String): ApplicantSummary {
+        // TODO: 실제 API 호출하여 지원자 상세 정보 조회
+        return ApplicantSampleData.applicantList.find { it.id == applicantId }
+            ?: throw Exception("지원자를 찾을 수 없습니다.")
+    }
+
+
 }
