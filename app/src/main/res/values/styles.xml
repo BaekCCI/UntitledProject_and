@@ -14,7 +14,7 @@
     <!-- 버튼 활성화 여부에 따라 배경색이 바뀌는 버튼 -->
     <style name="Widget.Untitled.Button.StateToggle" parent="Widget.Untitled.Button.Base">
         <item name="backgroundTint">@color/btn_state_toggle_bg</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/btn_text_state_toggle</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -67,5 +67,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-
+    <style name="EditTextStyle">
+        <item name="android:background">@drawable/input_selector_bg</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textColorHint">@color/gray_500</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:gravity">start</item>
+    </style>
 </resources>
