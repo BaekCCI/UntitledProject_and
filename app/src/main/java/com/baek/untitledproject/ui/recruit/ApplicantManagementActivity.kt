@@ -1,5 +1,6 @@
 package com.baek.untitledproject.ui.recruit
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -78,7 +79,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
 
         applicantListAdapter = ApplicantListAdapter(
             onItemClick = { applicant ->
-                // TODO: 지원자 상세 화면으로 이동
+                // 지원자 상세 화면으로 이동
+                val intent = Intent(this@ApplicantManagementActivity, ApplicantDetailActivity::class.java)
+                intent.putExtra("applicantId", applicant.id)
+                startActivity(intent)
             }
         )
 

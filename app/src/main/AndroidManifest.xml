@@ -25,6 +25,8 @@
         </activity>
 
         <activity android:name=".ui.recruit.ApplicantManagementActivity" />
+        <activity
+            android:name=".ui.recruit.ApplicantDetailActivity" />
     </application>
 
 </manifest>
