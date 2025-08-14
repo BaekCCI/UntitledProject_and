@@ -25,19 +25,21 @@ class ApplicationViewModel @Inject constructor(
     private val _answers = MutableStateFlow<Map<String, String>>(emptyMap())
     val answers: StateFlow<Map<String, String>> = _answers
 
+    private var isLoaded = false
+
     fun load(postId: String) {
+        if (isLoaded) return
         viewModelScope.launch {
             _applicationRequirement.value = Result.Loading
             val result = repository.getApplicationRequirement(postId)
             Log.d("ApplicationViewModel", "load: $postId 결과 = $result")
             _applicationRequirement.value = result
-
+            if (result is Result.Success) isLoaded = true
         }
     }
 
-
-    fun saveAnswers(answers: Map<String,String>) {
-
+    fun saveAnswers(answers: Map<String, String>) {
+        _answers.value = answers
     }
 
 

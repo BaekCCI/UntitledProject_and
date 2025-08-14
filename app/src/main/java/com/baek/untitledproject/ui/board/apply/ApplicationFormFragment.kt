@@ -5,11 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.addCallback
 import androidx.core.widget.doAfterTextChanged
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentApplicationFormBinding
 import com.baek.untitledproject.databinding.ItemApplicationFormBinding
@@ -17,6 +19,9 @@ import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.ui.MainActivity
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.KEY_CONFIRMED
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_APPLICATION_EXIT
+import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_CONFIRM_DELETE
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -44,6 +49,8 @@ class ApplicationFormFragment : Fragment() {
         observeState()
         load()
         setupSubmitBtn()
+        setupBackPressListener()
+        setupBackPressHandler()
     }
 
     private fun load() {
@@ -133,6 +140,7 @@ class ApplicationFormFragment : Fragment() {
                 id to binding.input.text.toString()
             }
             viewModel.saveAnswers(answers)
+            //TODO: 미리보기 화면으로 이동
         }
     }
 
@@ -140,6 +148,27 @@ class ApplicationFormFragment : Fragment() {
         super.onResume()
         (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "신청서 작성")
     }
+
+    private fun setupBackPressListener(){
+        parentFragmentManager.setFragmentResultListener(
+            REQ_APPLICATION_EXIT,
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean(KEY_CONFIRMED, false)) {
+                findNavController().popBackStack()
+            }
+        }
+    }
+    private fun setupBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val tag = "application_exit_dialog"
+            if (parentFragmentManager.findFragmentByTag(tag) == null) {
+                com.baek.untitledproject.ui.board.dialogs.ApplicationExitDialogFragment()
+                    .show(parentFragmentManager, tag)
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         binding.rootToolbar.setupWithNavController(navController, appBarConfiguration)
 
         binding.detailToolbar.setNavigationOnClickListener {
-            navController.popBackStack()
+            onBackPressedDispatcher.onBackPressed()
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
