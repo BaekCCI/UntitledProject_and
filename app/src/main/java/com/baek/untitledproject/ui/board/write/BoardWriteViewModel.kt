@@ -34,7 +34,7 @@ class BoardWriteViewModel @Inject constructor(
 
         viewModelScope.launch {
             _prevPost.value = Result.Loading
-            val result = boardRepository.getPost(postId)
+            val result = boardRepository.getPostById(postId)
             Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
             _prevPost.value = result
             if (result is Result.Success) {

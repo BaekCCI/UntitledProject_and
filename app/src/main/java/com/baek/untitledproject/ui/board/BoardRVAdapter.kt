@@ -6,23 +6,23 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.baek.untitledproject.databinding.ItemBoardLayoutBinding
-import com.baek.untitledproject.domain.data.BoardSummary
+import com.baek.untitledproject.domain.data.PostSummary
 
-class BoardRVAdapter(private val onItemClick: (BoardSummary) -> Unit) :
-    ListAdapter<BoardSummary, BoardRVAdapter.BoardViewHolder>(BoardDiffCallBack) {
+class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
+    ListAdapter<PostSummary, BoardRVAdapter.BoardViewHolder>(BoardDiffCallBack) {
 
     companion object {
-        private val BoardDiffCallBack = object : DiffUtil.ItemCallback<BoardSummary>() {
+        private val BoardDiffCallBack = object : DiffUtil.ItemCallback<PostSummary>() {
             override fun areItemsTheSame(
-                oldItem: BoardSummary,
-                newItem: BoardSummary
+                oldItem: PostSummary,
+                newItem: PostSummary
             ): Boolean {
-               return oldItem.id == newItem.id
+               return oldItem.postId == newItem.postId
             }
 
             override fun areContentsTheSame(
-                oldItem: BoardSummary,
-                newItem: BoardSummary
+                oldItem: PostSummary,
+                newItem: PostSummary
             ): Boolean {
                 return oldItem == newItem
             }
@@ -32,10 +32,10 @@ class BoardRVAdapter(private val onItemClick: (BoardSummary) -> Unit) :
     inner class BoardViewHolder(private val binding: ItemBoardLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: BoardSummary) {
-            binding.categoryTxt.text = item.category
+        fun bind(item: PostSummary) {
+            binding.categoryTxt.text = item.organization
             binding.titleTxt.text = item.title
-            binding.recruitStateTxt.text = item.recruitStatus
+            binding.recruitStateTxt.text = item.status
 
 
             binding.root.setOnClickListener {

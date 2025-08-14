@@ -16,11 +16,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentSearchBinding
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -56,7 +54,7 @@ class SearchFragment : Fragment() {
     private fun initRecyclerView() {
         adapter = SearchRVAdapter { item ->
             // 클릭 시 상세 화면 이동
-            val action = SearchFragmentDirections.actionSearchFragmentToBoardDetailFragment(item.id)
+            val action = SearchFragmentDirections.actionSearchFragmentToBoardDetailFragment(item.postId)
             findNavController().navigate(action)
         }
 

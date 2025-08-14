@@ -3,7 +3,7 @@ package com.baek.untitledproject.ui.board
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.baek.untitledproject.domain.data.BoardSummary
+import com.baek.untitledproject.domain.data.PostSummary
 import com.baek.untitledproject.domain.repository.BoardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,8 +17,8 @@ class SearchViewModel @Inject constructor(
     private val boardRepository: BoardRepository
 ) : ViewModel() {
 
-    private val _searchedBoards = MutableStateFlow<Result<List<BoardSummary>>>(Result.None)
-    val searchedBoards: StateFlow<Result<List<BoardSummary>>> = _searchedBoards
+    private val _searchedBoards = MutableStateFlow<Result<List<PostSummary>>>(Result.None)
+    val searchedBoards: StateFlow<Result<List<PostSummary>>> = _searchedBoards
 
     fun searchBoard(keyword: String) {
         viewModelScope.launch {

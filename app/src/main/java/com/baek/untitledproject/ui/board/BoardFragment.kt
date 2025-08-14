@@ -63,7 +63,7 @@ class BoardFragment : Fragment() {
         boardRVAdapter = BoardRVAdapter { board ->
             //클릭 시 상세 페이지 이동
             Log.d("BoardFragment", "${board.title} clicked!")
-            val action = BoardFragmentDirections.actionBoardFragmentToBoardDetailFragment(board.id)
+            val action = BoardFragmentDirections.actionBoardFragmentToBoardDetailFragment(board.postId)
             findNavController().navigate(action)
         }
 

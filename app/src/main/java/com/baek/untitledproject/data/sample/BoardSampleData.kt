@@ -5,24 +5,24 @@ import com.baek.untitledproject.data.model.InterviewSlotResponse
 import com.baek.untitledproject.data.model.PostImageResponse
 import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.domain.data.Board
-import com.baek.untitledproject.domain.data.BoardSummary
+import com.baek.untitledproject.domain.data.PostSummary
 import com.google.firebase.Timestamp
 import java.util.Date
 
 object BoardSampleData {
     val boardSummaryList = listOf(
-        BoardSummary("1", "예술동아리", "모집 1", "모집중"),
-        BoardSummary("2", "영화동아리", "모집 2", "모집중"),
-        BoardSummary("3", "00학회", "모집 3", "모집완료"),
-        BoardSummary("4", "예술동아리", "모집 4", "모집중"),
-        BoardSummary("5", "예술동아리", "모집 5", "모집중"),
-        BoardSummary("6", "예술동아리", "모집 6", "모집중"),
-        BoardSummary("7", "예술동아리", "모집 7", "모집중"),
-        BoardSummary("8", "영화동아리", "모집 8", "모집중"),
-        BoardSummary("9", "00학회", "모집 9", "모집완료"),
-        BoardSummary("10", "예술동아리", "모집 10", "모집중"),
-        BoardSummary("11", "예술동아리", "모집 11", "모집중"),
-        BoardSummary("12", "예술동아리", "모집 12", "모집중")
+        PostSummary("1", "예술동아리", "모집 1", "모집중"),
+        PostSummary("2", "영화동아리", "모집 2", "모집중"),
+        PostSummary("3", "00학회", "모집 3", "모집완료"),
+        PostSummary("4", "예술동아리", "모집 4", "모집중"),
+        PostSummary("5", "예술동아리", "모집 5", "모집중"),
+        PostSummary("6", "예술동아리", "모집 6", "모집중"),
+        PostSummary("7", "예술동아리", "모집 7", "모집중"),
+        PostSummary("8", "영화동아리", "모집 8", "모집중"),
+        PostSummary("9", "00학회", "모집 9", "모집완료"),
+        PostSummary("10", "예술동아리", "모집 10", "모집중"),
+        PostSummary("11", "예술동아리", "모집 11", "모집중"),
+        PostSummary("12", "예술동아리", "모집 12", "모집중")
     )
 
     val boardList = listOf(

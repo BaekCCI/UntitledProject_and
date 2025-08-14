@@ -6,18 +6,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.baek.untitledproject.databinding.ItemSearchBoardLayoutBinding
-import com.baek.untitledproject.domain.data.BoardSummary
+import com.baek.untitledproject.domain.data.PostSummary
 
-class SearchRVAdapter(private val onItemClick: (BoardSummary) -> Unit) :
-    ListAdapter<BoardSummary, SearchRVAdapter.SearchViewHolder>(SearchDiffCallBack) {
+class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
+    ListAdapter<PostSummary, SearchRVAdapter.SearchViewHolder>(SearchDiffCallBack) {
 
     companion object {
-        private val SearchDiffCallBack = object : DiffUtil.ItemCallback<BoardSummary>() {
-            override fun areItemsTheSame(oldItem: BoardSummary, newItem: BoardSummary): Boolean {
-                return oldItem.id == newItem.id
+        private val SearchDiffCallBack = object : DiffUtil.ItemCallback<PostSummary>() {
+            override fun areItemsTheSame(oldItem: PostSummary, newItem: PostSummary): Boolean {
+                return oldItem.postId == newItem.postId
             }
 
-            override fun areContentsTheSame(oldItem: BoardSummary, newItem: BoardSummary): Boolean {
+            override fun areContentsTheSame(oldItem: PostSummary, newItem: PostSummary): Boolean {
                 return oldItem == newItem
             }
         }
@@ -25,10 +25,10 @@ class SearchRVAdapter(private val onItemClick: (BoardSummary) -> Unit) :
 
     inner class SearchViewHolder(private val binding: ItemSearchBoardLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: BoardSummary) {
-            binding.categoryTxt.text = item.category
+        fun bind(item: PostSummary) {
+            binding.categoryTxt.text = item.organization
             binding.titleTxt.text = item.title
-            binding.recruitStateTxt.text = item.recruitStatus
+            binding.recruitStateTxt.text = item.status
 
 
             binding.root.setOnClickListener {
