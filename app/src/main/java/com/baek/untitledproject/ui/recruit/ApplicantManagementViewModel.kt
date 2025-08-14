@@ -58,9 +58,9 @@ class ApplicantManagementViewModel @Inject constructor(
     private fun applyCurrentFilter() {
         val filtered = when (_currentFilter.value) {
             "all" -> allApplicants.filter { it.status == "submitted" }
-            "interview" -> allApplicants.filter { it.status == "interview_scheduled" }
-            "review" -> allApplicants.filter { it.status == "interview_completed" }
-            "complete" -> allApplicants.filter { it.status in listOf("passed", "failed") }
+            "interview" -> allApplicants.filter { it.status == "interview_waiting" }  // 변경
+            "review" -> allApplicants.filter { it.status == "review_waiting" }        // 변경
+            "complete" -> allApplicants.filter { it.status == "review_completed" }    // 변경
             else -> allApplicants
         }
         _applicants.value = filtered
@@ -136,6 +136,6 @@ class ApplicantManagementViewModel @Inject constructor(
 
     // TODO: 현재 공고 ID를 저장하고 반환
     private fun getCurrentRecruitId(): String {
-        return "recruit_id_placeholder"
+        return "post_001" // 임시값, 실제로는 저장된 값 사용
     }
 }
