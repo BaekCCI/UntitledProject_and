@@ -25,7 +25,7 @@ class BoardDetailViewModel @Inject constructor(
     fun loadBoardData(id: String) {
         viewModelScope.launch {
             _board.value = Result.Loading
-            val result = boardRepository.getPost(id)
+            val result = boardRepository.getPostById(id)
             Log.d("BoardDetailViewModel", "getBoard: $id 결과 = $result")
             _board.value = result
         }

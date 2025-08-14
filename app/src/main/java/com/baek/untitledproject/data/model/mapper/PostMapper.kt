@@ -13,15 +13,12 @@ import com.baek.untitledproject.domain.data.CustomQuestion
 import java.time.LocalDate
 import java.time.ZoneId
 
-fun PostResponse.toDomain(
-    images: List<PostImageResponse>,
-    interviewSlots: List<InterviewSlotResponse>,
-    customQuestions: List<CustomQuestionResponse>
-): Post {
-    val sortedImages: List<Uri> = images.sortedBy { it.image_order }.map { it.image_url.toUri() }
-    val sortedCustomQuestions: List<String> =
-        customQuestions.sortedBy { it.question_order }.map { it.question_text }
 
+fun PostResponse.toDomain(
+    images: List<Uri>,
+    interviewSlots: Map<LocalDate, List<String>>,
+    customQuestions: List<String>
+): Post {
 
     return Post(
         postId = post_id,
@@ -30,10 +27,10 @@ fun PostResponse.toDomain(
         content = content,
         recruitmentStart = recruitment_start?.toLocalDate(),
         recruitmentEnd = recruitment_end?.toLocalDate(),
-        imageUris = sortedImages,
+        imageUris = images,
 
         hasInterview = has_interview,
-        interviewSlot = interviewSlots.toInterviewSlotMap(),
+        interviewSlot = interviewSlots,
         interviewStart = interviewSlots.earliestInterviewDate(),
         interviewEnd = interviewSlots.latestInterviewDate(),
         interviewLocation = interview_location,
@@ -45,7 +42,7 @@ fun PostResponse.toDomain(
         requiresAge = requires_age,
         requiresPhone = requires_phone,
 
-        customQuestions = sortedCustomQuestions
+        customQuestions = customQuestions
     )
 }
 
@@ -61,11 +58,11 @@ fun List<InterviewSlotResponse>.toInterviewSlotMap(): Map<LocalDate, String> {
         }
 }
 
-fun List<InterviewSlotResponse>.earliestInterviewDate(): LocalDate? =
-    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.minOrNull()
+fun Map<LocalDate, List<String>>.earliestInterviewDate(): LocalDate? =
+    asSequence().map { it.key }.minOrNull()
 
-fun List<InterviewSlotResponse>.latestInterviewDate(): LocalDate? =
-    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.maxOrNull()
+fun Map<LocalDate, List<String>>.latestInterviewDate(): LocalDate? =
+    asSequence().map { it.key }.maxOrNull()
 
 fun PostResponse.toApplicationRequirement(customQuestions: List<CustomQuestionResponse>): ApplicationRequirements {
     return ApplicationRequirements(
