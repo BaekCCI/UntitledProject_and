@@ -8,8 +8,10 @@ import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.domain.data.Post
 import androidx.core.net.toUri
 import com.baek.untitledproject.data.model.CustomQuestionResponse
+import com.baek.untitledproject.domain.data.MyRecruitSummary
 import java.time.LocalDate
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 fun PostResponse.toDomain(
     images: List<PostImageResponse>,
@@ -54,4 +56,31 @@ fun List<InterviewSlotResponse>.toInterviewSlotMap(): Map<LocalDate, String> {
                 .toLocalDate()
             localDate to slot.interview_time
         }
+}
+
+fun PostResponse.toMyRecruitSummary(
+    thumbnailUrl: String? = null,
+    applicantCount: Int = 0
+): MyRecruitSummary {
+    return MyRecruitSummary(
+        id = post_id,
+        title = title,
+        category = organization,
+        recruitStatus = mapPostStatusToText(status),
+        thumbnailUrl = thumbnailUrl,
+        hasInterview = has_interview,
+        applicantCount = applicantCount,
+        recruitmentEnd = recruitment_end?.toLocalDate()?.format(
+            DateTimeFormatter.ofPattern("MM/dd")
+        )
+    )
+}
+
+// 공고 상태를 한글로 변환
+private fun mapPostStatusToText(status: String): String {
+    return when (status) {
+        "recruiting" -> "모집중"
+        "completed" -> "모집완료"
+        else -> "알 수 없음"
+    }
 }
