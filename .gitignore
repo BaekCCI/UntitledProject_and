@@ -14,3 +14,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+# .gitignore
+app/google-services.json
