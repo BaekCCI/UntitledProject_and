@@ -4,6 +4,7 @@ plugins {
     id("com.google.devtools.ksp") version "2.0.21-1.0.27"
     id("com.google.dagger.hilt.android") version "2.56.2"
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -102,5 +103,8 @@ dependencies {
     //Kizitonwose CalendarView
     implementation("com.kizitonwose.calendar:view:2.6.1")
 
-    implementation ("androidx.activity:activity-ktx:1.10.1")
+    implementation("androidx.activity:activity-ktx:1.10.1")
+
+    //PhotoView
+    implementation("com.github.chrisbanes:PhotoView:2.3.0")
 }

@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Point -->
-    <color name="point_purple">#6046F4</color>
-    <color name="point_purple_tinted">#266046F4</color>
+    <color name="point_purple">#5593FF</color>
+    <color name="point_purple_tinted">#265593FF</color>
 
     <!-- Gray Scale -->
     <color name="black">#FF000000</color>

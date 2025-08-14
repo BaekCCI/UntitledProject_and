@@ -15,11 +15,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentInfoWriteBinding
 import com.baek.untitledproject.domain.data.Post
-import com.baek.untitledproject.domain.utils.toStringWithDayOfWeekAndSplitter
+import com.baek.untitledproject.domain.utils.DateUiStyle
+import com.baek.untitledproject.domain.utils.toUiString
+import com.baek.untitledproject.ui.MainActivity
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,7 +32,6 @@ class InfoWriteFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: BoardWriteViewModel by hiltNavGraphViewModels(R.id.write_board_nav_graph)
-    private val args: InfoWriteFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +61,7 @@ class InfoWriteFragment : Fragment() {
 
     //수정으로 접근 시 해당 게시글 데이터 불러오기
     private fun initField() {
-        val postId = args.postId
+        val postId = arguments?.getString("postId")
         if (postId != null) {
             viewModel.initPostData(postId)
         }
@@ -102,8 +102,8 @@ class InfoWriteFragment : Fragment() {
             }
         }
         if (post.recruitmentStart != null && post.recruitmentEnd != null) {
-            val startDate = post.recruitmentStart.toStringWithDayOfWeekAndSplitter()
-            val endDate = post.recruitmentEnd.toStringWithDayOfWeekAndSplitter()
+            val startDate = post.recruitmentStart.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
+            val endDate = post.recruitmentEnd.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
             binding.recruitDateSelectBtn.text = "$startDate ~ $endDate"
         }
         post.content?.let {
@@ -211,6 +211,19 @@ class InfoWriteFragment : Fragment() {
         viewModel.updateInfoWrite(title, groupName, content)
     }
 
+    override fun onResume() {
+        super.onResume()
+        val postId = arguments?.getString("postId")
+        if (postId.isNullOrEmpty()) {
+            // 작성 모드
+            (activity as? MainActivity)
+                ?.setToolbar(detailVisible = true, title = "공고 올리기")
+        } else {
+            // 수정 모드
+            (activity as? MainActivity)
+                ?.setToolbar(detailVisible = true, title = "공고 수정")
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

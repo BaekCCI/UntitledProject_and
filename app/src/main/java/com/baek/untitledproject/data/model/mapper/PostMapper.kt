@@ -9,6 +9,8 @@ import com.baek.untitledproject.domain.data.Post
 import androidx.core.net.toUri
 import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.domain.data.MyRecruitSummary
+import com.baek.untitledproject.domain.data.ApplicationRequirements
+import com.baek.untitledproject.domain.data.CustomQuestion
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -22,6 +24,7 @@ fun PostResponse.toDomain(
     val sortedCustomQuestions: List<String> =
         customQuestions.sortedBy { it.question_order }.map { it.question_text }
 
+
     return Post(
         postId = post_id,
         title = title,
@@ -33,7 +36,9 @@ fun PostResponse.toDomain(
 
         hasInterview = has_interview,
         interviewSlot = interviewSlots.toInterviewSlotMap(),
-        interviewLocation = null,
+        interviewStart = interviewSlots.earliestInterviewDate(),
+        interviewEnd = interviewSlots.latestInterviewDate(),
+        interviewLocation = interview_location,
 
         requiresName = requires_name,
         requiresStudentId = requires_student_id,
@@ -56,6 +61,25 @@ fun List<InterviewSlotResponse>.toInterviewSlotMap(): Map<LocalDate, String> {
                 .toLocalDate()
             localDate to slot.interview_time
         }
+}
+
+fun List<InterviewSlotResponse>.earliestInterviewDate(): LocalDate? =
+    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.minOrNull()
+
+fun List<InterviewSlotResponse>.latestInterviewDate(): LocalDate? =
+    asSequence().mapNotNull { it.interview_date?.toLocalDate() }.maxOrNull()
+
+fun PostResponse.toApplicationRequirement(customQuestions: List<CustomQuestionResponse>): ApplicationRequirements {
+    return ApplicationRequirements(
+        requiresName = requires_name,
+        requiresStudentId = requires_student_id,
+        requiresDepartment = requires_department,
+        requiresGender = requires_gender,
+        requiresAge = requires_gender,
+        //requiresPhone = requires_phone,
+        customQuestions = customQuestions.sortedBy { it.question_order }
+            .map { CustomQuestion(questionId = it.question_id, questionText = it.question_text) }
+    )
 }
 
 fun PostResponse.toMyRecruitSummary(

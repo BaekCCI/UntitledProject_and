@@ -18,6 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.ui.MainActivity
 
 @AndroidEntryPoint
 class NotificationFragment : Fragment() {
@@ -100,6 +101,10 @@ class NotificationFragment : Fragment() {
             }
             binding.notificationList.addItemDecoration(dec)
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title="알림")
     }
 
     override fun onDestroyView() {

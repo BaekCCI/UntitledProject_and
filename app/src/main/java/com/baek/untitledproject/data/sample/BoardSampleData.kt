@@ -124,7 +124,7 @@ object BoardSampleData {
             author_user_id = "user_003",
             title = "밴드부 보컬 모집",
             organization = "소리날밴드",
-            content = "음악을 사랑하는 사람, 지금 지원하세요!",
+            content = "음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!\n음악을 사랑하는 사람, 지금 지원하세요!",
             recruitment_start = Timestamp.now(),
             recruitment_end = Timestamp.now(),
             has_interview = true,
@@ -180,14 +180,17 @@ object BoardSampleData {
 
     val customQuestions = listOf(
         CustomQuestionResponse(
+            question_id = "1",
             question_text = "quetion1",
             question_order = 1
         ),
         CustomQuestionResponse(
+            question_id = "2",
             question_text = "quetion2",
             question_order = 2
         ),
         CustomQuestionResponse(
+            question_id = "3",
             question_text = "quetion3",
             question_order = 3
         )

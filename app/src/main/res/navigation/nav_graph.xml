@@ -46,6 +46,15 @@
         <argument
             android:name="id"
             app:argType="string" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_write_board_nav_graph"
+            app:destination="@id/write_board_nav_graph" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_imageViewerDialogFragment"
+            app:destination="@id/imageViewerDialogFragment" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_applicationFormFragment"
+            app:destination="@id/applicationFormFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -62,4 +71,18 @@
         android:name="com.baek.untitledproject.ui.board.notification.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" />
+    <dialog
+        android:id="@+id/imageViewerDialogFragment"
+        android:name="com.baek.untitledproject.ui.board.dialogs.ImageViewerDialogFragment"
+        android:label="fragment_image_viewer_dialog"
+        app:theme="@style/ThemeOverlay.Untitled.FullscreenDialog"
+        tools:layout="@layout/fragment_image_viewer_dialog">
+        <argument
+            android:name="startIndex"
+            app:argType="integer" />
+        <argument
+            android:name="imageUris"
+            app:argType="android.net.Uri[]" />
+    </dialog>
+    <include app:graph="@navigation/submit_application_nav_graph" />
 </navigation>

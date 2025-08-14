@@ -42,10 +42,12 @@ class PostCompleteFragment : Fragment() {
         }
         binding.toMyPostBtn.setOnClickListener {
             findNavController().navigate(
-                R.id.boardFragment, //TODO: 내 공고페이지로 변경
+                R.id.myRecruitsFragment,
                 null,
                 navOptions {
-                    popUpTo(R.id.write_board_nav_graph) { inclusive = true }
+                    popUpTo(R.id.boardFragment) {
+                        inclusive = true
+                    }
                     launchSingleTop = true
                 }
             )

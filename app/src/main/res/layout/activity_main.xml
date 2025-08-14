@@ -9,10 +9,21 @@
     tools:context=".ui.MainActivity">
 
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/rootToolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:title="제목" />
+        android:layout_height="?attr/actionBarSize"
+        app:titleTextAppearance="@style/ToolbarTitle.Root" />
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/detailToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:visibility="gone"
+        app:navigationIcon="@drawable/ic_chevron_left"
+        app:titleCentered="true"
+        app:titleTextAppearance="@style/ToolbarTitle.Detail">
+
+    </com.google.android.material.appbar.MaterialToolbar>
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

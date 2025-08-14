@@ -15,6 +15,10 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    private val rootDestinations = setOf(
+        R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,25 +31,39 @@ class MainActivity : AppCompatActivity() {
         val navController = navHostFragment.navController
         bottomNav.setupWithNavController(navController)
 
-        //각 탭의 루트화면에서만 하단탭 보이도록(나머지는 숨김)
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment -> {
-                    bottomNav.visibility = View.VISIBLE
-                }
+        //toolbar/bottomNav 설정
 
-                else -> bottomNav.visibility = View.GONE
-            }
+        setSupportActionBar(binding.rootToolbar)
+        val appBarConfiguration = AppBarConfiguration(rootDestinations)
+        binding.rootToolbar.setupWithNavController(navController, appBarConfiguration)
+
+        binding.detailToolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
         }
 
-        setSupportActionBar(binding.toolbar)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val isRoot = destination.id in rootDestinations
 
-        //루트 화면을 제외한 나머지 상단바에 뒤로가기 자동 추가
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment)
-        )
+            binding.bottomNav.visibility = if (isRoot) View.VISIBLE else View.GONE
 
-        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
+            binding.rootToolbar.visibility = if (isRoot) View.VISIBLE else View.GONE
+        }
+    }
+
+    //그냥 호출 시 toolbar 사라지도록
+    fun setToolbar(
+        rootVisible: Boolean = false,
+        detailVisible: Boolean = false,
+        title: String? = null
+    ) {
+        binding.rootToolbar.visibility = if (rootVisible) View.VISIBLE else View.GONE
+        binding.detailToolbar.visibility = if (detailVisible) View.VISIBLE else View.GONE
+        title?.let {
+            when {
+                rootVisible -> binding.rootToolbar.title = it
+                detailVisible -> binding.detailToolbar.title = it
+            }
+        }
     }
 
 }
