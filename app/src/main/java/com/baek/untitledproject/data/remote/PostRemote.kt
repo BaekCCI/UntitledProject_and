@@ -21,11 +21,15 @@ object PostRemote {
     suspend fun getPostSummaryList(): List<PostSummary> {
         val db = FirebaseFirestore.getInstance()
 
+        //posts 조회
         val postsSnap = db.collection("posts").get().await()
         val postDocs = postsSnap.documents
         val postIds = postDocs.map { it.id }
+
+        //썸네일 이미지 조회(postId to Uri)
         val thumbMap = fetchThumbnailByPostId(db, postIds)
 
+        //도메인 모델로 매핑
         return postDocs.map { doc ->
             PostSummary(
                 postId = doc.id,
@@ -37,27 +41,35 @@ object PostRemote {
         }
     }
 
+    //게시글 상세 조회
     suspend fun getPostById(postId: String):Post = coroutineScope {
         val db = FirebaseFirestore.getInstance()
 
+        //post 조회
         val postDoc = db.collection("posts")
             .document(postId)
             .get()
             .await()
 
         require(postDoc.exists()) { "존재하지 않는 게시글입니다." }
+        //Firestore 스냅샷 -> 서버 모델 (PostResponse)
         val postResponse = requireNotNull(postDoc.toObject(PostResponse::class.java)) {
             "PostResponse 매핑 실패"
         }
 
+        //----- 연관 데이터 병렬 조회 -----
+
+        //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
         val imagesDef = async {
             db.collection("post_images")
                 .whereEqualTo("post_id", postId)
                 .get().await()
+                .documents
                 .sortedBy { it.getLong("image_order") ?: 0L }
                 .mapNotNull { it.getString("image_url")?.toUri() }
         }
 
+        //interview_slots 조회: 마찬가지로 직접 정렬
         val slotsDef = async {
             db.collection("interview_slots")
                 .whereEqualTo("post_id", postId)
@@ -74,6 +86,7 @@ object PostRemote {
                 .toSortedMap()
         }
 
+        //커스텀 질문 조회
         val questionsDef = async {
             db.collection("custom_questions")
                 .whereEqualTo("post_id", postId)
@@ -83,15 +96,17 @@ object PostRemote {
                 .mapNotNull { it.getString("question_text") }
         }
 
+        //----- 조회 결과 -----
         val imageUris = imagesDef.await()
         val interviewSlot = slotsDef.await()
         val customQuestions = questionsDef.await()
 
+        //서버 모델 -> 도메인 모델(Post) 매핑
         postResponse.toDomain(imageUris, interviewSlot, customQuestions)
     }
 
 
-    //썸네일 이미지 가져오기
+    //게시글 id 리스트에 대한 썸네일 이미지 가져오기
     private suspend fun fetchThumbnailByPostId(
         db: FirebaseFirestore,
         postIds: List<String>
