@@ -5,7 +5,19 @@ import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ScheduleGroupSummary
 
 interface MyRecruitsRepository {
-    suspend fun getScheduleGroups(): List<ScheduleGroupSummary>
+
+    /**
+     * 내가 올린 공고 목록 조회
+     */
     suspend fun getMyRecruits(): List<MyRecruitSummary>
+
+    /**
+     * 내가 지원한 공고 목록 조회
+     */
     suspend fun getAppliedRecruits(): List<AppliedRecruitSummary>
+
+    /**
+     * 다가오는 면접 일정 그룹 조회
+     */
+    suspend fun getScheduleGroups(): List<ScheduleGroupSummary>
 }
