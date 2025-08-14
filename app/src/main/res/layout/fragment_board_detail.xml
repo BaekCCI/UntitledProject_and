@@ -232,7 +232,7 @@
                     </LinearLayout>
 
                     <include
-                        android:id="@+id/chipgruopView"
+                        android:id="@+id/chipGroupView"
                         layout="@layout/view_chipgroup_submit_fields"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" />
@@ -298,7 +298,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/endRecruitBtn"
-                style="@style/Widget.Untitled.Button.Base"
+                style="@style/Widget.Untitled.Button.StateToggle"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_gravity="start"

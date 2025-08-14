@@ -180,14 +180,17 @@ object BoardSampleData {
 
     val customQuestions = listOf(
         CustomQuestionResponse(
+            question_id = "1",
             question_text = "quetion1",
             question_order = 1
         ),
         CustomQuestionResponse(
+            question_id = "2",
             question_text = "quetion2",
             question_order = 2
         ),
         CustomQuestionResponse(
+            question_id = "3",
             question_text = "quetion3",
             question_order = 3
         )
