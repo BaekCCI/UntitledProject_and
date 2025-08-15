@@ -7,6 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.baek.untitledproject.databinding.ItemBoardLayoutBinding
 import com.baek.untitledproject.domain.data.PostSummary
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import kotlin.math.roundToInt
 
 class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
     ListAdapter<PostSummary, BoardRVAdapter.BoardViewHolder>(BoardDiffCallBack) {
@@ -33,10 +37,14 @@ class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: PostSummary) {
-            binding.categoryTxt.text = item.organization
+            val radiusPx = (10f * binding.root.resources.displayMetrics.density).roundToInt()
+            binding.organizationTxt.text = item.organization
             binding.titleTxt.text = item.title
             binding.recruitStateTxt.text = item.status
-
+            Glide.with(binding.thumbnailImg)
+                .load(item.imgUri)
+                .transform(CenterCrop(), RoundedCorners(radiusPx))
+                .into(binding.thumbnailImg)
 
             binding.root.setOnClickListener {
                 onItemClick(item)

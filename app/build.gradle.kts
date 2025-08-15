@@ -107,4 +107,6 @@ dependencies {
 
     //PhotoView
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
