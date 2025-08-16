@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
@@ -22,8 +23,11 @@ import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.toUiString
 import com.baek.untitledproject.ui.MainActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class InfoWriteFragment : Fragment() {
@@ -104,7 +108,7 @@ class InfoWriteFragment : Fragment() {
         if (post.recruitmentStart != null && post.recruitmentEnd != null) {
             val startDate = post.recruitmentStart.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
             val endDate = post.recruitmentEnd.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
-            binding.recruitDateSelectBtn.text = "$startDate ~ $endDate"
+            binding.recruitDate.text = "$startDate ~ $endDate"
         }
         post.content?.let {
             if (it != binding.contentInput.text.toString()) {
@@ -151,6 +155,8 @@ class InfoWriteFragment : Fragment() {
         }
 
     private fun renderImages(uris: List<Uri>) {
+        val radiusPx = (10f * binding.root.resources.displayMetrics.density).roundToInt()
+
         while (binding.imgContainer.childCount > 1) {
             binding.imgContainer.removeViewAt(1)
         }
@@ -160,19 +166,31 @@ class InfoWriteFragment : Fragment() {
             val thumb = item.findViewById<ImageView>(R.id.selectedImg)
             val cancel = item.findViewById<ImageView>(R.id.cancelBtn)
 
-            Glide.with(this).load(uri).centerCrop().into(thumb)
+            Glide.with(this)
+                .load(uri)
+                .centerCrop()
+                .transform(CenterCrop(), RoundedCorners(radiusPx))
+                .into(thumb)
             thumb.tag = uri
             cancel.setOnClickListener { viewModel.removeUiImage(idx) }
 
             binding.imgContainer.addView(item)
-
         }
         // 스크롤을 맨 오른쪽으로 이동
         binding.imageScrollView.post {
             binding.imageScrollView.smoothScrollTo(binding.imgContainer.width, 0)
         }
+        setImageCount(binding.imgContainer.childCount - 1)
     }
 
+    private fun setImageCount(count:Int){
+        binding.curImgCount.text = "$count"
+        if(count>0){
+            binding.curImgCount.setTextColor(
+                ContextCompat.getColor(binding.root.context, R.color.point_purple)
+            )
+        }
+    }
     // 텍스트 변경 감지 -> 버튼 활성화 여부 검증
     private fun setupTextWatchers() {
         binding.titleInput.doAfterTextChanged { validateInputs() }

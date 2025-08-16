@@ -38,7 +38,6 @@ class BoardWriteViewModel @Inject constructor(
             Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
             _prevPost.value = result
             if (result is Result.Success) {
-                _editingPost.value = result.data.copy()
                 initUiImagesFromPost()
                 isLoaded = true
             }
