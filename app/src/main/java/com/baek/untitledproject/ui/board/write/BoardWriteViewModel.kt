@@ -20,7 +20,7 @@ class BoardWriteViewModel @Inject constructor(
     private val boardRepository: BoardRepository
 ) : ViewModel() {
 
-    var loadedPostId: String? = null
+    var isLoaded = false
 
     private val _prevPost = MutableStateFlow<Result<Post>>(Result.None)
     val prevPost: StateFlow<Result<Post>> = _prevPost
@@ -30,7 +30,7 @@ class BoardWriteViewModel @Inject constructor(
 
     //첫번째 화면 진입 시 데이터 불러오기(수정 버튼으로 접근시)
     fun initPostData(postId: String?) {
-        if (postId == null) return
+        if (postId == null || isLoaded) return
 
         viewModelScope.launch {
             _prevPost.value = Result.Loading
@@ -38,9 +38,9 @@ class BoardWriteViewModel @Inject constructor(
             Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
             _prevPost.value = result
             if (result is Result.Success) {
-                loadedPostId = postId
                 _editingPost.value = result.data.copy()
                 initUiImagesFromPost()
+                isLoaded = true
             }
         }
     }
@@ -104,7 +104,9 @@ class BoardWriteViewModel @Inject constructor(
 
         viewModelScope.launch {
             _submitResult.value = Result.Loading
-            _submitResult.value = boardRepository.submitPost(loadedPostId)
+            val result = boardRepository.submitPost(editingPost.value)
+            _submitResult.value = result
+            Log.d("BoardWriteViewModel", "completePost 결과: result")
         }
     }
 

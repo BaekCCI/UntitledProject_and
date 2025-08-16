@@ -9,12 +9,15 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import androidx.core.net.toUri
-import com.baek.untitledproject.common.utils.toLocalDate
-import com.baek.untitledproject.data.model.PostImageResponse
+import com.baek.untitledproject.data.model.CustomQuestionResponse
+import com.baek.untitledproject.data.model.InterviewSlotResponse
 import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.data.model.mapper.toDomain
+import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.domain.data.Post
-import java.time.LocalDate
+import com.google.firebase.Firebase
+import com.google.firebase.Timestamp
+import com.google.firebase.storage.storage
 
 object PostRemote {
     //게시글 리스트 가져오기
@@ -42,7 +45,7 @@ object PostRemote {
     }
 
     //게시글 상세 조회
-    suspend fun getPostById(postId: String):Post = coroutineScope {
+    suspend fun getPostById(postId: String): Post = coroutineScope {
         val db = FirebaseFirestore.getInstance()
 
         //post 조회
@@ -75,15 +78,7 @@ object PostRemote {
                 .whereEqualTo("post_id", postId)
                 .get().await()
                 .documents
-                .mapNotNull { doc ->
-                    val date = doc.getTimestamp("interview_date")?.toLocalDate()
-                    val time = doc.getString("interview_time")
-                    if (date != null && time != null) date to time else null
-                }
-                .sortedWith(compareBy({ it.first }, { it.second })) // "HH:mm" 가정
-                .groupBy({ it.first }, { it.second })
-                .mapValues { (_, times) -> times.distinct().sorted() }
-                .toSortedMap()
+                .mapNotNull { it.toObject(InterviewSlotResponse::class.java) }
         }
 
         //커스텀 질문 조회
@@ -92,8 +87,7 @@ object PostRemote {
                 .whereEqualTo("post_id", postId)
                 .get().await()
                 .documents
-                .sortedBy { it.getLong("order") ?: 0L }
-                .mapNotNull { it.getString("question_text") }
+                .mapNotNull { it.toObject(CustomQuestionResponse::class.java) }
         }
 
         //----- 조회 결과 -----
@@ -128,5 +122,87 @@ object PostRemote {
             }
         }
         jobs.awaitAll().flatten().toMap()
+    }
+
+    //-----공고 올리기-----
+
+    suspend fun uploadPost(post: Post): String = coroutineScope {
+        val now = Timestamp.now()
+
+        val db = FirebaseFirestore.getInstance()
+        val storage = Firebase.storage
+
+        //posts 문서 생성
+        val postRef = db.collection("posts").document()
+        val postId = postRef.id
+
+
+        //이미지 업로드
+        val imageResult = post.imageUris.mapIndexed { index, uri ->
+            async {
+                //post_images 컬렉션 문서 생성
+                val imgRef = db.collection("post_images").document()
+                val imgId = imgRef.id
+
+
+                //Storage에 저장할 경로 정의
+                val path = "post_images/$postId/$imgId.jpg"
+                val storageRef = storage.reference.child(path)
+
+                //Storage 업로드
+                storageRef.putFile(uri).await()
+                //업로드 완료 후 다운로드 URL 획득
+                val downloadUrl = storageRef.downloadUrl.await().toString()
+
+                //Firestore에 넣을 데이터
+                imgRef to mapOf(
+                    "image_id" to imgId,
+                    "post_id" to postId,
+                    "image_url" to downloadUrl,
+                    "image_order" to index.toLong(),
+                    "created_at" to now
+                )
+            }
+        }.awaitAll()// 모든 이미지 업로드가 완료될 때까지 대기
+
+        //interview slot 데이터 생성
+        val slotDocs = post.interviewSlot.flatMap { (date, times) ->
+            times.map { time ->
+                val slotRef = db.collection("interview_slots").document()
+                val slotId = slotRef.id
+                slotRef to mapOf(
+                    "slot_id" to slotId,
+                    "post_id" to postId,
+                    "interview_date" to date,
+                    "interview_time" to time,
+                    "max_capacity" to post.maxCapacity,
+                    "current_reservations" to 0,
+                    "created_at" to now
+                )
+            }
+        }
+
+        //커스텀 질문 데이터
+        val questionDocs = post.customQuestions.mapIndexed { index, q ->
+            val questionRef = db.collection("custom_questions").document()
+            val questionId = questionRef.id
+            questionRef to mapOf(
+                "question_id" to questionId,
+                "post_id" to postId,
+                "question_text" to q,
+                "question_order" to index + 1,
+                "created_at" to now
+            )
+        }
+
+        //Firestore에 커밋
+        db.runBatch { b ->
+            b.set(postRef, post.toResponse(postId, now)) // 필요 시 serverTimestamp로 통일 가능
+            imageResult.forEach { (ref, data) -> b.set(ref, data) }
+            slotDocs.forEach { (ref, data) -> b.set(ref, data) }
+            questionDocs.forEach { (ref, data) -> b.set(ref, data) }
+        }.await()
+
+        return@coroutineScope postId
     }
 }

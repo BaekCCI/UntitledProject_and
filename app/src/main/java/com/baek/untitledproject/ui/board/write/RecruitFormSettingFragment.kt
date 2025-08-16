@@ -85,7 +85,7 @@ class RecruitFormSettingFragment : Fragment() {
             post.requiresStudentId,
             post.requiresPhone
         ).any { it }
-        if (viewModel.loadedPostId != null) {
+        if (viewModel.isLoaded) {
             completeBtn.text = "수정 저장하기"
         }
     }
@@ -187,7 +187,7 @@ class RecruitFormSettingFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-                            if (viewModel.loadedPostId != null) {
+                            if (viewModel.isLoaded) {
                                 Toast.makeText(requireContext(), "공고가 수정 되었어요", Toast.LENGTH_SHORT)
                                     .show()
                                 findNavController().popBackStack(

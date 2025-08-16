@@ -15,9 +15,10 @@ data class Post(
 
     val hasInterview: Boolean? = null, //면접 진행 여부
     val interviewSlot: Map<LocalDate, List<String>> = emptyMap(), // 인터뷰 시간대 <yy/MM/dd, HH:mm>
-    val interviewStart : LocalDate?=null,
-    val interviewEnd:LocalDate?=null,
+    val interviewStart: LocalDate? = null,
+    val interviewEnd: LocalDate? = null,
     val interviewLocation: String? = null,//면접 장소
+    val maxCapacity: Int? = 1,
 
     val requiresName: Boolean = false,
     val requiresStudentId: Boolean = false,

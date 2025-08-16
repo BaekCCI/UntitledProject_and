@@ -8,11 +8,7 @@ import com.baek.untitledproject.domain.utils.Result
 interface BoardRepository {
     suspend fun getPostSummaryList(): Result<List<PostSummary>>
 
-    suspend fun getBoard(id: String): Result<Board>
-
-    suspend fun searchBoard(keyword: String): Result<List<PostSummary>>
-
     suspend fun getPostById(postId: String): Result<Post>
 
-    suspend fun submitPost(postId: String?) : Result<String>
+    suspend fun submitPost(post: Post): Result<String>
 }
