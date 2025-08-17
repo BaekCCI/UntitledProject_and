@@ -29,6 +29,7 @@ class RecruitFormSettingFragment : Fragment() {
 
     private val viewModel: BoardWriteViewModel by hiltNavGraphViewModels(R.id.write_board_nav_graph)
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -64,6 +65,7 @@ class RecruitFormSettingFragment : Fragment() {
 
     //화면 초기화
     private fun render(post: Post) = with(binding) {
+        if(viewModel.submitResult.value is Result.Loading) return
         // 체크 박스 초기화
         nameCheckBox.isChecked = post.requiresName
         genderCheckBox.isChecked = post.requiresGender
