@@ -14,5 +14,5 @@ data class ApplicantSummary(
 
     // UI 표시용 변환된 값들
     val statusText: String,                  // 상태 텍스트 (한글)
-    val motivation: String? = null           // 지원동기 (별도 조회 후 설정)
+    val customQuestionAnswers: List<QuestionAnswer> = emptyList() // 커스텀 질문/답변
 )

@@ -30,12 +30,3 @@ data class Application(
     val appliedAt: LocalDateTime?,
     val updatedAt: LocalDateTime?
 )
-
-/**
- * 커스텀 질문과 답변
- */
-data class QuestionAnswer(
-    val questionId: String,
-    val questionText: String,
-    val answerText: String
-)
