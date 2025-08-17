@@ -95,7 +95,6 @@ class ApplicantDetailActivity : AppCompatActivity() {
             phoneNumberTxt.text = applicant.phoneNumber ?: "연락처 없음"
             studentIdTxt.text = applicant.studentId ?: "학번 없음"
             departmentTxt.text = applicant.department ?: "학과 미정"
-            motivationTxt.text = applicant.motivation ?: "지원동기가 없습니다."
 
             updateStatusDisplay(applicant.status, applicant.isPassed)
         }
@@ -113,7 +112,6 @@ class ApplicantDetailActivity : AppCompatActivity() {
         }
 
         binding.statusTxt.text = statusText
-        // TODO: statusColor 적용 (필요시)
     }
 
     private fun updateMotivationState() {

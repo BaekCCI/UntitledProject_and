@@ -34,15 +34,17 @@ class ApplicantManagementViewModel @Inject constructor(
     // 전체 지원자 목록 (필터링 전)
     private var allApplicants: List<ApplicantSummary> = emptyList()
 
+    // ApplicantManagementViewModel.kt 로그 추가
     fun loadApplicants(recruitId: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
                 allApplicants = applicantRepository.getApplicants(recruitId)
+                allApplicants.forEach { applicant ->
+                }
                 _applicants.value = allApplicants
                 applyCurrentFilter()
             } catch (e: Exception) {
-                // TODO: 에러 처리
                 e.printStackTrace()
             } finally {
                 _isLoading.value = false
@@ -57,10 +59,10 @@ class ApplicantManagementViewModel @Inject constructor(
 
     private fun applyCurrentFilter() {
         val filtered = when (_currentFilter.value) {
-            "all" -> allApplicants.filter { it.status == "submitted" }
-            "interview" -> allApplicants.filter { it.status == "interview_waiting" }  // 변경
-            "review" -> allApplicants.filter { it.status == "review_waiting" }        // 변경
-            "complete" -> allApplicants.filter { it.status == "review_completed" }    // 변경
+            "all" -> allApplicants.filter { it.status == "지원서 제출됨" }
+            "interview" -> allApplicants.filter { it.status == "면접 대기 중" }
+            "review" -> allApplicants.filter { it.status == "심사 대기 중" }
+            "complete" -> allApplicants.filter { it.status == "심사 완료됨" }
             else -> allApplicants
         }
         _applicants.value = filtered
