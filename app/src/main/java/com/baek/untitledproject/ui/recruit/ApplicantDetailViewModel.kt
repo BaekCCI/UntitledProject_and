@@ -33,7 +33,7 @@ class ApplicantDetailViewModel @Inject constructor(
             try {
                 val applicant = applicantRepository.getApplicantDetail(applicantId)
                 _applicantDetail.value = applicant
-                updateActionButtons(applicant.status)
+                updateActionButtons(applicant.status, applicant.isPassed, applicant.isNotified)
             } catch (e: Exception) {
                 e.printStackTrace()
             } finally {
@@ -42,9 +42,10 @@ class ApplicantDetailViewModel @Inject constructor(
         }
     }
 
-    private fun updateActionButtons(status: String) {
-        val buttonGroups = when (status) {
-            "submitted" -> listOf(
+    private fun updateActionButtons(status: String, isPassed: Boolean?, isNotified: Boolean) {
+        val buttonGroups = when {
+            // 지원서 제출 완료 상태
+            status == "submitted" -> listOf(
                 listOf(
                     ApplicantActionButton(
                         text = "불합격",
@@ -61,7 +62,8 @@ class ApplicantDetailViewModel @Inject constructor(
                 )
             )
 
-            "interview_scheduled" -> listOf(
+            // 면접 대기중 상태 (기존 interview_scheduled 대신)
+            status == "interview_waiting" -> listOf(
                 listOf(
                     ApplicantActionButton(
                         text = "면접 완료",
@@ -72,7 +74,8 @@ class ApplicantDetailViewModel @Inject constructor(
                 )
             )
 
-            "interview_completed" -> listOf(
+            // 심사 대기중 상태 (기존 interview_completed 대신)
+            status == "review_waiting" -> listOf(
                 listOf(
                     ApplicantActionButton(
                         text = "불합격",
@@ -89,39 +92,39 @@ class ApplicantDetailViewModel @Inject constructor(
                 )
             )
 
-            "passed" -> {
-                val applicant = _applicantDetail.value
-                if (applicant?.isNotified == true) {
-                    emptyList() // 이미 알림 완료된 경우 버튼 없음
-                } else {
-                    listOf(
+            // 심사 완료 상태 - isPassed 값에 따라 다른 버튼
+            status == "review_completed" -> {
+                when {
+                    isPassed == true && !isNotified -> {
+                        // 합격했지만 아직 알림 안 보낸 경우
                         listOf(
-                            ApplicantActionButton(
-                                text = "심사 결과 공유",
-                                actionType = "notify_result",
-                                confirmMessage = "제이름에게\n심사 결과를 공유하시겠어요?",
-                                isDangerous = false
+                            listOf(
+                                ApplicantActionButton(
+                                    text = "합격 결과 공유",
+                                    actionType = "notify_result",
+                                    confirmMessage = "제이름에게\n합격 결과를 공유하시겠어요?",
+                                    isDangerous = false
+                                )
                             )
                         )
-                    )
-                }
-            }
-
-            "failed" -> {
-                val applicant = _applicantDetail.value
-                if (applicant?.isNotified == true) {
-                    emptyList() // 이미 알림 완료된 경우 버튼 없음
-                } else {
-                    listOf(
+                    }
+                    isPassed == false && !isNotified -> {
+                        // 불합격했지만 아직 알림 안 보낸 경우
                         listOf(
-                            ApplicantActionButton(
-                                text = "불합격",
-                                actionType = "notify_rejection",
-                                confirmMessage = "제이름에게\n불합격 처리하시겠어요?\n이후에는 되돌릴 수 없습니다.",
-                                isDangerous = true
+                            listOf(
+                                ApplicantActionButton(
+                                    text = "불합격 결과 공유",
+                                    actionType = "notify_rejection",
+                                    confirmMessage = "제이름에게\n불합격 결과를 공유하시겠어요?",
+                                    isDangerous = true
+                                )
                             )
                         )
-                    )
+                    }
+                    else -> {
+                        // 이미 알림 완료된 경우 또는 미정인 경우
+                        emptyList()
+                    }
                 }
             }
 
@@ -147,10 +150,7 @@ class ApplicantDetailViewModel @Inject constructor(
                     "reject" -> {
                         applicantRepository.failApplicants(listOf(applicantId))
                     }
-                    "notify_result" -> {
-                        applicantRepository.notifyResults(listOf(applicantId))
-                    }
-                    "notify_rejection" -> {
+                    "notify_result", "notify_rejection" -> {
                         applicantRepository.notifyResults(listOf(applicantId))
                     }
                 }

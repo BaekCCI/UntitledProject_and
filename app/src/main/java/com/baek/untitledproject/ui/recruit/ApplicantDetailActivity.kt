@@ -94,20 +94,20 @@ class ApplicantDetailActivity : AppCompatActivity() {
             genderAgeTxt.text = "${applicant.gender}, ${applicant.age}세"
             phoneNumberTxt.text = applicant.phoneNumber ?: "연락처 없음"
             studentIdTxt.text = applicant.studentId ?: "학번 없음"
-            departmentTxt.text = applicant.department
-            motivationTxt.text = applicant.motivation ?: "지원동기가 없습니다."
+            departmentTxt.text = applicant.department ?: "학과 미정"
 
-            updateStatusDisplay(applicant.status)
+            updateStatusDisplay(applicant.status, applicant.isPassed)
         }
     }
 
-    private fun updateStatusDisplay(status: String) {
-        val (statusText, statusColor) = when (status) {
-            "submitted" -> "지원서 제출 완료" to "#2196F3"
-            "interview_scheduled" -> "면접 확정" to "#2196F3"
-            "interview_completed" -> "면접 완료" to "#FF9800"
-            "passed" -> "합격" to "#4CAF50"
-            "failed" -> "불합격" to "#F44336"
+    private fun updateStatusDisplay(status: String, isPassed: Boolean?) {
+        val (statusText, statusColor) = when {
+            status == "submitted" -> "지원서 제출 완료" to "#2196F3"
+            status == "interview_waiting" -> "면접 대기중" to "#2196F3"
+            status == "review_waiting" -> "심사 대기중" to "#FF9800"
+            status == "review_completed" && isPassed == true -> "합격" to "#4CAF50"
+            status == "review_completed" && isPassed == false -> "불합격" to "#F44336"
+            status == "review_completed" && isPassed == null -> "심사 완료" to "#666666"
             else -> "알 수 없음" to "#666666"
         }
 

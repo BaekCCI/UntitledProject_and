@@ -7,11 +7,11 @@ import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.common.utils.toTimestamp
 import com.baek.untitledproject.data.model.CustomQuestionResponse
+import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
 import com.google.firebase.Timestamp
 import java.time.LocalDate
-
 
 fun PostResponse.toDomain(
     images: List<Uri>,
@@ -118,4 +118,31 @@ fun PostResponse.toApplicationRequirement(customQuestions: List<CustomQuestionRe
         customQuestions = customQuestions.sortedBy { it.question_order }
             .map { CustomQuestion(questionId = it.question_id, questionText = it.question_text) }
     )
+}
+
+fun PostResponse.toMyRecruitSummary(
+    thumbnailUrl: String? = null,
+    applicantCount: Int = 0
+): MyRecruitSummary {
+    return MyRecruitSummary(
+        id = post_id,
+        title = title,
+        category = organization,
+        recruitStatus = mapPostStatusToText(status),
+        thumbnailUrl = thumbnailUrl,
+        hasInterview = has_interview,
+        applicantCount = applicantCount,
+        recruitmentEnd = recruitment_end?.toLocalDate()?.format(
+            DateTimeFormatter.ofPattern("MM/dd")
+        )
+    )
+}
+
+// 공고 상태를 한글로 변환
+private fun mapPostStatusToText(status: String): String {
+    return when (status) {
+        "recruiting" -> "모집중"
+        "completed" -> "모집완료"
+        else -> "알 수 없음"
+    }
 }

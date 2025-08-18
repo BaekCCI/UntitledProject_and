@@ -1,103 +1,170 @@
 package com.baek.untitledproject.data.sample
 
-import com.baek.untitledproject.domain.data.ApplicantSummary
+import com.baek.untitledproject.data.model.ApplicationResponse
+import com.google.firebase.Timestamp
+import java.util.Date
 
-object ApplicantSampleData {
+object ApplicationSampleData {
 
-    val applicantList = listOf(
-        ApplicantSummary(
-            id = "app1",
-            name = "제이름",
-            gender = "남",
-            age = 24,
-            department = "커뮤니케이션학과",
+    val applicationList = listOf(
+        // 지원서 제출 완료 상태
+        ApplicationResponse(
+            application_id = "app_001",
+            applicant_user_id = "user_001",
+            post_id = "my_post_001",
             status = "submitted",
-            statusText = "지원서 제출 완료",
-            applicationDate = "2024-08-15",
-            phoneNumber = "010-1234-5678",
-            email = "applicant1@example.com"
+            is_passed = null,
+            interview_slot_id = null,
+            interview_reservation_status = null,
+
+            applicant_name = "김민수",
+            applicant_birth_year = 2002,
+            applicant_gender = "M",
+            applicant_department = "컴퓨터공학과",
+            applicant_student_id = "202012345",
+            applicant_phone = "010-1234-5678",
+
+            post_title = "프로그래밍 동아리 신입 모집",
+            post_organization = "코딩클럽",
+            post_author_user_id = "user_author_001",
+
+            applied_at = Timestamp.now(),
+            updated_at = Timestamp.now()
         ),
-        ApplicantSummary(
-            id = "app2",
-            name = "헤리",
-            gender = "여",
-            age = 24,
-            department = "커뮤니케이션학과",
+
+        // 면접 대기중 상태
+        ApplicationResponse(
+            application_id = "app_002",
+            applicant_user_id = "user_002",
+            post_id = "my_post_001",
+            status = "interview_waiting",
+            is_passed = null,
+            interview_slot_id = "slot_001",
+            interview_reservation_status = "reserved",
+
+            applicant_name = "이영희",
+            applicant_birth_year = 2001,
+            applicant_gender = "F",
+            applicant_department = "경영학과",
+            applicant_student_id = "202112346",
+            applicant_phone = "010-9876-5432",
+
+            post_title = "프로그래밍 동아리 신입 모집",
+            post_organization = "코딩클럽",
+            post_author_user_id = "user_author_001",
+
+            applied_at = Timestamp(Date(System.currentTimeMillis() - 86400000)), // 1일 전
+            updated_at = Timestamp.now()
+        ),
+
+        // 심사 대기중 상태
+        ApplicationResponse(
+            application_id = "app_003",
+            applicant_user_id = "user_003",
+            post_id = "my_post_001",
+            status = "review_waiting",
+            is_passed = null,
+            interview_slot_id = "slot_002",
+            interview_reservation_status = "completed",
+
+            applicant_name = "박철수",
+            applicant_birth_year = 2000,
+            applicant_gender = "M",
+            applicant_department = "전자공학과",
+            applicant_student_id = "202012347",
+            applicant_phone = "010-5555-1234",
+
+            post_title = "프로그래밍 동아리 신입 모집",
+            post_organization = "코딩클럽",
+            post_author_user_id = "user_author_001",
+
+            applied_at = Timestamp(Date(System.currentTimeMillis() - 172800000)), // 2일 전
+            updated_at = Timestamp(Date(System.currentTimeMillis() - 86400000)) // 1일 전
+        ),
+
+        // 합격 상태
+        ApplicationResponse(
+            application_id = "app_004",
+            applicant_user_id = "user_004",
+            post_id = "my_post_0012",
+            status = "review_completed",
+            is_passed = true,
+            interview_slot_id = "slot_003",
+            interview_reservation_status = "completed",
+
+            applicant_name = "최지은",
+            applicant_birth_year = 2002,
+            applicant_gender = "F",
+            applicant_department = "디자인학과",
+            applicant_student_id = "202212348",
+            applicant_phone = "010-7777-8888",
+
+            post_title = "사진 동아리 신입 모집",
+            post_organization = "사진사랑",
+            post_author_user_id = "user_author_002",
+
+            applied_at = Timestamp(Date(System.currentTimeMillis() - 259200000)), // 3일 전
+            updated_at = Timestamp(Date(System.currentTimeMillis() - 86400000)) // 1일 전
+        ),
+
+        // 불합격 상태
+        ApplicationResponse(
+            application_id = "app_005",
+            applicant_user_id = "user_005",
+            post_id = "my_post_001",
+            status = "review_completed",
+            is_passed = false,
+            interview_slot_id = null,
+            interview_reservation_status = null,
+
+            applicant_name = "정민호",
+            applicant_birth_year = 2001,
+            applicant_gender = "M",
+            applicant_department = "수학과",
+            applicant_student_id = "202112349",
+            applicant_phone = null,
+
+            post_title = "사진 동아리 신입 모집",
+            post_organization = "사진사랑",
+            post_author_user_id = "user_author_002",
+
+            applied_at = Timestamp(Date(System.currentTimeMillis() - 345600000)), // 4일 전
+            updated_at = Timestamp(Date(System.currentTimeMillis() - 172800000)) // 2일 전
+        ),
+
+        // 다른 공고 지원자들
+        ApplicationResponse(
+            application_id = "app_006",
+            applicant_user_id = "user_006",
+            post_id = "my_post_001",
             status = "submitted",
-            statusText = "지원서 제출 완료",
-            applicationDate = "2024-08-16",
-            phoneNumber = "010-2345-6789",
-            email = "applicant2@example.com"
-        ),
-        ApplicantSummary(
-            id = "app3",
-            name = "가단",
-            gender = "남",
-            age = 24,
-            department = "커뮤니케이션학과",
-            status = "interview_scheduled",
-            statusText = "면접 예약 완료",
-            applicationDate = "2024-08-14",
-            phoneNumber = "010-3456-7890",
-            email = "applicant3@example.com",
-            interviewDate = "2024-08-25",
-            interviewTime = "14:00-14:30"
-        ),
-        ApplicantSummary(
-            id = "app4",
-            name = "벨코",
-            gender = "남",
-            age = 24,
-            department = "커뮤니케이션학과",
-            status = "interview_completed",
-            statusText = "7/4 16:00 면접 완료",
-            applicationDate = "2024-08-13",
-            phoneNumber = "010-4567-8901",
-            email = "applicant4@example.com",
-            interviewDate = "2024-07-04",
-            interviewTime = "16:00-16:30"
-        ),
-        ApplicantSummary(
-            id = "app5",
-            name = "세오",
-            gender = "여",
-            age = 24,
-            department = "커뮤니케이션학과",
-            status = "passed",
-            statusText = "최종 합격",
-            applicationDate = "2024-08-12",
-            phoneNumber = "010-5678-9012",
-            email = "applicant5@example.com",
-            interviewDate = "2024-07-10",
-            interviewTime = "15:00-15:30"
-        ),
-        ApplicantSummary(
-            id = "app6",
-            name = "도법",
-            gender = "남",
-            age = 24,
-            department = "커뮤니케이션학과",
-            status = "failed",
-            statusText = "불합격",
-            applicationDate = "2024-08-11",
-            phoneNumber = "010-6789-0123",
-            email = "applicant6@example.com",
-            interviewDate = "2024-07-08",
-            interviewTime = "13:30-14:00"
-        ),
-        ApplicantSummary(
-            id = "app7",
-            name = "백지",
-            gender = "남",
-            age = 24,
-            department = "커뮤니케이션학과",
-            status = "failed",
-            statusText = "탈락된 결과 공유 완료",
-            applicationDate = "2024-08-10",
-            phoneNumber = "010-7890-1234",
-            email = "applicant7@example.com",
-            interviewDate = "2024-07-12",
-            interviewTime = "10:00-10:30"
+            is_passed = null,
+            interview_slot_id = null,
+            interview_reservation_status = null,
+
+            applicant_name = "한소영",
+            applicant_birth_year = 2003,
+            applicant_gender = "F",
+            applicant_department = "심리학과",
+            applicant_student_id = "202312350",
+            applicant_phone = "010-2222-3333",
+
+            post_title = "밴드부 보컬 모집",
+            post_organization = "소리날밴드",
+            post_author_user_id = "user_author_003",
+
+            applied_at = Timestamp.now(),
+            updated_at = Timestamp.now()
         )
     )
+
+    // 특정 공고의 지원자들만 필터링하는 함수
+    fun getApplicationsByPostId(postId: String): List<ApplicationResponse> {
+        return applicationList.filter { it.post_id == postId }
+    }
+
+    // 특정 사용자의 지원서들만 필터링하는 함수
+    fun getApplicationsByUserId(userId: String): List<ApplicationResponse> {
+        return applicationList.filter { it.applicant_user_id == userId }
+    }
 }

@@ -12,7 +12,7 @@ import com.baek.untitledproject.domain.data.ApplicantSummary
 class ApplicantAdapter(
     private val onItemClick: (ApplicantSummary) -> Unit,
     private val onItemLongClick: (ApplicantSummary) -> Unit,
-    private val onSelectionChanged: (() -> Unit)? = null // 선택 변경 콜백 추가
+    private val onSelectionChanged: (() -> Unit)? = null
 ) : ListAdapter<ApplicantSummary, ApplicantAdapter.ApplicantViewHolder>(ApplicantDiffCallback) {
 
     private var isSelectionMode = false
@@ -44,11 +44,11 @@ class ApplicantAdapter(
             // 기본 정보 설정
             binding.nameTxt.text = item.name
             binding.ageTxt.text = "${item.gender}, ${item.age}세"
-            binding.departmentTxt.text = item.department
+            binding.departmentTxt.text = item.department ?: "학과 미정"
             binding.statusLinkTxt.text = item.statusText
 
-            // 상태 아이콘 색상 설정
-            updateStatusIcon(item.status)
+            // 상태 아이콘 색상 설정 (Firebase 상태값 기준)
+            updateStatusIcon(item.status, item.isPassed)
 
             // 선택 모드에 따른 체크박스 표시/숨김
             binding.selectionCheckbox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
@@ -63,13 +63,14 @@ class ApplicantAdapter(
             setupClickEvents(item)
         }
 
-        private fun updateStatusIcon(status: String) {
-            val iconRes = when (status) {
-                "submitted" -> com.baek.untitledproject.R.drawable.tag_blue
-                "interview_scheduled" -> com.baek.untitledproject.R.drawable.tag_green
-                "interview_completed" -> com.baek.untitledproject.R.drawable.tag_green
-                "passed" -> com.baek.untitledproject.R.drawable.tag_green
-                "failed" -> com.baek.untitledproject.R.drawable.tag_blue
+        private fun updateStatusIcon(status: String, isPassed: Boolean?) {
+            val iconRes = when {
+                status == "submitted" -> com.baek.untitledproject.R.drawable.tag_blue
+                status == "interview_waiting" -> com.baek.untitledproject.R.drawable.tag_green
+                status == "review_waiting" -> com.baek.untitledproject.R.drawable.tag_orange
+                status == "review_completed" && isPassed == true -> com.baek.untitledproject.R.drawable.tag_green
+                status == "review_completed" && isPassed == false -> com.baek.untitledproject.R.drawable.tag_red
+                status == "review_completed" && isPassed == null -> com.baek.untitledproject.R.drawable.tag_blue
                 else -> com.baek.untitledproject.R.drawable.tag_blue
             }
             binding.statusIcon.setBackgroundResource(iconRes)
@@ -121,16 +122,19 @@ class ApplicantAdapter(
 
             // 상태 링크 클릭
             binding.statusLinkTxt.setOnClickListener {
-                // TODO: 상태별 상세 화면으로 이동
+                // Firebase 상태값에 따른 상세 화면 이동
                 when (item.status) {
                     "submitted" -> {
                         // 지원서 상세보기
                     }
-                    "interview_scheduled" -> {
+                    "interview_waiting" -> {
                         // 면접 일정 보기
                     }
-                    "interview_completed" -> {
+                    "review_waiting" -> {
                         // 면접 결과 보기
+                    }
+                    "review_completed" -> {
+                        // 최종 결과 보기
                     }
                     else -> {
                         // 기본 처리
@@ -153,14 +157,14 @@ class ApplicantAdapter(
         holder.bind(getItem(position))
     }
 
-    // 선택 모드 관련 메서드들
+    // 선택 모드 관련 메서드들 (기존과 동일)
     fun setSelectionMode(enabled: Boolean) {
         isSelectionMode = enabled
         if (!enabled) {
             selectedItems.clear()
         }
         notifyDataSetChanged()
-        onSelectionChanged?.invoke() // 선택 변경 알림
+        onSelectionChanged?.invoke()
     }
 
     fun toggleSelection(itemId: String) {
@@ -170,7 +174,7 @@ class ApplicantAdapter(
             selectedItems.add(itemId)
         }
         notifyDataSetChanged()
-        onSelectionChanged?.invoke() // 선택 변경 알림
+        onSelectionChanged?.invoke()
     }
 
     fun selectAll() {
@@ -179,13 +183,13 @@ class ApplicantAdapter(
             selectedItems.add(applicant.id)
         }
         notifyDataSetChanged()
-        onSelectionChanged?.invoke() // 선택 변경 알림
+        onSelectionChanged?.invoke()
     }
 
     fun clearSelection() {
         selectedItems.clear()
         notifyDataSetChanged()
-        onSelectionChanged?.invoke() // 선택 변경 알림
+        onSelectionChanged?.invoke()
     }
 
     fun getSelectedIds(): List<String> {
