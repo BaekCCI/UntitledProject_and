@@ -59,10 +59,10 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:suffixText="/@jbnu.ac.kr">
+            app:suffixText="@jbnu.ac.kr">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailLocalPart"
+                android:id="@+id/emailInput"
                 style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,6 +81,7 @@
         android:paddingVertical="20dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/EmailVerificationBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -227,6 +227,7 @@
         android:paddingVertical="20dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/completeBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

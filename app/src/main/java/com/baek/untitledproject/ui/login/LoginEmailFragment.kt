@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentLoginEmailBinding
+import com.baek.untitledproject.ui.MainActivity
 
 class LoginEmailFragment : Fragment() {
 
@@ -19,6 +20,10 @@ class LoginEmailFragment : Fragment() {
     ): View? {
         _binding = FragmentLoginEmailBinding.inflate(inflater, container, false)
         return binding.root
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "로그인")
     }
 
     override fun onDestroyView() {

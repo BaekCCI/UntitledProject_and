@@ -5,8 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentStartLoginBinding
+import com.baek.untitledproject.ui.MainActivity
 
 
 class StartLoginFragment : Fragment() {
@@ -20,6 +22,25 @@ class StartLoginFragment : Fragment() {
     ): View? {
         _binding = FragmentStartLoginBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.loginBtn.setOnClickListener {
+            val action = StartLoginFragmentDirections.actionStartLoginFragmentToLoginEmailFragment()
+            findNavController().navigate(action)
+        }
+
+        binding.joinBtn.setOnClickListener {
+            val action = StartLoginFragmentDirections.actionStartLoginFragmentToJoinEmailFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "시작하기")
     }
 
     override fun onDestroyView() {

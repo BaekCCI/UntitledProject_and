@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentJoinEmailBinding
+import com.baek.untitledproject.ui.MainActivity
 
 class JoinEmailFragment : Fragment() {
 
@@ -16,9 +17,14 @@ class JoinEmailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentJoinEmailBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "회원가입")
     }
 
     override fun onDestroyView() {

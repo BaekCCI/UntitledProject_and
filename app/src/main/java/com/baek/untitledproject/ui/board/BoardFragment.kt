@@ -166,5 +166,4 @@ class BoardFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
