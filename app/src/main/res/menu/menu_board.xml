@@ -12,5 +12,10 @@
         android:icon="@drawable/ic_search"
         android:title="검색"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_setting"
+        android:icon="@drawable/ic_setting"
+        android:title="설정"
+        app:showAsAction="ifRoom"/>
 
 </menu>

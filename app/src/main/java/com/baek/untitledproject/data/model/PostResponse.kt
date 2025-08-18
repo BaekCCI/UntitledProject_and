@@ -21,7 +21,7 @@ data class PostResponse(
     val requires_department: Boolean = false,
     val requires_gender: Boolean = false,
     val requires_age: Boolean = false,
-    val requires_phone: Boolean = false,
+    //val requires_phone: Boolean = false,
 
     val author_name: String = "",
     val author_organization: String = "",

@@ -15,17 +15,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:paddingTop="16dp"
             android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp">
+                    android:layout_marginBottom="12dp">
 
                     <FrameLayout
                         android:layout_width="wrap_content"
@@ -71,39 +73,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="32dp"
+                    android:layout_marginBottom="28dp"
                     android:text="면접을 진행하시나요?"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="24sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginBottom="32dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/interviewYesBtn"
-                        style="@style/Widget.Untitled.Button.Base"
+                        style="@style/Widget.Untitled.Button.ClickedToggle"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
                         android:layout_weight="1"
                         android:checkable="true"
-                        android:text="예"
-                        android:textColor="@color/white" />
+                        android:padding="20dp"
+                        android:text="예" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/interviewNoBtn"
-                        style="@style/Widget.Untitled.Button.Base"
+                        style="@style/Widget.Untitled.Button.ClickedToggle"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:checkable="true"
-                        android:text="아니오"
-                        android:textColor="@color/white" />
+                        android:padding="20dp"
+                        android:text="아니오" />
 
                 </LinearLayout>
 
@@ -111,58 +111,86 @@
                     android:id="@+id/interviewSettingLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
                     android:orientation="vertical"
+                    android:paddingHorizontal="8dp"
                     android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="면접 일정"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/gray_700"
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="추후 설정 가능"
-                            android:textColor="#808080"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
                     </LinearLayout>
 
-                    <com.google.android.material.button.MaterialButton
+                    <LinearLayout
                         android:id="@+id/interviewDateSelectBtn"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginBottom="32dp"
-                        android:text="시작일~마감일 선택" />
+                        android:background="@drawable/rounded_bg"
+                        android:backgroundTint="@color/gray_50"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="18dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
+                            android:src="@drawable/ic_calender" />
+
+                        <TextView
+                            android:id="@+id/recruitDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="시작일 ~ 마감일 선택"
+                            android:textColor="@color/gray_700"
+                            android:textColorHint="@color/gray_500"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/gray_500" />
+
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
                             android:text="면접 장소"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/gray_700"
+                            android:textSize="14sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="추후 설정 가능"
-                            android:textColor="#808080"
+                            android:textColor="@color/gray_500"
                             android:textSize="14sp" />
                     </LinearLayout>
 
@@ -170,12 +198,10 @@
                         android:id="@+id/interviewLocInput"
                         style="@style/EditTextStyle"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginBottom="32dp"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/input_selector_bg"
                         android:hint="장소를 입력해주세요"
                         android:inputType="text"
-                        android:maxLines="1"
                         android:padding="18dp" />
 
                 </LinearLayout>
@@ -183,33 +209,36 @@
         </ScrollView>
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="162dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@drawable/bottom_action_container_bg"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/prevBtn"
-            android:layout_width="0dp"
+            style="@style/Widget.Untitled.Button.ClickedToggle"
+            android:layout_width="172dp"
             android:layout_height="56dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
             android:text="이전"
-            android:textColor="@color/white"
-            app:backgroundTint="@null" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/nextBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
-            android:layout_width="0dp"
+            android:layout_width="172dp"
             android:layout_height="56dp"
-            android:layout_weight="1"
             android:enabled="false"
-            android:text="다음" />
-    </LinearLayout>
+            android:text="다음"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -8,6 +8,7 @@ import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.repository.BoardRepository
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -20,7 +21,8 @@ class BoardWriteViewModel @Inject constructor(
     private val boardRepository: BoardRepository
 ) : ViewModel() {
 
-    var loadedPostId: String? = null
+    var isLoaded = false
+    var isApplicantExist = false
 
     private val _prevPost = MutableStateFlow<Result<Post>>(Result.None)
     val prevPost: StateFlow<Result<Post>> = _prevPost
@@ -30,19 +32,20 @@ class BoardWriteViewModel @Inject constructor(
 
     //첫번째 화면 진입 시 데이터 불러오기(수정 버튼으로 접근시)
     fun initPostData(postId: String?) {
-        if (postId == null) return
+        if (postId == null || isLoaded) return
 
         viewModelScope.launch {
             _prevPost.value = Result.Loading
-            val result = boardRepository.getPost(postId)
+            val result = boardRepository.getPostById(postId)
             Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
             _prevPost.value = result
             if (result is Result.Success) {
-                loadedPostId = postId
-                _editingPost.value = result.data.copy()
+                _editingPost.value = result.data
                 initUiImagesFromPost()
+                isLoaded = true
             }
         }
+        //TODO: 지원자 존재 여부 확인하여 isApplicantExist 정보업데이트하기
     }
 
 
@@ -104,7 +107,9 @@ class BoardWriteViewModel @Inject constructor(
 
         viewModelScope.launch {
             _submitResult.value = Result.Loading
-            _submitResult.value = boardRepository.submitPost(loadedPostId)
+            val result = boardRepository.submitPost(editingPost.value)
+            _submitResult.value = result
+            Log.d("BoardWriteViewModel", "completePost 결과: $result")
         }
     }
 
@@ -115,7 +120,8 @@ class BoardWriteViewModel @Inject constructor(
         age: Boolean? = null,
         dept: Boolean? = null,
         studentId: Boolean? = null,
-        phone: Boolean? = null
+        phone: Boolean? = null,
+        questions: List<String>
     ) {
         _editingPost.value = _editingPost.value.copy(
             requiresName = name ?: _editingPost.value.requiresName,
@@ -123,12 +129,9 @@ class BoardWriteViewModel @Inject constructor(
             requiresAge = age ?: _editingPost.value.requiresAge,
             requiresDepartment = dept ?: _editingPost.value.requiresDepartment,
             requiresStudentId = studentId ?: _editingPost.value.requiresStudentId,
-            requiresPhone = phone ?: _editingPost.value.requiresPhone
+            requiresPhone = phone ?: _editingPost.value.requiresPhone,
+            customQuestions = questions
         )
-    }
-
-    fun updateCustomQuestions(questions: List<String>) {
-        _editingPost.value = _editingPost.value.copy(customQuestions = questions)
     }
 
 }

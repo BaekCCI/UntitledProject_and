@@ -6,11 +6,22 @@
     android:layout_height="match_parent"
     tools:context=".ui.board.BoardFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/item_board_layout" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/boardRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_board_layout" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <Button
         android:id="@+id/writeBoardBtn"
@@ -20,5 +31,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

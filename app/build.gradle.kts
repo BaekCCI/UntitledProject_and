@@ -99,6 +99,7 @@ dependencies {
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")
 
     //Kizitonwose CalendarView
     implementation("com.kizitonwose.calendar:view:2.6.1")
@@ -107,4 +108,6 @@ dependencies {
 
     //PhotoView
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

@@ -2,20 +2,22 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="84dp"
     android:layout_height="84dp"
-    android:layout_margin="4dp">
+    android:background="@drawable/rounded_bg"
+    android:backgroundTint="@color/gray_100"
+    android:layout_marginHorizontal="5dp">
 
     <ImageView
         android:id="@+id/selectedImg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_launcher_background"
         android:scaleType="centerCrop" />
 
     <ImageView
+        android:layout_margin="4dp"
         android:id="@+id/cancelBtn"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_gravity="top|end"
-        android:src="@mipmap/ic_launcher" />
+        android:src="@drawable/ic_close_one" />
 
 </FrameLayout>

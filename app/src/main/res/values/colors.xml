@@ -7,6 +7,7 @@
 
     <!-- Gray Scale -->
     <color name="black">#FF000000</color>
+    <color name="gray_800">#2B2B31</color>
     <color name="gray_700">#404048</color>
     <color name="gray_600">#696E7C</color>
     <color name="gray_500">#7E8394</color>

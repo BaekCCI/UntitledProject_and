@@ -1,7 +1,6 @@
 package com.baek.untitledproject.ui.board
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.Menu
@@ -9,10 +8,9 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -31,9 +29,9 @@ class BoardFragment : Fragment() {
     private var _binding: FragmentBoardBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: BoardViewModel by viewModels()
+    private val viewModel: BoardViewModel by activityViewModels()
 
-    private lateinit var boardRVAdapter: BoardRVAdapter
+    private lateinit var boardAdapter: BoardRVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,29 +49,40 @@ class BoardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupSwipeRefresh()
         initAdapter()
         observeBoardList()
         setToolbar()
-        viewModel.loadBoardList()
         setupWriteBoardBtn()
+    }
+
+    //위로 당겨서 새로고침
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setColorSchemeResources(
+            R.color.point_purple, R.color.gray_100, R.color.black
+        )
+
+        // 당겨서 새로고침
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.loadBoardList()
+        }
     }
 
     private fun initAdapter() {
         //adapter 초기화 및 게시물 클릭 시 이벤트
-        boardRVAdapter = BoardRVAdapter { board ->
+        boardAdapter = BoardRVAdapter { board ->
             //클릭 시 상세 페이지 이동
-            Log.d("BoardFragment", "${board.title} clicked!")
-            val action = BoardFragmentDirections.actionBoardFragmentToBoardDetailFragment(board.id)
+            val action =
+                BoardFragmentDirections.actionBoardFragmentToBoardDetailFragment(board.postId)
             findNavController().navigate(action)
         }
-
-        //recyclerView 설정
-        binding.recyclerView.apply {
-            adapter = boardRVAdapter
+        binding.boardRv.apply {
+            adapter = boardAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
     }
 
+    //게시글 로드 상태 관찰
     private fun observeBoardList() {
         //boardList 수집하여 adapter에 넘김
         viewLifecycleOwner.lifecycleScope.launch {
@@ -81,11 +90,13 @@ class BoardFragment : Fragment() {
                 viewModel.boardList.collect { state ->
                     when (state) {
                         is Result.Success -> {
-                            boardRVAdapter.submitList(state.data)
+                            boardAdapter.submitList(state.data)
+                            binding.swipeRefresh.isRefreshing = false
                         }
 
                         is Result.Loading -> {
                             //TODO: loading ui 적용
+                            binding.swipeRefresh.isRefreshing = true
                         }
 
                         is Result.Error -> {
@@ -102,11 +113,7 @@ class BoardFragment : Fragment() {
 
     //toolbar 설정
     private fun setToolbar() {
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "BoardFragment"
-
         val menuHost: MenuHost = requireActivity()
-
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menu.clear()
@@ -116,15 +123,21 @@ class BoardFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.action_alert -> {
-                        val action = BoardFragmentDirections.actionBoardFragmentToNotificationFragment()
+                        val action =
+                            BoardFragmentDirections.actionBoardFragmentToNotificationFragment()
                         findNavController().navigate(action)
                         true
                     }
 
                     R.id.action_search -> {
-                        Log.d("BoardFragment", "검색 버튼 클릭!")
-                        val action = BoardFragmentDirections.actionBoardFragmentToSearchFragment()
+                        val action =
+                            BoardFragmentDirections.actionBoardFragmentToSearchFragment()
                         findNavController().navigate(action)
+                        true
+                    }
+
+                    R.id.action_setting -> {
+                        //설정 화면
                         true
                     }
 
@@ -135,6 +148,7 @@ class BoardFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    //공고 작성 버튼
     private fun setupWriteBoardBtn() {
         binding.writeBoardBtn.setOnClickListener {
             val action = BoardFragmentDirections.actionBoardFragmentToWriteBoardNavGraph()
@@ -146,6 +160,7 @@ class BoardFragment : Fragment() {
         super.onResume()
         (activity as? MainActivity)?.setToolbar(rootVisible = true, title = "전북대학교 구인공고")
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

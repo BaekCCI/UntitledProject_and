@@ -1,5 +1,8 @@
 package com.baek.untitledproject.domain.utils
 
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import com.baek.untitledproject.domain.data.Notification
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -42,5 +45,30 @@ fun Notification.timeText(now: Long): String {
         day < 7 -> "${day}일 전"
         else -> java.text.SimpleDateFormat("yyyy/MM/dd", Locale.KOREA)
             .format(java.util.Date(createdAt))
+    }
+}
+
+fun CharSequence.highlightQuery(
+    query: String,
+    color: Int
+): CharSequence {
+    val q = query.trim()
+    if (q.isEmpty()) return this
+
+    // 공백 여러개 허용 → 토큰 사이를 \s+ 로 매칭
+    val tokens = q.split(Regex("\\s+")).filter { it.isNotBlank() }
+    if (tokens.isEmpty()) return this
+
+    val pattern = tokens.joinToString(separator = "\\s+") { Regex.escape(it) }
+    val regex = Regex(pattern, RegexOption.IGNORE_CASE)
+
+    val match = regex.find(this) ?: return this
+
+    return SpannableString(this).apply {
+        setSpan(
+            ForegroundColorSpan(color),
+            match.range.first, match.range.last + 1,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
 }
