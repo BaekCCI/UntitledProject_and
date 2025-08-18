@@ -51,7 +51,9 @@ fun PostResponse.toDomain(
 //submitPost용(수정시엔 사용 X)
 fun Post.toResponse(
     postId: String,
-    now: Timestamp
+    now: Timestamp,
+    createdAt: Timestamp,
+    isUpdate: Boolean = false
 ): PostResponse {
 
     return PostResponse(
@@ -77,7 +79,8 @@ fun Post.toResponse(
         author_name = "Ash",
         author_organization = organization ?: "",
 
-        created_at = now
+        created_at = createdAt,
+        updated_at = if (isUpdate) now else null
     )
 }
 

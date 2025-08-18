@@ -20,7 +20,7 @@ class BoardDetailViewModel @Inject constructor(
     private val _board = MutableStateFlow<Result<Post>>(Result.Loading)
     val board: StateFlow<Result<Post>> = _board
 
-    val isWriter = false
+    val isWriter = true
 
     fun loadBoardData(id: String) {
         viewModelScope.launch {

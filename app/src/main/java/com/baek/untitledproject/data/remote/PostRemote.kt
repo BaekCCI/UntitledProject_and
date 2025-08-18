@@ -132,33 +132,52 @@ object PostRemote {
         val db = FirebaseFirestore.getInstance()
         val storage = Firebase.storage
 
-        //posts 문서 생성
-        val postRef = db.collection("posts").document()
+        //posts 문서: 새로 생성 || 기존 문서
+        val isUpdate = !post.postId.isNullOrBlank()
+        val postRef = if (isUpdate) {
+            // isUpdate == true면 postId가 null/blank가 아니어야 함
+            db.collection("posts").document(post.postId!!)  // !! 안전 보장
+        } else {
+            db.collection("posts").document()
+        }
         val postId = postRef.id
 
+        //기존 생성 시간 보존
+        val createdAt =
+            if (isUpdate) postRef.get().await().getTimestamp("created_at") ?: now else now
 
-        //이미지 업로드
+        //수정 시에 기존 데이터 미리 읽어둠
+        val oldImgsSnap = if (isUpdate) db.collection("post_images")
+            .whereEqualTo("post_id", postId).get().await() else null
+        val oldSlotsSnap = if (isUpdate) db.collection("interview_slots")
+            .whereEqualTo("post_id", postId).get().await() else null
+        val oldQuestionsSnap = if (isUpdate) db.collection("custom_questions")
+            .whereEqualTo("post_id", postId).get().await() else null
+
+        //기존 이미지 경로 수집
+        val oldImagePaths: List<String> = oldImgsSnap?.documents?.mapNotNull { d ->
+            d.getString("image_path") ?: d.getString("image_url")
+        } ?: emptyList()
+
+        //새 이미지 업로드
+        val uploadedPaths = mutableListOf<String>()
+
         val imageResult = post.imageUris.mapIndexed { index, uri ->
             async {
                 //post_images 컬렉션 문서 생성
                 val imgRef = db.collection("post_images").document()
                 val imgId = imgRef.id
 
-
                 //Storage에 저장할 경로 정의
                 val path = "post_images/$postId/$imgId.jpg"
-                val storageRef = storage.reference.child(path)
-
-                //Storage 업로드
-                storageRef.putFile(uri).await()
-                //업로드 완료 후 다운로드 URL 획득
-                val downloadUrl = storageRef.downloadUrl.await().toString()
+                storage.reference.child(path).putFile(uri).await()
+                uploadedPaths += path
 
                 //Firestore에 넣을 데이터
                 imgRef to mapOf(
                     "image_id" to imgId,
                     "post_id" to postId,
-                    "image_url" to downloadUrl,
+                    "image_path" to path,
                     "image_order" to index.toLong(),
                     "created_at" to now
                 )
@@ -195,14 +214,33 @@ object PostRemote {
             )
         }
 
-        //Firestore에 커밋
-        db.runBatch { b ->
-            b.set(postRef, post.toResponse(postId, now)) // 필요 시 serverTimestamp로 통일 가능
-            imageResult.forEach { (ref, data) -> b.set(ref, data) }
-            slotDocs.forEach { (ref, data) -> b.set(ref, data) }
-            questionDocs.forEach { (ref, data) -> b.set(ref, data) }
-        }.await()
+        try {
+            db.runBatch { b ->
+                b.set(postRef, post.toResponse(postId, now, createdAt, isUpdate))
 
-        return@coroutineScope postId
+                oldImgsSnap?.documents?.forEach { b.delete(it.reference) }
+                oldSlotsSnap?.documents?.forEach { b.delete(it.reference) }
+                oldQuestionsSnap?.documents?.forEach { b.delete(it.reference) }
+
+                imageResult.forEach { (ref, data) -> b.set(ref, data) }
+                slotDocs.forEach { (ref, data) -> b.set(ref, data) }
+                questionDocs.forEach { (ref, data) -> b.set(ref, data) }
+            }.await()
+            oldImagePaths.forEach { p ->
+                val ref = if (p.startsWith("gs://") || p.startsWith("http"))
+                    storage.getReferenceFromUrl(p)
+                else
+                    storage.reference.child(p)
+                runCatching { ref.delete().await() }
+            }
+        } catch (e: Exception) {
+            // Firestore 실패 시 업로드 롤백
+            uploadedPaths.forEach { p ->
+                runCatching { storage.reference.child(p).delete().await() }
+            }
+            throw e
+        }
+
+        postId
     }
 }
