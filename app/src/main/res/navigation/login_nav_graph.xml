@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav_graph"
+    app:startDestination="@id/startLoginFragment">
+
+    <fragment
+        android:id="@+id/startLoginFragment"
+        android:name="com.baek.untitledproject.ui.login.StartLoginFragment"
+        android:label="fragment_start_login"
+        tools:layout="@layout/fragment_start_login" >
+        <action
+            android:id="@+id/action_startLoginFragment_to_joinEmailFragment"
+            app:destination="@id/joinEmailFragment" />
+        <action
+            android:id="@+id/action_startLoginFragment_to_loginEmailFragment"
+            app:destination="@id/loginEmailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinEmailFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinEmailFragment"
+        android:label="fragment_join_email"
+        tools:layout="@layout/fragment_join_email" >
+        <action
+            android:id="@+id/action_joinEmailFragment_to_joinInfoFragment"
+            app:destination="@id/joinInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinInfoFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinInfoFragment"
+        android:label="fragment_join_info"
+        tools:layout="@layout/fragment_join_info" />
+    <fragment
+        android:id="@+id/loginEmailFragment"
+        android:name="com.baek.untitledproject.ui.login.LoginEmailFragment"
+        android:label="fragment_login_email"
+        tools:layout="@layout/fragment_login_email" />
+</navigation>

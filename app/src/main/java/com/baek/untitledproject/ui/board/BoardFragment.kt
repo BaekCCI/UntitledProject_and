@@ -137,7 +137,8 @@ class BoardFragment : Fragment() {
                     }
 
                     R.id.action_setting -> {
-                        //설정 화면
+                        val action = BoardFragmentDirections.actionBoardFragmentToLoginNavGraph()
+                        findNavController().navigate(action)
                         true
                     }
 

@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_boardFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_boardFragment_to_login_nav_graph"
+            app:destination="@id/login_nav_graph" />
     </fragment>
     <fragment
         android:id="@+id/myRecruitsFragment"
@@ -85,4 +88,5 @@
             app:argType="android.net.Uri[]" />
     </dialog>
     <include app:graph="@navigation/submit_application_nav_graph" />
+    <include app:graph="@navigation/login_nav_graph" />
 </navigation>

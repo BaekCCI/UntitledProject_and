@@ -12,6 +12,7 @@ import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
 import com.google.firebase.Timestamp
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 fun PostResponse.toDomain(
     images: List<Uri>,
