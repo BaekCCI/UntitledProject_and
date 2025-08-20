@@ -38,9 +38,9 @@ class MyRecruitsViewModel @Inject constructor(
             _isLoading.value = true
             try {
                 // 모든 데이터를 병렬로 로드
-                _scheduleGroups.value = myRecruitsRepository.getScheduleGroups()
-                _myRecruits.value = myRecruitsRepository.getMyRecruits()
-                _appliedRecruits.value = myRecruitsRepository.getAppliedRecruits()
+                _scheduleGroups.value = myRecruitsRepository.getScheduleGroups().take(3)
+                _myRecruits.value = myRecruitsRepository.getMyRecruits().take(3)
+                _appliedRecruits.value = myRecruitsRepository.getAppliedRecruits().take(3)
             } catch (e: Exception) {
                 // TODO: 에러 처리
                 e.printStackTrace()
