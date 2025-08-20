@@ -193,6 +193,52 @@ object ApplicantRemote {
     }
 
     /**
+     * 지원자들을 이전 단계로 되돌리기
+     */
+    suspend fun revertToPreviousStage(applicationIds: List<String>) {
+        val db = FirebaseFirestore.getInstance()
+
+        applicationIds.forEach { applicationId ->
+            // 현재 상태 확인
+            val applicationDoc = db.collection("applications")
+                .document(applicationId)
+                .get()
+                .await()
+
+            val currentStatus = applicationDoc.getString("status")
+
+            // 이전 단계로 되돌리기
+            val previousStatus = when (currentStatus) {
+                "면접 대기 중" -> "지원서 제출됨"
+                "심사 대기 중" -> "면접 대기 중"
+                "심사 완료됨" -> "심사 대기 중"
+                else -> {
+                    Log.w("ApplicantRemote", "되돌릴 수 없는 상태: $currentStatus")
+                    return@forEach // 이 지원자는 건너뛰기
+                }
+            }
+
+            // 상태 업데이트
+            val updateData = mutableMapOf<String, Any>(
+                "status" to previousStatus,
+                "updated_at" to com.google.firebase.Timestamp.now()
+            )
+
+            // 심사 완료됨에서 되돌릴 때는 is_passed 필드 삭제
+            if (currentStatus == "심사 완료됨") {
+                updateData["is_passed"] = com.google.firebase.firestore.FieldValue.delete()
+            }
+
+            db.collection("applications")
+                .document(applicationId)
+                .update(updateData)
+                .await()
+
+            Log.d("ApplicantRemote", "단계 되돌리기: $applicationId ($currentStatus → $previousStatus)")
+        }
+    }
+
+    /**
      * 지원자들의 면접을 완료 상태로 변경
      */
     suspend fun completeInterviews(applicationIds: List<String>) {
