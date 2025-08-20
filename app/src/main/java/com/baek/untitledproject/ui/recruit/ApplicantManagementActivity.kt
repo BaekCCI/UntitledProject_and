@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -29,6 +30,7 @@ class ApplicantManagementActivity : AppCompatActivity() {
     private var isSelectionMode = false
     private var currentFilter = "all"
     private var currentTab = 0
+    private var isSearchMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +112,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
             if (isSelectionMode && currentTab != 0) {
                 disableSelectionMode()
             }
+            // 탭 전환 시 검색 모드 해제
+            if (isSearchMode) {
+                exitSearchMode()
+            }
             switchToTab(0)
         }
 
@@ -117,6 +123,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
             // 관리 탭에서 리스트 탭으로 전환 시 선택 모드 해제
             if (isSelectionMode && currentTab != 1) {
                 disableSelectionMode()
+            }
+            // 탭 전환 시 검색 모드 해제
+            if (isSearchMode) {
+                exitSearchMode()
             }
             switchToTab(1)
         }
@@ -127,6 +137,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
             if (isSelectionMode) {
                 disableSelectionMode()
             }
+            // 검색 모드도 해제
+            if (isSearchMode) {
+                exitSearchMode()
+            }
             updateFilterButtons("all")
             viewModel.filterApplicants("all")
         }
@@ -135,6 +149,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
             // 필터 변경 시 선택 모드 해제
             if (isSelectionMode) {
                 disableSelectionMode()
+            }
+            // 검색 모드도 해제
+            if (isSearchMode) {
+                exitSearchMode()
             }
             updateFilterButtons("interview")
             viewModel.filterApplicants("interview")
@@ -145,6 +163,10 @@ class ApplicantManagementActivity : AppCompatActivity() {
             if (isSelectionMode) {
                 disableSelectionMode()
             }
+            // 검색 모드도 해제
+            if (isSearchMode) {
+                exitSearchMode()
+            }
             updateFilterButtons("review")
             viewModel.filterApplicants("review")
         }
@@ -154,13 +176,26 @@ class ApplicantManagementActivity : AppCompatActivity() {
             if (isSelectionMode) {
                 disableSelectionMode()
             }
+            // 검색 모드도 해제
+            if (isSearchMode) {
+                exitSearchMode()
+            }
             updateFilterButtons("complete")
             viewModel.filterApplicants("complete")
         }
 
         // 선택 모드 버튼들
         binding.selectAllBtn.setOnClickListener {
-            applicantAdapter.selectAll()
+            val currentSelectedCount = applicantAdapter.getSelectedCount()
+            val totalCount = applicantAdapter.itemCount
+
+            if (currentSelectedCount == totalCount) {
+                // 모두 선택된 상태면 전체 해제
+                applicantAdapter.clearSelection()
+            } else {
+                // 일부만 선택되었거나 아무것도 선택 안 된 상태면 전체 선택
+                applicantAdapter.selectAll()
+            }
             updateSelectionActionBar()
         }
 
@@ -175,6 +210,11 @@ class ApplicantManagementActivity : AppCompatActivity() {
 
         binding.notifyAllBtn.setOnClickListener {
             viewModel.notifyAllApplicants()
+        }
+
+        // 검색 아이콘 클릭
+        binding.searchIcon.setOnClickListener {
+            toggleSearchMode()
         }
 
         // 선택 모드 액션바 버튼들
@@ -220,6 +260,117 @@ class ApplicantManagementActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun toggleSearchMode() {
+        if (isSearchMode) {
+            // 검색 모드 해제
+            exitSearchMode()
+        } else {
+            // 검색 모드 진입
+            enterSearchMode()
+        }
+    }
+
+    private fun enterSearchMode() {
+        isSearchMode = true
+
+        // 기존 UI 숨김
+        binding.searchLabel.visibility = View.GONE
+        binding.selectModeBtn.visibility = View.GONE
+
+        // 검색 아이콘을 닫기 아이콘으로 변경
+        binding.searchIcon.setImageResource(android.R.drawable.ic_menu_close_clear_cancel)
+
+        // 검색 입력 필드를 동적으로 추가
+        createSearchEditText()
+    }
+
+    private fun createSearchEditText() {
+        // EditText 생성
+        val searchEditText = android.widget.EditText(this)
+        searchEditText.apply {
+            id = View.generateViewId()
+            hint = "이름, 학과, 학번으로 검색"
+            background = null
+            textSize = 16f
+            setPadding(0, 0, 0, 0)
+
+            // 텍스트 변경 리스너
+            addTextChangedListener(object : android.text.TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: android.text.Editable?) {
+                    viewModel.updateSearchQuery(s?.toString() ?: "")
+                }
+            })
+
+            // 엔터키 처리
+            setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyboard()
+                    true
+                } else {
+                    false
+                }
+            }
+        }
+
+        // 기존 레이아웃에 추가 (searchLabel 위치에)
+        val layoutParams = binding.searchLabel.layoutParams
+        (binding.searchLabel.parent as ViewGroup).addView(searchEditText, layoutParams)
+
+        // 포커스 주고 키보드 열기
+        searchEditText.requestFocus()
+        showKeyboard(searchEditText)
+    }
+
+    private fun exitSearchMode() {
+        isSearchMode = false
+
+        // 검색어 초기화
+        viewModel.clearSearch()
+
+        // 동적으로 추가된 EditText 제거
+        removeSearchEditText()
+
+        // UI 복원
+        binding.searchLabel.visibility = View.VISIBLE
+        if (!isSelectionMode) {
+            binding.selectModeBtn.visibility = View.VISIBLE
+        }
+        binding.searchIcon.setImageResource(android.R.drawable.ic_menu_search)
+
+        // 키보드 숨김
+        hideKeyboard()
+    }
+
+    private fun removeSearchEditText() {
+        val searchHeader = binding.searchLabel.parent as ViewGroup
+        // EditText 찾아서 제거
+        for (i in 0 until searchHeader.childCount) {
+            val child = searchHeader.getChildAt(i)
+            if (child is android.widget.EditText) {
+                searchHeader.removeView(child)
+                break
+            }
+        }
+    }
+
+    private fun showKeyboard(view: View) {
+        val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        imm.showSoftInput(view, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+        currentFocus?.let {
+            imm.hideSoftInputFromWindow(it.windowToken, 0)
+        }
+    }
+
+    private fun showSearchDialog() {
+        // 이제 사용하지 않는 메서드
     }
 
     private fun enableSelectionMode() {
@@ -555,7 +706,11 @@ class ApplicantManagementActivity : AppCompatActivity() {
 
                 binding.searchHeader.visibility = View.VISIBLE
 
+                // 선택 모드가 아닐 때만 선택 버튼 표시
                 if (!isSelectionMode) {
+                    binding.selectModeBtn.visibility = View.VISIBLE
+                    binding.searchLabel.visibility = View.VISIBLE
+                    binding.searchIcon.visibility = View.VISIBLE
                     updateBottomButton()
                 }
             }

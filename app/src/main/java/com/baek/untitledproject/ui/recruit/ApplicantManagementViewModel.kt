@@ -28,6 +28,10 @@ class ApplicantManagementViewModel @Inject constructor(
     private val _currentFilter = MutableStateFlow("all")
     val currentFilter: StateFlow<String> = _currentFilter
 
+    // 검색어
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
     // 로딩 상태
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -63,10 +67,18 @@ class ApplicantManagementViewModel @Inject constructor(
 
     fun filterApplicants(filter: String) {
         _currentFilter.value = filter
-        applyCurrentFilter()
+        applyFiltersAndSearch()
     }
 
-    private fun applyCurrentFilter() {
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        applyFiltersAndSearch()
+    }
+
+    private fun applyFiltersAndSearch() {
+        val query = _searchQuery.value.trim()
+
+        // 먼저 필터 적용
         val filtered = when (_currentFilter.value) {
             "all" -> allApplicants.filter { it.status == "지원서 제출됨" }
             "interview" -> allApplicants.filter { it.status == "면접 대기 중" }
@@ -74,7 +86,24 @@ class ApplicantManagementViewModel @Inject constructor(
             "complete" -> allApplicants.filter { it.status == "심사 완료됨" }
             else -> allApplicants
         }
-        _applicants.value = filtered
+
+        // 검색어가 있으면 추가 필터링
+        val result = if (query.isEmpty()) {
+            filtered
+        } else {
+            filtered.filter { applicant ->
+                applicant.name.contains(query, ignoreCase = true) ||
+                        applicant.department?.contains(query, ignoreCase = true) == true ||
+                        applicant.studentId?.contains(query, ignoreCase = true) == true
+            }
+        }
+
+        _applicants.value = result
+    }
+
+    private fun applyCurrentFilter() {
+        // 기존 메서드를 새로운 로직으로 대체
+        applyFiltersAndSearch()
     }
 
     // 면접 제안 (면접 일정 체크 포함)
@@ -245,6 +274,12 @@ class ApplicantManagementViewModel @Inject constructor(
     // 에러 메시지 초기화
     fun clearErrorMessage() {
         _errorMessage.value = null
+    }
+
+    // 검색어 초기화
+    fun clearSearch() {
+        _searchQuery.value = ""
+        applyFiltersAndSearch()
     }
 
     // 이전 단계로 되돌리기
