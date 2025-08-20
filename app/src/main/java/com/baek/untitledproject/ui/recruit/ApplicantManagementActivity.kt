@@ -53,24 +53,22 @@ class ApplicantManagementActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         applicantAdapter = ApplicantAdapter(
             onItemClick = { applicant ->
-                if (!isSelectionMode) {
-                    enableSelectionMode()
+                // 선택 모드일 때만 선택/해제 동작
+                if (isSelectionMode) {
                     applicantAdapter.toggleSelection(applicant.id)
-                    showSelectionActionBar()
-                } else {
+                    updateSelectionActionBar()
+                }
+                // 선택 모드가 아닐 때는 아무것도 안함
+            },
+            onItemLongClick = { applicant ->
+                // 롱클릭도 선택 모드일 때만 동작
+                if (isSelectionMode) {
                     applicantAdapter.toggleSelection(applicant.id)
                     updateSelectionActionBar()
                 }
             },
-            onItemLongClick = { applicant ->
-                if (!isSelectionMode) {
-                    enableSelectionMode()
-                    applicantAdapter.toggleSelection(applicant.id)
-                    showSelectionActionBar()
-                }
-            },
             onSelectionChanged = {
-                // 선택이 변경될 때마다 액션 바 업데이트
+                // 선택이 변경될 때마다 액션바 업데이트
                 if (isSelectionMode) {
                     updateSelectionActionBar()
                 }
@@ -102,26 +100,56 @@ class ApplicantManagementActivity : AppCompatActivity() {
             }
         }
 
-        binding.applicantManageTab.setOnClickListener { switchToTab(0) }
-        binding.applicantListTab.setOnClickListener { switchToTab(1) }
+        // 탭 전환 시 선택 모드 해제
+        binding.applicantManageTab.setOnClickListener {
+            // 다른 탭에서 관리 탭으로 전환 시 선택 모드 해제
+            if (isSelectionMode && currentTab != 0) {
+                disableSelectionMode()
+            }
+            switchToTab(0)
+        }
 
-        // 필터 버튼들
+        binding.applicantListTab.setOnClickListener {
+            // 관리 탭에서 리스트 탭으로 전환 시 선택 모드 해제
+            if (isSelectionMode && currentTab != 1) {
+                disableSelectionMode()
+            }
+            switchToTab(1)
+        }
+
+        // 필터 버튼들 - 필터 변경 시 선택 모드 해제
         binding.filterAllBtn.setOnClickListener {
+            // 필터 변경 시 선택 모드 해제
+            if (isSelectionMode) {
+                disableSelectionMode()
+            }
             updateFilterButtons("all")
             viewModel.filterApplicants("all")
         }
 
         binding.filterInterviewBtn.setOnClickListener {
+            // 필터 변경 시 선택 모드 해제
+            if (isSelectionMode) {
+                disableSelectionMode()
+            }
             updateFilterButtons("interview")
             viewModel.filterApplicants("interview")
         }
 
         binding.filterReviewBtn.setOnClickListener {
+            // 필터 변경 시 선택 모드 해제
+            if (isSelectionMode) {
+                disableSelectionMode()
+            }
             updateFilterButtons("review")
             viewModel.filterApplicants("review")
         }
 
         binding.filterCompleteBtn.setOnClickListener {
+            // 필터 변경 시 선택 모드 해제
+            if (isSelectionMode) {
+                disableSelectionMode()
+            }
             updateFilterButtons("complete")
             viewModel.filterApplicants("complete")
         }
@@ -145,7 +173,7 @@ class ApplicantManagementActivity : AppCompatActivity() {
             viewModel.notifyAllApplicants()
         }
 
-        // 선택 모드 액션 바 버튼들
+        // 선택 모드 액션바 버튼들
         binding.leftActionButton.setOnClickListener {
             val action = binding.leftActionButton.text.toString()
             showConfirmBottomSheet(action, action.contains("불합격") || action.contains("취소"))
@@ -199,21 +227,26 @@ class ApplicantManagementActivity : AppCompatActivity() {
     }
 
     private fun disableSelectionMode() {
+        // 이미 해제된 상태면 중복 실행 방지
+        if (!isSelectionMode) return
+
         isSelectionMode = false
 
+        // 상단 UI 요소들 복원
         binding.selectAllBtn.visibility = View.GONE
         binding.cancelSelectionBtn.visibility = View.GONE
-
         binding.searchLabel.visibility = View.VISIBLE
         binding.searchIcon.visibility = View.VISIBLE
         binding.selectModeBtn.visibility = View.VISIBLE
 
+        // 하단 버튼 상태 복원 (필터에 따라)
         updateBottomButton()
 
+        // 어댑터 선택 상태 완전히 초기화
         applicantAdapter.setSelectionMode(false)
         applicantAdapter.clearSelection()
 
-        // 선택 모드 액션 바 숨김
+        // 선택 모드 액션바 숨김
         binding.selectionActionBar.visibility = View.GONE
     }
 
@@ -238,16 +271,16 @@ class ApplicantManagementActivity : AppCompatActivity() {
         hideAllActionButtons()
 
         when {
-            statusGroups.containsKey("submitted") -> {
+            statusGroups.containsKey("지원서 제출됨") -> {
                 showTwoButtons("불합격", "면접 제안", true, true)
             }
-            statusGroups.containsKey("interview_scheduled") -> {
+            statusGroups.containsKey("면접 대기 중") -> {
                 showTwoButtons("면접 취소", "면접 완료", true, true)
             }
-            statusGroups.containsKey("interview_completed") -> {
+            statusGroups.containsKey("심사 대기 중") -> {
                 showTwoButtons("불합격", "합격", true, true)
             }
-            statusGroups.containsKey("passed") || statusGroups.containsKey("failed") -> {
+            statusGroups.containsKey("심사 완료됨") -> {
                 showSingleButton("심사 결과 알리기")
             }
         }
@@ -434,6 +467,7 @@ class ApplicantManagementActivity : AppCompatActivity() {
             1 -> {
                 binding.applicantRecyclerView.adapter = applicantListAdapter
 
+                // 리스트 탭에서는 선택 모드 강제 해제
                 if (isSelectionMode) {
                     disableSelectionMode()
                 }
