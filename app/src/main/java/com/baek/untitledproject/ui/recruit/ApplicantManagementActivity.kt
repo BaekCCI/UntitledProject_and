@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.databinding.ActivityApplicantManagementBinding
 import com.baek.untitledproject.databinding.BottomSheetConfirmBinding
+import com.baek.untitledproject.domain.data.ApplicantSummary
 import com.baek.untitledproject.ui.recruit.adapter.ApplicantListAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import dagger.hilt.android.AndroidEntryPoint
@@ -61,10 +62,13 @@ class ApplicantManagementActivity : AppCompatActivity() {
                 // 선택 모드가 아닐 때는 아무것도 안함
             },
             onItemLongClick = { applicant ->
-                // 롱클릭도 선택 모드일 때만 동작
                 if (isSelectionMode) {
+                    // 선택 모드에서는 기존 동작
                     applicantAdapter.toggleSelection(applicant.id)
                     updateSelectionActionBar()
+                } else {
+                    // 선택 모드가 아닐 때는 되돌리기 AlertDialog 표시
+                    showRevertAlertDialog(applicant)
                 }
             },
             onSelectionChanged = {
@@ -344,6 +348,40 @@ class ApplicantManagementActivity : AppCompatActivity() {
         }
     }
 
+    private fun showThreeButtons(leftText: String, centerText: String, rightText: String) {
+        // 기존 버튼들 숨김
+        hideAllActionButtons()
+
+        // 왼쪽: 이전 단계로 (중립 색상)
+        binding.leftActionButton.apply {
+            visibility = View.VISIBLE
+            text = leftText
+            backgroundTintList = null
+            setTextColor(getColor(android.R.color.black))
+        }
+
+        // 오른쪽: 주요 액션 (검은색)
+        binding.rightActionButton.apply {
+            visibility = View.VISIBLE
+            text = rightText
+            backgroundTintList = getColorStateList(android.R.color.black)
+            setTextColor(getColor(android.R.color.white))
+        }
+
+        // 가운데는 singleActionButton을 재활용 (위험한 액션용)
+        binding.singleActionButton.apply {
+            visibility = View.VISIBLE
+            text = centerText
+            if (centerText.contains("취소") || centerText.contains("불합격")) {
+                backgroundTintList = getColorStateList(android.R.color.darker_gray)
+                setTextColor(getColor(android.R.color.black))
+            } else {
+                backgroundTintList = null
+                setTextColor(getColor(android.R.color.black))
+            }
+        }
+    }
+
     private fun showConfirmBottomSheet(action: String, isDangerous: Boolean) {
         val confirmBinding = BottomSheetConfirmBinding.inflate(LayoutInflater.from(this))
         val confirmDialog = BottomSheetDialog(this)
@@ -398,6 +436,38 @@ class ApplicantManagementActivity : AppCompatActivity() {
 
         errorDialog.setContentView(errorBinding.root)
         errorDialog.show()
+    }
+
+    private fun showRevertAlertDialog(applicant: ApplicantSummary) {
+        android.util.Log.d("Activity", "showRevertAlertDialog 호출: ${applicant.name}, 상태: ${applicant.status}")
+
+        // 되돌릴 수 없는 상태 체크
+        if (applicant.status == "지원서 제출됨") {
+            android.util.Log.d("Activity", "첫 번째 단계라서 되돌리기 불가")
+            return // 첫 번째 단계는 되돌릴 수 없음
+        }
+
+        val previousStage = when (applicant.status) {
+            "면접 대기 중" -> "지원서 제출 단계"
+            "심사 대기 중" -> "면접 대기 단계"
+            "심사 완료됨" -> "심사 대기 단계"
+            else -> {
+                android.util.Log.d("Activity", "알 수 없는 상태: ${applicant.status}")
+                return
+            }
+        }
+
+        android.util.Log.d("Activity", "AlertDialog 표시: ${applicant.name} -> $previousStage")
+
+        android.app.AlertDialog.Builder(this)
+            .setTitle("이전 단계로 되돌리기")
+            .setMessage("${applicant.name} 지원자를\n${previousStage}로 되돌리시겠습니까?")
+            .setPositiveButton("되돌리기") { _, _ ->
+                android.util.Log.d("Activity", "되돌리기 확인됨: ${applicant.id}")
+                viewModel.revertToPreviousStage(listOf(applicant.id))
+            }
+            .setNegativeButton("취소", null)
+            .show()
     }
 
     private fun performAction(action: String) {

@@ -247,6 +247,34 @@ class ApplicantManagementViewModel @Inject constructor(
         _errorMessage.value = null
     }
 
+    // 이전 단계로 되돌리기
+    fun revertToPreviousStage(applicantIds: List<String>) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                when (val result = applicantRepository.revertToPreviousStage(applicantIds)) {
+                    is Result.Success -> {
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _errorMessage.value = "이전 단계로 되돌리기 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     // 현재 공고 ID 반환
     private fun getCurrentRecruitId(): String {
         return currentRecruitId
