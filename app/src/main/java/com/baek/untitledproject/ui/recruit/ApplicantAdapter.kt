@@ -157,6 +157,12 @@ class ApplicantAdapter(
         holder.bind(getItem(position))
     }
 
+    fun updateSelectionByIds(selectedIds: Set<String>) {
+        selectedItems.clear()
+        selectedItems.addAll(selectedIds)
+        notifyDataSetChanged()
+    }
+
     // 선택 모드 관련 메서드들 (기존과 동일)
     fun setSelectionMode(enabled: Boolean) {
         isSelectionMode = enabled
