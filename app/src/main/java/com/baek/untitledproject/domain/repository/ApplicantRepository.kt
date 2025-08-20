@@ -21,6 +21,11 @@ interface ApplicantRepository {
     suspend fun getApplicantDetail(applicationId: String): ApplicantSummary
 
     /**
+     * 특정 공고에 면접 일정이 설정되어 있는지 확인
+     */
+    suspend fun hasInterviewSlots(postId: String): Result<Boolean>
+
+    /**
      * 지원자들을 면접 대기 상태로 변경
      */
     suspend fun scheduleInterviews(applicationIds: List<String>): Result<Unit>

@@ -205,6 +205,15 @@ class ApplicantManagementActivity : AppCompatActivity() {
                         // TODO: 로딩 UI 표시/숨김
                     }
                 }
+
+                launch {
+                    viewModel.errorMessage.collect { errorMessage ->
+                        errorMessage?.let {
+                            showErrorBottomSheet(it)
+                            viewModel.clearErrorMessage()
+                        }
+                    }
+                }
             }
         }
     }
@@ -373,6 +382,22 @@ class ApplicantManagementActivity : AppCompatActivity() {
 
         confirmDialog.setContentView(confirmBinding.root)
         confirmDialog.show()
+    }
+
+    private fun showErrorBottomSheet(errorMessage: String) {
+        val errorBinding = BottomSheetConfirmBinding.inflate(LayoutInflater.from(this))
+        val errorDialog = BottomSheetDialog(this)
+
+        errorBinding.confirmMessageTxt.text = errorMessage
+        errorBinding.confirmBtn.text = "확인"
+        errorBinding.cancelBtn.visibility = View.GONE  // 취소 버튼 숨김
+
+        errorBinding.confirmBtn.setOnClickListener {
+            errorDialog.dismiss()
+        }
+
+        errorDialog.setContentView(errorBinding.root)
+        errorDialog.show()
     }
 
     private fun performAction(action: String) {

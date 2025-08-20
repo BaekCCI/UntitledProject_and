@@ -7,10 +7,8 @@ import com.baek.untitledproject.domain.repository.ApplicantRepository
 import com.baek.untitledproject.domain.utils.Result
 import javax.inject.Inject
 
-
 class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
 
-    // ApplicantRepositoryImpl.kt 로그 추가
     override suspend fun getApplicants(postId: String): List<ApplicantSummary> {
         return try {
             val result = ApplicantRemote.getApplicants(postId)
@@ -34,6 +32,17 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
         }
     }
 
+    override suspend fun hasInterviewSlots(postId: String): Result<Boolean> {
+        return try {
+            val hasSlots = ApplicantRemote.hasInterviewSlots(postId)
+            Log.d("ApplicantRepository", "면접 슬롯 확인 완료: $postId - $hasSlots")
+            Result.Success(hasSlots)
+        } catch (e: Exception) {
+            Log.e("ApplicantRepository", "면접 슬롯 확인 실패", e)
+            Result.Error("면접 일정 확인에 실패했습니다.", e)
+        }
+    }
+
     override suspend fun scheduleInterviews(applicationIds: List<String>): Result<Unit> {
         return try {
             ApplicantRemote.scheduleInterviews(applicationIds)
@@ -41,7 +50,13 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
             Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("ApplicantRepository", "면접 일정 설정 실패", e)
-            Result.Error("면접 일정 설정에 실패했습니다.", e)
+            // 에러 메시지 구분해서 반환
+            val errorMessage = when {
+                e.message?.contains("면접 일정이 설정되지 않았습니다") == true ->
+                    "면접 일정이 설정되지 않았습니다. 먼저 면접 일정을 설정해주세요."
+                else -> "면접 일정 설정에 실패했습니다."
+            }
+            Result.Error(errorMessage, e)
         }
     }
 
