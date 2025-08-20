@@ -49,4 +49,9 @@ interface ApplicantRepository {
      * 지원자들에게 결과 알림 발송
      */
     suspend fun notifyResults(applicationIds: List<String>): Result<Unit>
+
+    /**
+     * 지원자들을 이전 단계로 되돌리기
+     */
+    suspend fun revertToPreviousStage(applicationIds: List<String>): Result<Unit>
 }

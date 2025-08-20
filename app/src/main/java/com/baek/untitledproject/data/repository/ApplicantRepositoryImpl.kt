@@ -103,4 +103,15 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
             Result.Error("결과 알림 발송에 실패했습니다.", e)
         }
     }
+
+    override suspend fun revertToPreviousStage(applicationIds: List<String>): Result<Unit> {
+        return try {
+            ApplicantRemote.revertToPreviousStage(applicationIds)
+            Log.d("ApplicantRepository", "이전 단계 되돌리기 완료: $applicationIds")
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("ApplicantRepository", "이전 단계 되돌리기 실패", e)
+            Result.Error("이전 단계로 되돌리기에 실패했습니다.", e)
+        }
+    }
 }
