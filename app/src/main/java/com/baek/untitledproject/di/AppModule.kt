@@ -7,8 +7,10 @@ import com.baek.untitledproject.domain.repository.MyRecruitsRepository
 import com.baek.untitledproject.domain.repository.ApplicantRepository
 import com.baek.untitledproject.data.repository.ApplicantRepositoryImpl
 import com.baek.untitledproject.data.repository.ApplyRepositoryImpl
+import com.baek.untitledproject.data.repository.EmailVerifyRepositoryImpl
 import com.baek.untitledproject.data.repository.NotificationRepositoryImpl
 import com.baek.untitledproject.domain.repository.ApplyRepository
+import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.repository.NotificationRepository
 import dagger.Binds
 import dagger.Module
@@ -49,4 +51,11 @@ abstract class AppModule {
     abstract fun bindApplyRepository(
         applyRepositoryImpl: ApplyRepositoryImpl
     ): ApplyRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindEmailVerifyRepository(
+        emailVerifyRepositoryImpl: EmailVerifyRepositoryImpl
+    ): EmailVerifyRepository
+
 }

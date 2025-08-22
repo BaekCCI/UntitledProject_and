@@ -28,12 +28,14 @@ class StartLoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.loginBtn.setOnClickListener {
-            val action = StartLoginFragmentDirections.actionStartLoginFragmentToLoginEmailFragment()
+            val action =
+                StartLoginFragmentDirections.actionStartLoginFragmentToEmailVerifyFragment(AuthEntry.LOGIN.name)
             findNavController().navigate(action)
         }
 
         binding.joinBtn.setOnClickListener {
-            val action = StartLoginFragmentDirections.actionStartLoginFragmentToJoinEmailFragment()
+            val action =
+                StartLoginFragmentDirections.actionStartLoginFragmentToEmailVerifyFragment(AuthEntry.JOIN.name)
             findNavController().navigate(action)
         }
     }

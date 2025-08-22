@@ -1,5 +1,6 @@
 package com.baek.untitledproject.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.ActivityMainBinding
+import com.baek.untitledproject.ui.login.EmailVerifyFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,6 +20,12 @@ class MainActivity : AppCompatActivity() {
     private val rootDestinations = setOf(
         R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment
     )
+
+    private val navController by lazy {
+        val host =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        host.navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +56,7 @@ class MainActivity : AppCompatActivity() {
 
             binding.rootToolbar.visibility = if (isRoot) View.VISIBLE else View.GONE
         }
+        navController.handleDeepLink(intent)
     }
 
     //그냥 호출 시 toolbar 사라지도록
@@ -65,5 +74,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        navController.handleDeepLink(intent)
+    }
+
 
 }

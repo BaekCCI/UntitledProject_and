@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentJoinInfoBinding
 import com.baek.untitledproject.ui.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class JoinInfoFragment : Fragment() {
 
     private var _binding: FragmentJoinInfoBinding? = null

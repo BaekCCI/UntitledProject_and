@@ -9,22 +9,10 @@
         android:id="@+id/startLoginFragment"
         android:name="com.baek.untitledproject.ui.login.StartLoginFragment"
         android:label="fragment_start_login"
-        tools:layout="@layout/fragment_start_login" >
+        tools:layout="@layout/fragment_start_login">
         <action
-            android:id="@+id/action_startLoginFragment_to_joinEmailFragment"
-            app:destination="@id/joinEmailFragment" />
-        <action
-            android:id="@+id/action_startLoginFragment_to_loginEmailFragment"
-            app:destination="@id/loginEmailFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/joinEmailFragment"
-        android:name="com.baek.untitledproject.ui.login.JoinEmailFragment"
-        android:label="fragment_join_email"
-        tools:layout="@layout/fragment_join_email" >
-        <action
-            android:id="@+id/action_joinEmailFragment_to_joinInfoFragment"
-            app:destination="@id/joinInfoFragment" />
+            android:id="@+id/action_startLoginFragment_to_emailVerifyFragment"
+            app:destination="@id/emailVerifyFragment" />
     </fragment>
     <fragment
         android:id="@+id/joinInfoFragment"
@@ -32,8 +20,18 @@
         android:label="fragment_join_info"
         tools:layout="@layout/fragment_join_info" />
     <fragment
-        android:id="@+id/loginEmailFragment"
-        android:name="com.baek.untitledproject.ui.login.LoginEmailFragment"
-        android:label="fragment_login_email"
-        tools:layout="@layout/fragment_login_email" />
+        android:id="@+id/emailVerifyFragment"
+        android:name="com.baek.untitledproject.ui.login.EmailVerifyFragment"
+        android:label="fragment_email_verify"
+        tools:layout="@layout/fragment_email_verify">
+        <deepLink app:uri="muje://email-verified" />
+        <argument
+            android:name="entry"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_emailVerifyFragment_to_joinInfoFragment"
+            app:destination="@id/joinInfoFragment" />
+    </fragment>
 </navigation>
