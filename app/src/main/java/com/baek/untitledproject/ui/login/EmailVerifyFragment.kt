@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.baek.untitledproject.data.local.model.AuthCache
+import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.databinding.FragmentEmailVerifyBinding
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.ui.login.AuthEntry.Companion.toEntry
@@ -161,7 +162,7 @@ class EmailVerifyFragment : Fragment() {
         }
     }
 
-    private fun handleSignInState(state: Result<Boolean>) {
+    private fun handleSignInState(state: Result<EmailLinkResult>) {
         when (state) {
             is Result.Loading -> {
                 // 필요 시 로딩 UI
@@ -180,8 +181,8 @@ class EmailVerifyFragment : Fragment() {
     }
 
     //인증 성공 후 신규/기존 분기
-    private fun proceedAfterSignIn(isNewUser: Boolean) {
-        if (isNewUser) {
+    private fun proceedAfterSignIn(result: EmailLinkResult) {
+        if (result.isNewUser) {
             if (entry == AuthEntry.JOIN) {
                 Toast.makeText(requireContext(), "인증을 성공하였습니다.", Toast.LENGTH_LONG).show()
             } else if (entry == AuthEntry.LOGIN) {

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.data.local.model.AuthCache
+import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.utils.Result
 import com.google.rpc.context.AttributeContext.Auth
@@ -27,8 +28,8 @@ class EmailVerifyViewModel @Inject constructor(
     val sendState: StateFlow<Result<Unit>> = _sendState
 
     //링크 인증 상태: true -> 신규, false -> 기존
-    private val _signInState = MutableStateFlow<Result<Boolean>>(Result.None)
-    val signInState: StateFlow<Result<Boolean>> = _signInState
+    private val _signInState = MutableStateFlow<Result<EmailLinkResult>>(Result.None)
+    val signInState: StateFlow<Result<EmailLinkResult>> = _signInState
 
     private val _authCache = MutableStateFlow<Result<AuthCache>>(Result.None)
     val authCache: StateFlow<Result<AuthCache>> = _authCache

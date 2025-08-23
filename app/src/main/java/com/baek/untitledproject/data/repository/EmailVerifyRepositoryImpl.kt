@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import com.baek.untitledproject.data.local.EmailStore
 import com.baek.untitledproject.data.local.model.AuthCache
+import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.data.remote.AuthRemote
 import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.utils.Result
@@ -32,7 +33,7 @@ class EmailVerifyRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun handleDeepLink(uri: Uri): Result<Boolean> {
+    override suspend fun handleDeepLink(uri: Uri): Result<EmailLinkResult> {
         return try {
             val email = emailStore.get().email ?: ""
 
@@ -40,8 +41,8 @@ class EmailVerifyRepositoryImpl @Inject constructor(
                 return Result.Error("저장된 이메일이 없습니다. 이메일을 다시 입력해주세요.")
             }
 
-            val isNew = AuthRemote.handleEmailSignInLink(uri, email)
-            Result.Success(isNew)
+            val result = AuthRemote.handleEmailSignInLink(uri, email)
+            Result.Success(result)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {

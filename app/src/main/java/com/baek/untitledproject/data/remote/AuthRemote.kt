@@ -1,6 +1,7 @@
 package com.baek.untitledproject.data.remote
 
 import android.net.Uri
+import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.google.firebase.Firebase
 import com.google.firebase.app
 import com.google.firebase.auth.ActionCodeSettings
@@ -19,7 +20,7 @@ object AuthRemote {
         FirebaseAuth.getInstance().sendSignInLinkToEmail(email, settings).await()
     }
 
-    suspend fun handleEmailSignInLink(deepLink: Uri, inputEmail: String): Boolean {
+    suspend fun handleEmailSignInLink(deepLink: Uri, inputEmail: String): EmailLinkResult {
         // 커스텀 스킴/호스트 확인
         require(deepLink.scheme == "muje" && deepLink.host == "email-verified") {
             "유효하지 않은 딥링크"
@@ -56,7 +57,11 @@ object AuthRemote {
 
         //이메일 로그인
         val result = auth.signInWithEmailLink(inputEmail, signInLink).await()
-        return result.additionalUserInfo?.isNewUser == true
+        return EmailLinkResult(
+            uid = result.user?.uid,
+            email = result.user?.email,
+            isNewUser = result.additionalUserInfo?.isNewUser == true
+        )
     }
 
 }
