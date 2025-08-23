@@ -23,7 +23,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- 일정 목록 -->
+        <!-- 일정 목록 (기존 RecyclerView 유지) -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/scheduleRecyclerView"
             android:layout_width="match_parent"
@@ -59,13 +59,22 @@
 
         </LinearLayout>
 
-        <!-- 내 공고 목록 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/myRecruitRecyclerView"
+        <!-- 내 공고 ViewPager2 -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/myRecruitViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- 내 공고 페이지 인디케이터 -->
+        <LinearLayout
+            android:id="@+id/myRecruitIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:nestedScrollingEnabled="false" />
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" />
 
         <!-- 내가 지원한 공고 섹션 -->
         <LinearLayout
@@ -95,12 +104,21 @@
 
         </LinearLayout>
 
-        <!-- 지원한 공고 목록 -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/appliedRecruitRecyclerView"
+        <!-- 지원한 공고 ViewPager2 -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/appliedRecruitViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="4dp" />
+
+        <!-- 지원한 공고 페이지 인디케이터 -->
+        <LinearLayout
+            android:id="@+id/appliedRecruitIndicator"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone" />
 
     </LinearLayout>
 

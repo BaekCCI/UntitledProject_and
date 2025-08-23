@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 인디케이터 점 크기 및 간격 -->
+    <dimen name="indicator_dot_size">8dp</dimen>
+    <dimen name="indicator_dot_margin">4dp</dimen>
+</resources>

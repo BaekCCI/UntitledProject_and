@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.ApplicantSummary
 import com.baek.untitledproject.domain.repository.ApplicantRepository
+import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,18 +28,29 @@ class ApplicantManagementViewModel @Inject constructor(
     private val _currentFilter = MutableStateFlow("all")
     val currentFilter: StateFlow<String> = _currentFilter
 
+    // 검색어
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
     // 로딩 상태
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
+    // 에러 메시지
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     // 전체 지원자 목록 (필터링 전)
     private var allApplicants: List<ApplicantSummary> = emptyList()
 
-    // ApplicantManagementViewModel.kt 로그 추가
+    // 현재 공고 ID 저장
+    private var currentRecruitId: String = ""
+
     fun loadApplicants(recruitId: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                currentRecruitId = recruitId
                 allApplicants = applicantRepository.getApplicants(recruitId)
                 allApplicants.forEach { applicant ->
                 }
@@ -46,6 +58,7 @@ class ApplicantManagementViewModel @Inject constructor(
                 applyCurrentFilter()
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "지원자 목록을 불러오는데 실패했습니다."
             } finally {
                 _isLoading.value = false
             }
@@ -54,10 +67,18 @@ class ApplicantManagementViewModel @Inject constructor(
 
     fun filterApplicants(filter: String) {
         _currentFilter.value = filter
-        applyCurrentFilter()
+        applyFiltersAndSearch()
     }
 
-    private fun applyCurrentFilter() {
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        applyFiltersAndSearch()
+    }
+
+    private fun applyFiltersAndSearch() {
+        val query = _searchQuery.value.trim()
+
+        // 먼저 필터 적용
         val filtered = when (_currentFilter.value) {
             "all" -> allApplicants.filter { it.status == "지원서 제출됨" }
             "interview" -> allApplicants.filter { it.status == "면접 대기 중" }
@@ -65,79 +86,232 @@ class ApplicantManagementViewModel @Inject constructor(
             "complete" -> allApplicants.filter { it.status == "심사 완료됨" }
             else -> allApplicants
         }
-        _applicants.value = filtered
+
+        // 검색어가 있으면 추가 필터링
+        val result = if (query.isEmpty()) {
+            filtered
+        } else {
+            filtered.filter { applicant ->
+                applicant.name.contains(query, ignoreCase = true) ||
+                        applicant.department?.contains(query, ignoreCase = true) == true ||
+                        applicant.studentId?.contains(query, ignoreCase = true) == true
+            }
+        }
+
+        _applicants.value = result
     }
 
-    // 액션 메서드들
+    private fun applyCurrentFilter() {
+        // 기존 메서드를 새로운 로직으로 대체
+        applyFiltersAndSearch()
+    }
+
+    // 면접 제안 (면접 일정 체크 포함)
     fun scheduleInterviews(applicantIds: List<String>) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                applicantRepository.scheduleInterviews(applicantIds)
-                // 데이터 새로고침
-                loadApplicants(getCurrentRecruitId())
+                when (val result = applicantRepository.scheduleInterviews(applicantIds)) {
+                    is Result.Success -> {
+                        // 성공 시 데이터 새로고침
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "면접 제안 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun completeInterviews(applicantIds: List<String>) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                applicantRepository.completeInterviews(applicantIds)
-                loadApplicants(getCurrentRecruitId())
+                when (val result = applicantRepository.completeInterviews(applicantIds)) {
+                    is Result.Success -> {
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "면접 완료 처리 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun passApplicants(applicantIds: List<String>) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                applicantRepository.passApplicants(applicantIds)
-                loadApplicants(getCurrentRecruitId())
+                when (val result = applicantRepository.passApplicants(applicantIds)) {
+                    is Result.Success -> {
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "합격 처리 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun failApplicants(applicantIds: List<String>) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                applicantRepository.failApplicants(applicantIds)
-                loadApplicants(getCurrentRecruitId())
+                when (val result = applicantRepository.failApplicants(applicantIds)) {
+                    is Result.Success -> {
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "불합격 처리 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun notifyResults(applicantIds: List<String>) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
-                applicantRepository.notifyResults(applicantIds)
-                // 알림 완료 후 특별한 처리가 필요하다면 추가
+                when (val result = applicantRepository.notifyResults(applicantIds)) {
+                    is Result.Success -> {
+                        // 알림 완료 후 특별한 처리가 필요하다면 추가
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "알림 발송 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun notifyAllApplicants() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val allIds = _applicants.value.map { it.id }
-                applicantRepository.notifyResults(allIds)
+                when (val result = applicantRepository.notifyResults(allIds)) {
+                    is Result.Success -> {
+                        // 전체 알림 완료
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
+                _errorMessage.value = "전체 알림 발송 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    // TODO: 현재 공고 ID를 저장하고 반환
+    // 에러 메시지 초기화
+    fun clearErrorMessage() {
+        _errorMessage.value = null
+    }
+
+    // 검색어 초기화
+    fun clearSearch() {
+        _searchQuery.value = ""
+        applyFiltersAndSearch()
+    }
+
+    // 이전 단계로 되돌리기
+    fun revertToPreviousStage(applicantIds: List<String>) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                when (val result = applicantRepository.revertToPreviousStage(applicantIds)) {
+                    is Result.Success -> {
+                        loadApplicants(currentRecruitId)
+                    }
+                    is Result.Error -> {
+                        _errorMessage.value = result.message
+                    }
+                    is Result.Loading -> {
+                        // 이미 _isLoading으로 처리중
+                    }
+                    is Result.None -> {
+                        // 초기 상태, 아무것도 하지 않음
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _errorMessage.value = "이전 단계로 되돌리기 중 오류가 발생했습니다."
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // 현재 공고 ID 반환
     private fun getCurrentRecruitId(): String {
-        return "post_001" // 임시값, 실제로는 저장된 값 사용
+        return currentRecruitId
     }
 }

@@ -1,174 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    android:layout_marginHorizontal="4dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="#FFFFFF"
-    app:contentPadding="16dp">
+    android:layout_height="match_parent"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- 상단: 이미지 + 텍스트 가로 배치 -->
+        android:layout_height="240dp"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:contentPadding="16dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:orientation="horizontal"
-            android:gravity="top">
+            android:orientation="vertical">
 
-            <!-- 좌측: 회색 이미지 박스 -->
-            <View
-                android:id="@+id/thumbnailImg"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="12dp"
-                android:background="#E0E0E0" />
-
-            <!-- 우측: 동아리명 + 제목 -->
+            <!-- 상단: 이미지 + 텍스트 가로 배치 -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:gravity="top">
 
-                <!-- 동아리명 (색깔 없이 그냥 텍스트) -->
+                <!-- 좌측: 썸네일 이미지 -->
+                <ImageView
+                    android:id="@+id/thumbnailImg"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="#E0E0E0"
+                    android:scaleType="centerCrop" />
+
+                <!-- 우측: 동아리명 + 제목 -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <!-- 동아리명 -->
+                    <TextView
+                        android:id="@+id/categoryTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:text="동아리명"
+                        android:textColor="#666666"
+                        android:textSize="12sp" />
+
+                    <!-- 제목 -->
+                    <TextView
+                        android:id="@+id/titleTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="댄스 동아리 OO 모집합니다"
+                        android:textColor="#333333"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:maxLines="2"
+                        android:ellipsize="end" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- 상태 -->
+            <TextView
+                android:id="@+id/statusTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/tag_blue"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:text="면접 진행"
+                android:textColor="#2196F3"
+                android:textSize="11sp" />
+
+            <!-- 모집 기간 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:orientation="horizontal">
+
                 <TextView
-                    android:id="@+id/categoryTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="동아리명"
+                    android:layout_marginEnd="8dp"
+                    android:text="모집 기간"
                     android:textColor="#666666"
                     android:textSize="12sp" />
 
-                <!-- 제목 -->
                 <TextView
-                    android:id="@+id/titleTxt"
+                    android:id="@+id/periodDetailTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="댄스 동아리 OO 모집합니다"
+                    android:text="8월 1일 ~ 9월 30일"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- 현재 일정 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="현재 일정"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/currentScheduleTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="미정"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- 하단: 관리 버튼들 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/interviewManageBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="@null"
+                    android:text="면접 일정 관리"
                     android:textColor="#333333"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/applicantManageBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="@null"
+                    android:text="지원자 관리"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/postManageBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_outline"
+                    android:backgroundTint="@null"
+                    android:text="작성글 관리"
+                    android:textColor="#333333"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- 상태 (하나의 TextView로 통합) -->
-        <TextView
-            android:id="@+id/statusTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/tag_blue"
-            android:paddingHorizontal="6dp"
-            android:paddingVertical="2dp"
-            android:text="면접 진행"
-            android:textColor="#2196F3"
-            android:textSize="11sp" />
+    </androidx.cardview.widget.CardView>
 
-        <!-- 모집 기간 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="모집 기간"
-                android:textColor="#666666"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/periodDetailTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8월 1일 ~ 9월 30일"
-                android:textColor="#666666"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <!-- 현재 일정 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:text="현재 일정"
-                android:textColor="#666666"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/currentScheduleTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="미정"
-                android:textColor="#666666"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-        <!-- 하단: 관리 버튼들 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/interviewManageBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_outline"
-                android:backgroundTint="@null"
-                android:text="면접 일정 관리"
-                android:textColor="#333333"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/applicantManageBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginHorizontal="3dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_outline"
-                android:backgroundTint="@null"
-                android:text="지원자 관리"
-                android:textColor="#333333"
-                android:textSize="12sp" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/postManageBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_outline"
-                android:backgroundTint="@null"
-                android:text="작성글 관리"
-                android:textColor="#333333"
-                android:textSize="12sp" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</androidx.cardview.widget.CardView>
+</LinearLayout>

@@ -47,7 +47,7 @@ class ApplicantAdapter(
             binding.departmentTxt.text = item.department ?: "학과 미정"
             binding.statusLinkTxt.text = item.statusText
 
-            // 상태 아이콘 색상 설정 (Firebase 상태값 기준)
+            // 상태 아이콘 색상 설정 (실제 DB 상태값 기준)
             updateStatusIcon(item.status, item.isPassed)
 
             // 선택 모드에 따른 체크박스 표시/숨김
@@ -65,12 +65,12 @@ class ApplicantAdapter(
 
         private fun updateStatusIcon(status: String, isPassed: Boolean?) {
             val iconRes = when {
-                status == "submitted" -> com.baek.untitledproject.R.drawable.tag_blue
-                status == "interview_waiting" -> com.baek.untitledproject.R.drawable.tag_green
-                status == "review_waiting" -> com.baek.untitledproject.R.drawable.tag_orange
-                status == "review_completed" && isPassed == true -> com.baek.untitledproject.R.drawable.tag_green
-                status == "review_completed" && isPassed == false -> com.baek.untitledproject.R.drawable.tag_red
-                status == "review_completed" && isPassed == null -> com.baek.untitledproject.R.drawable.tag_blue
+                status == "지원서 제출됨" -> com.baek.untitledproject.R.drawable.tag_blue
+                status == "면접 대기 중" -> com.baek.untitledproject.R.drawable.tag_green
+                status == "심사 대기 중" -> com.baek.untitledproject.R.drawable.tag_orange
+                status == "심사 완료됨" && isPassed == true -> com.baek.untitledproject.R.drawable.tag_green
+                status == "심사 완료됨" && isPassed == false -> com.baek.untitledproject.R.drawable.tag_red
+                status == "심사 완료됨" && isPassed == null -> com.baek.untitledproject.R.drawable.tag_blue
                 else -> com.baek.untitledproject.R.drawable.tag_blue
             }
             binding.statusIcon.setBackgroundResource(iconRes)
@@ -95,6 +95,7 @@ class ApplicantAdapter(
         private fun setupClickEvents(item: ApplicantSummary) {
             // 일반 클릭
             binding.root.setOnClickListener {
+                android.util.Log.d("ApplicantAdapter", "일반 클릭: ${item.name}, 선택모드: $isSelectionMode")
                 if (isSelectionMode) {
                     // 선택 모드에서는 체크박스 토글
                     binding.selectionCheckbox.isChecked = !binding.selectionCheckbox.isChecked
@@ -102,10 +103,11 @@ class ApplicantAdapter(
                 onItemClick(item)
             }
 
-            // 길게 누르기
+            // 길게 누르기 - 로그 추가해서 확인
             binding.root.setOnLongClickListener {
+                android.util.Log.d("ApplicantAdapter", "롱프레스 감지: ${item.name}, 선택모드: $isSelectionMode, 상태: ${item.status}")
                 onItemLongClick(item)
-                true
+                true // 이벤트 소비됨
             }
 
             // 체크박스 클릭 - 콜백 추가
@@ -122,18 +124,18 @@ class ApplicantAdapter(
 
             // 상태 링크 클릭
             binding.statusLinkTxt.setOnClickListener {
-                // Firebase 상태값에 따른 상세 화면 이동
+                // 실제 DB 상태값에 따른 상세 화면 이동
                 when (item.status) {
-                    "submitted" -> {
+                    "지원서 제출됨" -> {
                         // 지원서 상세보기
                     }
-                    "interview_waiting" -> {
+                    "면접 대기 중" -> {
                         // 면접 일정 보기
                     }
-                    "review_waiting" -> {
+                    "심사 대기 중" -> {
                         // 면접 결과 보기
                     }
-                    "review_completed" -> {
+                    "심사 완료됨" -> {
                         // 최종 결과 보기
                     }
                     else -> {
@@ -157,8 +159,15 @@ class ApplicantAdapter(
         holder.bind(getItem(position))
     }
 
-    // 선택 모드 관련 메서드들 (기존과 동일)
+    fun updateSelectionByIds(selectedIds: Set<String>) {
+        selectedItems.clear()
+        selectedItems.addAll(selectedIds)
+        notifyDataSetChanged()
+    }
+
+    // 선택 모드 관련 메서드들
     fun setSelectionMode(enabled: Boolean) {
+        android.util.Log.d("ApplicantAdapter", "선택 모드 변경: $enabled")
         isSelectionMode = enabled
         if (!enabled) {
             selectedItems.clear()
