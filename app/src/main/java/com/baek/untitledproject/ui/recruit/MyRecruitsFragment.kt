@@ -1,11 +1,13 @@
 package com.baek.untitledproject.ui.recruit
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -28,7 +30,6 @@ class MyRecruitsFragment : Fragment() {
 
     private val viewModel: MyRecruitsViewModel by viewModels()
 
-    // 어댑터들
     private lateinit var scheduleGroupAdapter: ScheduleGroupAdapter
     private lateinit var myRecruitPagerAdapter: MyRecruitPagerAdapter
     private lateinit var appliedRecruitPagerAdapter: AppliedRecruitPagerAdapter
@@ -54,7 +55,7 @@ class MyRecruitsFragment : Fragment() {
     }
 
     private fun initAdapters() {
-        // 일정 그룹 어댑터 (기존 유지)
+        // 일정 그룹 어댑터
         scheduleGroupAdapter = ScheduleGroupAdapter { groupId ->
             viewModel.toggleScheduleGroup(groupId)
         }
@@ -62,45 +63,60 @@ class MyRecruitsFragment : Fragment() {
         // 내 공고 ViewPager2 어댑터
         myRecruitPagerAdapter = MyRecruitPagerAdapter(
             onInterviewManageClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "면접 예약 관리 클릭: $recruitId")
                 viewModel.onInterviewManageClick(recruitId)
             },
             onApplicantManageClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "지원자 관리 클릭: $recruitId")
-                // ApplicantManagementActivity로 이동
                 val intent = Intent(requireContext(), ApplicantManagementActivity::class.java)
                 intent.putExtra("recruitId", recruitId)
                 startActivity(intent)
             },
             onPostManageClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "작성글 관리 클릭: $recruitId")
                 viewModel.onPostManageClick(recruitId)
             },
             onCardClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "내 공고 카드 클릭: $recruitId")
                 // TODO: 상세 페이지로 이동
             }
         )
 
-        // 지원한 공고 ViewPager2 어댑터
         appliedRecruitPagerAdapter = AppliedRecruitPagerAdapter(
             onInterviewReserveClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "면접 예약 클릭: $recruitId")
-                viewModel.onInterviewReserveClick(recruitId)
+
+                val appliedRecruit = viewModel.appliedRecruits.value.find { it.id == recruitId }
+
+                if (appliedRecruit != null) {
+                    val intent = Intent(requireContext(), InterviewReservationActivity::class.java).apply {
+                        putExtra("postId", appliedRecruit.postId)
+                        putExtra("applicationId", appliedRecruit.id)
+                    }
+
+                    startActivityForResult(intent, REQUEST_CODE_INTERVIEW_RESERVATION)
+                } else {
+                    Toast.makeText(requireContext(), "지원서 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
             },
             onViewPostClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "공고글 보기 클릭: $recruitId")
                 viewModel.onViewPostClick(recruitId)
             },
             onCardClick = { recruitId ->
-                Log.d("MyRecruitsFragment", "지원한 공고 카드 클릭: $recruitId")
                 // TODO: 상세 페이지로 이동
             }
         )
     }
 
+    companion object {
+        private const val REQUEST_CODE_INTERVIEW_RESERVATION = 1001
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_INTERVIEW_RESERVATION && resultCode == Activity.RESULT_OK) {
+            viewModel.loadAllData()
+            Toast.makeText(requireContext(), "면접 예약이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun setupViews() {
-        // 일정 RecyclerView (기존 유지)
         binding.scheduleRecyclerView.apply {
             adapter = scheduleGroupAdapter
             layoutManager = LinearLayoutManager(requireContext())
@@ -198,7 +214,7 @@ class MyRecruitsFragment : Fragment() {
         binding.myRecruitIndicator.visibility = View.VISIBLE
         binding.myRecruitIndicator.removeAllViews()
 
-        // 인디케이터 점들 추가
+        // 인디케이터 점
         for (i in 0 until itemCount) {
             val indicator = createIndicatorDot(i == 0)
             binding.myRecruitIndicator.addView(indicator)
@@ -242,7 +258,6 @@ class MyRecruitsFragment : Fragment() {
     private fun createIndicatorDot(isSelected: Boolean): View {
         val dot = View(requireContext())
 
-        // 8dp 크기와 4dp 마진 설정
         val dotSize = (8 * resources.displayMetrics.density).toInt()
         val dotMargin = (4 * resources.displayMetrics.density).toInt()
 
