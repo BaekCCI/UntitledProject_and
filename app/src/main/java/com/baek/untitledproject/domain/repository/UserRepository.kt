@@ -4,6 +4,9 @@ import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.utils.Result
 
 interface UserRepository {
+    //유저 존재 여부 확인
+    suspend fun userExists(userId: String): Result<Boolean>
+
     //서버 -> room 동기화
     suspend fun syncUser(userId: String): Result<User>
 

@@ -14,6 +14,17 @@ import com.baek.untitledproject.domain.utils.Result
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDao
 ) : UserRepository {
+
+    //존재하는 유저인지
+    override suspend fun userExists(userId: String): Result<Boolean> {
+        return try {
+            val exists = UserRemote.userExist(userId)
+            Result.Success(exists)
+        } catch (e: Exception) {
+            Result.Error("유저 정보를 찾는 중 에러 발생", e)
+        }
+    }
+
     //서버 -> room 동기화
     override suspend fun syncUser(userId: String): Result<User> {
         return try {

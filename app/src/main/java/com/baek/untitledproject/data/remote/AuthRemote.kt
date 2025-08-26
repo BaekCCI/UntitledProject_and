@@ -2,8 +2,6 @@ package com.baek.untitledproject.data.remote
 
 import android.net.Uri
 import com.baek.untitledproject.data.local.model.EmailLinkResult
-import com.google.firebase.Firebase
-import com.google.firebase.app
 import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
@@ -57,9 +55,10 @@ object AuthRemote {
 
         //이메일 로그인
         val result = auth.signInWithEmailLink(inputEmail, signInLink).await()
+        val user = requireNotNull(result.user) { "로그인 성공 응답이지만 user=null" }
         return EmailLinkResult(
-            uid = result.user?.uid,
-            email = result.user?.email,
+            uid = user.uid,
+            email = user.email ?: inputEmail,
             isNewUser = result.additionalUserInfo?.isNewUser == true
         )
     }

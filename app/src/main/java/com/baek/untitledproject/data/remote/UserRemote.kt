@@ -8,6 +8,15 @@ import kotlinx.coroutines.tasks.await
 
 object UserRemote {
 
+    suspend fun userExist(userId: String): Boolean {
+        val db = FirebaseFirestore.getInstance()
+        val doc = db.collection("users")
+            .document(userId)
+            .get()
+            .await()
+        return doc.exists()
+    }
+
     suspend fun getUser(userId: String): UserResponse {
         val db = FirebaseFirestore.getInstance()
 
