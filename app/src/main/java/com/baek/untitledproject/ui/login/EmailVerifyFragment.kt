@@ -2,7 +2,6 @@ package com.baek.untitledproject.ui.login
 
 import android.os.Bundle
 import android.text.Editable
-import android.text.InputFilter
 import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,11 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
+import com.baek.untitledproject.R
 import com.baek.untitledproject.data.local.model.AuthCache
 import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.databinding.FragmentEmailVerifyBinding
@@ -33,7 +35,8 @@ class EmailVerifyFragment : Fragment() {
     private var _binding: FragmentEmailVerifyBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: EmailVerifyViewModel by viewModels()
+    private val emailVerifyViewModel: EmailVerifyViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by hiltNavGraphViewModels(R.id.login_nav_graph)
     private val args: EmailVerifyFragmentArgs by navArgs()
 
     private var entry: AuthEntry? = null
@@ -57,6 +60,9 @@ class EmailVerifyFragment : Fragment() {
         setSendEmailBtn()
         observeSignInState()
         observeSendState()
+
+        observeLoginState()
+        observeCanLogin()
     }
 
     //인증 메일 요청 버튼
@@ -64,15 +70,15 @@ class EmailVerifyFragment : Fragment() {
 
         binding.sendEmailBtn.setOnClickListener {
             val email = binding.emailInput.text.toString().trim()
-            Log.d("EmailVerifyFragment","email $email")
-            viewModel.requestEmailLink(email, entry ?: AuthEntry.JOIN)
+            Log.d("EmailVerifyFragment", "email $email")
+            emailVerifyViewModel.requestEmailLink(email, entry ?: AuthEntry.JOIN)
         }
     }
 
     //인증 확인 버튼
     private fun setEmailVerifyBtn() {
         binding.EmailVerifyBtn.setOnClickListener {
-            handleSignInState(viewModel.signInState.value)
+            handleSignInState(emailVerifyViewModel.signInState.value)
         }
     }
 
@@ -128,7 +134,7 @@ class EmailVerifyFragment : Fragment() {
     private fun observeSendState() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.sendState.collect { state ->
+                emailVerifyViewModel.sendState.collect { state ->
                     when (state) {
                         is Result.Success -> {
                             binding.sendEmailBtn.visibility = View.GONE
@@ -151,11 +157,12 @@ class EmailVerifyFragment : Fragment() {
         }
     }
 
+    //-----------------
     //이메일 인증 상태
     private fun observeSignInState() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.signInState.collect { state ->
+                emailVerifyViewModel.signInState.collect { state ->
                     handleSignInState(state)
                 }
             }
@@ -180,8 +187,11 @@ class EmailVerifyFragment : Fragment() {
         }
     }
 
+    //isNewUser == false => userExists? : false -> 회원가입, true -> 로그인
+    //isNewUser == true => 회원가입
     //인증 성공 후 신규/기존 분기
     private fun proceedAfterSignIn(result: EmailLinkResult) {
+        loginViewModel.acceptEmailResult(result)
         if (result.isNewUser) {
             if (entry == AuthEntry.JOIN) {
                 Toast.makeText(requireContext(), "인증을 성공하였습니다.", Toast.LENGTH_LONG).show()
@@ -189,12 +199,86 @@ class EmailVerifyFragment : Fragment() {
                 Toast.makeText(requireContext(), "가입이력이 확인되지 않아요!\n회원가입을 진행해주세요", Toast.LENGTH_LONG)
                     .show()
             }
+
+            clearState()
             val action = EmailVerifyFragmentDirections
                 .actionEmailVerifyFragmentToJoinInfoFragment()
             findNavController().navigate(action)
         } else {
-            Toast.makeText(requireContext(), "성공적으로 로그인했어요!", Toast.LENGTH_LONG).show()
-            // TODO: ROOMDB 저장 및 네비게이션
+            loginViewModel.existsUser()
+        }
+    }
+
+    private fun observeCanLogin() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.canLogin.collect { state ->
+                    when (state) {
+                        is Result.Success -> {
+                            if (state.data) { //가입 정보가 존재하면
+                                loginViewModel.login()
+                            } else {
+                                if (entry == AuthEntry.JOIN) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "인증을 성공하였습니다.",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                } else if (entry == AuthEntry.LOGIN) {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "가입이력이 확인되지 않아요!\n회원가입을 진행해주세요",
+                                        Toast.LENGTH_LONG
+                                    )
+                                        .show()
+                                }
+                                clearState()
+
+                                val action = EmailVerifyFragmentDirections
+                                    .actionEmailVerifyFragmentToJoinInfoFragment()
+                                findNavController().navigate(action)
+
+                            }
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeLoginState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.loginState.collect { state ->
+                    when (state) {
+                        is Result.Loading -> {
+
+                        }
+
+                        is Result.Success -> {
+                            Toast.makeText(requireContext(), "성공적으로 로그인했어요!", Toast.LENGTH_LONG)
+                                .show()
+                            emailVerifyViewModel.clearAuthCache()
+                            findNavController().navigate(
+                                R.id.myPageFragment,
+                                null,
+                                navOptions {
+                                    popUpTo(R.id.login_nav_graph) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            )
+                        }
+
+                        is Result.Error -> {
+
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
         }
     }
 
@@ -208,11 +292,11 @@ class EmailVerifyFragment : Fragment() {
     }
 
     //인증 완료 후 돌아왔을 때 기존에 입력했던 이메일 값
-    private fun emailFeildFromCacheIfDeepLinked() {
+    private fun emailFieldFromCacheIfDeepLinked() {
         if (!consumedDeepLink) return
         viewLifecycleOwner.lifecycleScope.launch {
             // authCache가 Success로 emit될 때까지 '한 번만' 기다린 뒤 채우기
-            val email = viewModel.authCache
+            val email = emailVerifyViewModel.authCache
                 .filterIsInstance<Result.Success<AuthCache>>()
                 .map { it.data.email.orEmpty() }
                 .firstOrNull()
@@ -223,15 +307,20 @@ class EmailVerifyFragment : Fragment() {
         }
     }
 
+    private fun clearState() {
+        emailVerifyViewModel.clearAuthCache()
+        loginViewModel.clearCanLogin()
+    }
+
     override fun onStart() {
         super.onStart()
         // 화면이 보일 때마다 확인하되, 한 번만 처리
         if (!consumedDeepLink) {
             requireActivity().intent?.data?.let { uri ->
-                viewModel.handleDeepLink(uri)
+                emailVerifyViewModel.handleDeepLink(uri)
                 // 중복 호출 방지
                 consumedDeepLink = true
-                emailFeildFromCacheIfDeepLinked()
+                emailFieldFromCacheIfDeepLinked()
                 // 다음 진입에서 다시 처리되지 않게 인텐트 정리(선택)
                 requireActivity().intent?.data = null
             }

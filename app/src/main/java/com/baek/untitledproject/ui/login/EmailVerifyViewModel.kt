@@ -8,7 +8,6 @@ import com.baek.untitledproject.data.local.model.AuthCache
 import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.utils.Result
-import com.google.rpc.context.AttributeContext.Auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable
@@ -69,10 +68,12 @@ class EmailVerifyViewModel @Inject constructor(
     }
 
     fun clearAuthCache() {
+        _sendState.value = Result.None
+        _signInState.value = Result.None
+        _authCache.value = Result.None
         viewModelScope.launch(Dispatchers.IO) {
             withContext(NonCancellable) {
                 emailVerifyRepository.clearAuthCache()
-                loadAuthCache()
                 Log.d("EmailVerifyViewModel", "Clear Cache")
             }
         }
