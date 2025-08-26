@@ -83,4 +83,19 @@
         <item name="android:textSize">16sp</item>
         <item name="android:gravity">start</item>
     </style>
+
+    <!--이용약관용 다이얼로그 스타일-->
+    <style name="ThemeOverlay.Untitled.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/Widget.Untitled.BottomSheet</item>
+    </style>
+
+    <style name="Widget.Untitled.BottomSheet" parent="Widget.Material3.BottomSheet">
+        <item name="shapeAppearance">@style/ShapeAppearance.Untitled.NoCorners</item>
+        <item name="backgroundTint">@color/white</item>
+    </style>
+
+    <style name="ShapeAppearance.Untitled.NoCorners" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">0dp</item>
+    </style>
 </resources>
