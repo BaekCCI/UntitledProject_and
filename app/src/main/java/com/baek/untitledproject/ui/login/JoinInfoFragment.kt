@@ -13,6 +13,8 @@ import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentJoinInfoBinding
 import com.baek.untitledproject.domain.utils.Result
@@ -208,7 +210,13 @@ class JoinInfoFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-                            //TODO: 스택 제거 후 Complete화면 이동
+                            findNavController().navigate(
+                                R.id.action_joinInfoFragment_to_completeJoinFragment,
+                                null,
+                                navOptions {
+                                    popUpTo(R.id.login_nav_graph) { inclusive = true }
+                                }
+                            )
                         }
 
                         else -> {

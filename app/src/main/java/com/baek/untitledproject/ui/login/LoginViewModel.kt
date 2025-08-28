@@ -70,7 +70,7 @@ class LoginViewModel @Inject constructor(
                 userId = emailResult!!.uid,
                 email = emailResult!!.email,
                 name = name,
-                birthYear = birth.substring(0, 3).toInt(),
+                birthYear = birth.substring(0, 4).toInt(),
                 gender = gender,
                 department = department,
                 studentId = studentId,

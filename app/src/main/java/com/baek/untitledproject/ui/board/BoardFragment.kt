@@ -137,7 +137,7 @@ class BoardFragment : Fragment() {
                     }
 
                     R.id.action_setting -> {
-                        val action = BoardFragmentDirections.actionBoardFragmentToLoginNavGraph()
+                        val action = BoardFragmentDirections.actionBoardFragmentToSettingFragment()
                         findNavController().navigate(action)
                         true
                     }

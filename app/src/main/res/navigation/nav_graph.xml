@@ -23,8 +23,8 @@
             android:id="@+id/action_boardFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
         <action
-            android:id="@+id/action_boardFragment_to_login_nav_graph"
-            app:destination="@id/login_nav_graph" />
+            android:id="@+id/action_boardFragment_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <fragment
         android:id="@+id/myRecruitsFragment"
@@ -89,4 +89,13 @@
     </dialog>
     <include app:graph="@navigation/submit_application_nav_graph" />
     <include app:graph="@navigation/login_nav_graph" />
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.baek.untitledproject.ui.setting.SettingFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" >
+        <action
+            android:id="@+id/action_settingFragment_to_login_nav_graph"
+            app:destination="@id/login_nav_graph" />
+    </fragment>
 </navigation>

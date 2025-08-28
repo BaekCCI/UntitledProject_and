@@ -262,7 +262,7 @@ class EmailVerifyFragment : Fragment() {
                                 .show()
                             emailVerifyViewModel.clearAuthCache()
                             findNavController().navigate(
-                                R.id.myPageFragment,
+                                R.id.settingFragment,
                                 null,
                                 navOptions {
                                     popUpTo(R.id.login_nav_graph) { inclusive = true }

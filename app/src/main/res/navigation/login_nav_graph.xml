@@ -18,7 +18,11 @@
         android:id="@+id/joinInfoFragment"
         android:name="com.baek.untitledproject.ui.login.JoinInfoFragment"
         android:label="fragment_join_info"
-        tools:layout="@layout/fragment_join_info" />
+        tools:layout="@layout/fragment_join_info" >
+        <action
+            android:id="@+id/action_joinInfoFragment_to_completeJoinFragment"
+            app:destination="@id/completeJoinFragment" />
+    </fragment>
     <fragment
         android:id="@+id/emailVerifyFragment"
         android:name="com.baek.untitledproject.ui.login.EmailVerifyFragment"
@@ -34,4 +38,9 @@
             android:id="@+id/action_emailVerifyFragment_to_joinInfoFragment"
             app:destination="@id/joinInfoFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/completeJoinFragment"
+        android:name="com.baek.untitledproject.ui.login.CompleteJoinFragment"
+        android:label="fragment_complete_join"
+        tools:layout="@layout/fragment_complete_join" />
 </navigation>
