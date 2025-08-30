@@ -2,8 +2,13 @@ package com.baek.untitledproject.domain.repository
 
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.utils.Result
+import kotlinx.coroutines.flow.Flow
 
-interface AuthRepository {
+//프로필/캐시 전달
+interface UserRepository {
+
+    fun observeCurrentUser(): Flow<User?>
+
     //유저 존재 여부 확인
     suspend fun userExists(userId: String): Result<Boolean>
 
@@ -16,15 +21,6 @@ interface AuthRepository {
     //User 저장: 서버 및 Room에 저장
     suspend fun saveUser(userId: String, user: User): Result<User>
 
-    //비밀번호 설정
-    suspend fun setPassword(password: String): Result<Unit>
-
-    //로그인
-    suspend fun login(email: String, password: String): Result<User>
-
     //로그아웃 시 로컬 데이터 삭제
-    suspend fun logoutAndClearLocalData(): Result<Unit>
-
-    //회원탈퇴 시 서버/로컬 데이터 삭제
-    suspend fun deleteUserAccount(userId: String): Result<Unit>
+    suspend fun clearLocal(): Result<Unit>
 }

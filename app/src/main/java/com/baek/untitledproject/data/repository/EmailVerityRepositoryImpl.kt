@@ -5,22 +5,22 @@ import android.net.Uri
 import android.util.Log
 import com.baek.untitledproject.data.local.EmailStore
 import com.baek.untitledproject.data.local.model.EmailLinkResult
-import com.baek.untitledproject.data.remote.AuthRemote
-import com.baek.untitledproject.domain.repository.AuthRepository
+import com.baek.untitledproject.data.remote.EmailVerifyRemote
+import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import kotlin.coroutines.cancellation.CancellationException
 
-class AuthRepositoryImpl @Inject constructor(
+class EmailVerityRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val emailStore: EmailStore
-) : AuthRepository {
+) : EmailVerifyRepository {
     override suspend fun sendSignInLink(email: String): Result<Unit> {
         return try {
             emailStore.clear()
-            AuthRemote.sendSignInLink(email, context.packageName)
+            EmailVerifyRemote.sendSignInLink(email, context.packageName)
             emailStore.saveEmail(email)
             Result.Success(Unit)
         } catch (e: CancellationException) {
@@ -38,7 +38,7 @@ class AuthRepositoryImpl @Inject constructor(
             if (email == null) {
                 return Result.Error("저장된 이메일이 없습니다. 이메일을 다시 입력해주세요.")
             }
-            val result = AuthRemote.handleEmailSignInLink(uri, email)
+            val result = EmailVerifyRemote.handleEmailSignInLink(uri, email)
             Result.Success(result)
         } catch (e: CancellationException) {
             throw e

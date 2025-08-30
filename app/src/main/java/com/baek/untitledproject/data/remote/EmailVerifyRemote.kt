@@ -6,7 +6,7 @@ import com.google.firebase.auth.ActionCodeSettings
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.tasks.await
 
-object AuthRemote {
+object EmailVerifyRemote {
 
     suspend fun sendSignInLink(email: String, androidPackageName: String) {
         val settings = ActionCodeSettings.newBuilder()

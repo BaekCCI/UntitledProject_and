@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.data.local.model.EmailLinkResult
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.AuthRepository
+import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.repository.UserRepository
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class JoinViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val emailVerifyRepository: EmailVerifyRepository,
+    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
     //이메일 전송 상태
     private val _sendState = MutableStateFlow<Result<Unit>>(Result.None)
@@ -26,10 +28,10 @@ class JoinViewModel @Inject constructor(
 
     var lastRequestedEmail: String? = null
 
-    val emailCacheFlow = authRepository.emailFlow
+    val emailCacheFlow = emailVerifyRepository.emailFlow
     init {
         viewModelScope.launch {
-            authRepository.getEmail()?.let { email ->
+            emailVerifyRepository.getEmail()?.let { email ->
                 lastRequestedEmail = email
             }
         }
@@ -43,7 +45,7 @@ class JoinViewModel @Inject constructor(
     fun requestEmailLink(email: String) {
         viewModelScope.launch {
             _sendState.value = Result.Loading
-            val result = authRepository.sendSignInLink(email)
+            val result = emailVerifyRepository.sendSignInLink(email)
             if (result is Result.Success) {
                 lastRequestedEmail = email
             }
@@ -66,7 +68,7 @@ class JoinViewModel @Inject constructor(
     //딥링크 처리
     fun handleDeepLink(uri: Uri) = viewModelScope.launch {
         _signInState.value = Result.Loading
-        val result = authRepository.handleDeepLink(lastRequestedEmail, uri)
+        val result = emailVerifyRepository.handleDeepLink(lastRequestedEmail, uri)
         if (result is Result.Success) {
             if (result.data.isNewUser) {
                 _signInState.value = result
@@ -97,7 +99,7 @@ class JoinViewModel @Inject constructor(
     fun setPassword(password: String) {
         viewModelScope.launch {
             _setPwState.value = Result.Loading
-            _setPwState.value = userRepository.setPassword(password)
+            _setPwState.value = authRepository.setPassword(password)
         }
     }
 

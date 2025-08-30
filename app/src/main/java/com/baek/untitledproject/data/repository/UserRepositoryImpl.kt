@@ -7,18 +7,24 @@ import com.baek.untitledproject.data.model.mapper.toEntity
 import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.data.remote.UserRemote
 import com.baek.untitledproject.domain.data.User
-import com.baek.untitledproject.domain.repository.AuthRepository
+import com.baek.untitledproject.domain.repository.UserRepository
 import javax.inject.Inject
 import com.baek.untitledproject.domain.utils.Result
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class AuthRepositoryImpl @Inject constructor(
-    private val userDao: UserDao
-) : AuthRepository {
+class UserRepositoryImpl @Inject constructor(
+    private val userDao: UserDao,
+    private val userRemote: UserRemote
+) : UserRepository {
+
+    override fun observeCurrentUser(): Flow<User?> =
+        userDao.observeSingle().map { it?.toDomain() }
 
     //존재하는 유저인지
     override suspend fun userExists(userId: String): Result<Boolean> {
         return try {
-            val exists = UserRemote.userExist(userId)
+            val exists = userRemote.userExist(userId)
             Result.Success(exists)
         } catch (e: Exception) {
             Result.Error("유저 정보를 찾는 중 에러 발생", e)
@@ -28,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
     //서버 -> room 동기화
     override suspend fun syncUser(userId: String): Result<User> {
         return try {
-            val userResponse = UserRemote.getUser(userId)
+            val userResponse = userRemote.getUser(userId)
             val user = userResponse.toDomain()
 
             userDao.insertUser(userResponse.toEntity())
@@ -43,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun getUser(userId: String): Result<User> {
         try {
             val userEntity = userDao.getUser()
-            val user = userEntity?.toDomain() ?: UserRemote.getUser(userId).toDomain()
+            val user = userEntity?.toDomain() ?: userRemote.getUser(userId).toDomain()
 
             return Result.Success(user)
         } catch (e: Exception) {
@@ -55,7 +61,7 @@ class AuthRepositoryImpl @Inject constructor(
     //User 저장: 서버 및 Room에 저장
     override suspend fun saveUser(userId: String, user: User): Result<User> {
         return try {
-            val savedUser = UserRemote.saveUser(user.toResponse(userId))
+            val savedUser = userRemote.saveUser(user.toResponse(userId))
             userDao.insertUser(savedUser.toEntity())
             Result.Success(savedUser.toDomain())
         } catch (e: Exception) {
@@ -64,48 +70,15 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    //비밀번호 설정
-    override suspend fun setPassword(password: String): Result<Unit> {
-        return try {
-            UserRemote.setPassword(password)
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            Log.e("UserRepository", "비밀번호 저장 실패", e)
-            Result.Error("비밀번호를 저장하는 데 실패하였습니다.", e)
-        }
-    }
-
-    //로그인 후 roomDb에 유저 정보 저장
-    override suspend fun login(email: String, password: String): Result<User> {
-        return try {
-            val userId = UserRemote.login(email, password)
-            syncUser(userId)
-        } catch (e: Exception) {
-            Log.e("UserRepository", "로그인 실패", e)
-            Result.Error("로그인을 실패하였습니다.", e)
-        }
-    }
 
     //로그아웃 시 로컬 데이터 삭제
-    override suspend fun logoutAndClearLocalData(): Result<Unit> {
+    override suspend fun clearLocal(): Result<Unit> {
         return try {
             userDao.deleteAllData()
             Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("UserRepository", "유저 정보 삭제 실패", e)
-            Result.Error("로그아웃에 실패하였습니다.", e)
-        }
-    }
-
-    //회원탈퇴 시 서버/로컬 데이터 삭제
-    override suspend fun deleteUserAccount(userId: String): Result<Unit> {
-        return try {
-            UserRemote.deleteUser(userId)
-            userDao.deleteAllData()
-            Result.Success(Unit)
-        } catch (e: Exception) {
-            Log.e("UserRepository", "유저 정보 삭제 실패", e)
-            Result.Error("회원탈퇴에 실패하였습니다.", e)
+            Result.Error("로컬 데이터 삭제를 실패하였습니다.", e)
         }
     }
 
