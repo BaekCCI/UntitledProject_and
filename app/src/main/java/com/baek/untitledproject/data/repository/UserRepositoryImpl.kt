@@ -7,13 +7,13 @@ import com.baek.untitledproject.data.model.mapper.toEntity
 import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.data.remote.UserRemote
 import com.baek.untitledproject.domain.data.User
-import com.baek.untitledproject.domain.repository.UserRepository
+import com.baek.untitledproject.domain.repository.AuthRepository
 import javax.inject.Inject
 import com.baek.untitledproject.domain.utils.Result
 
-class UserRepositoryImpl @Inject constructor(
+class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao
-) : UserRepository {
+) : AuthRepository {
 
     //존재하는 유저인지
     override suspend fun userExists(userId: String): Result<Boolean> {

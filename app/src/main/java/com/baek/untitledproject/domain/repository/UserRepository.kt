@@ -3,7 +3,7 @@ package com.baek.untitledproject.domain.repository
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.utils.Result
 
-interface UserRepository {
+interface AuthRepository {
     //유저 존재 여부 확인
     suspend fun userExists(userId: String): Result<Boolean>
 
