@@ -28,7 +28,7 @@ class JoinInfoFragment : Fragment() {
     private var _binding: FragmentJoinInfoBinding? = null
     private val binding get() = _binding!!
 
-    private val loginViewModel: LoginViewModel by hiltNavGraphViewModels(R.id.login_nav_graph)
+    private val joinViewModel: JoinViewModel by hiltNavGraphViewModels(R.id.login_nav_graph)
 
 
     private val editTexts by lazy {
@@ -190,7 +190,7 @@ class JoinInfoFragment : Fragment() {
     private fun setupCompleteBtn() = with(binding) {
 
         completeBtn.setOnClickListener {
-            loginViewModel.completeJoin(
+            joinViewModel.completeJoin(
                 name = nameInput.text.toString(),
                 birth = birthInput.text.toString(),
                 department = departmentInput.text.toString(),
@@ -203,16 +203,17 @@ class JoinInfoFragment : Fragment() {
     private fun observeJoinState() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                loginViewModel.joinState.collect { state ->
+                joinViewModel.joinState.collect { state ->
                     when (state) {
                         is Result.Loading -> {
                             //TODO: 로딩
                         }
 
                         is Result.Success -> {
+                            val action = JoinInfoFragmentDirections
+                                .actionJoinInfoFragmentToCompleteJoinFragment(state.data.name)
                             findNavController().navigate(
-                                R.id.action_joinInfoFragment_to_completeJoinFragment,
-                                null,
+                                action,
                                 navOptions {
                                     popUpTo(R.id.login_nav_graph) { inclusive = true }
                                 }

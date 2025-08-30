@@ -3,6 +3,8 @@ package com.baek.untitledproject.data.remote
 import com.baek.untitledproject.data.model.UserResponse
 import com.baek.untitledproject.domain.data.User
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -33,6 +35,25 @@ object UserRemote {
         return userResponse
     }
 
+    //비밀번호 설정
+    suspend fun setPassword(password: String) {
+
+        val user = requireNotNull(FirebaseAuth.getInstance().currentUser)
+        try {
+            user.updatePassword(password).await()
+        } catch (e: Exception) {
+            // password provider가 안 붙어있다면 링크
+            val hasPasswordProvider = user.providerData.any { it.providerId == "password" }
+            if (!hasPasswordProvider) {
+                val email = user.email ?: error("이메일 정보가 없습니다.")
+                val cred = EmailAuthProvider.getCredential(email, password)
+                user.linkWithCredential(cred).await()
+            } else {
+                throw e
+            }
+        }
+    }
+
     suspend fun saveUser(user: UserResponse): UserResponse {
 
         val now = Timestamp.now()
@@ -45,6 +66,14 @@ object UserRemote {
         userRef.set(userWithTime).await()
         val snap = userRef.get().await()
         return requireNotNull(snap.toObject(UserResponse::class.java)) { "UserResponse 매핑 실패" }
+    }
+
+    suspend fun login(email: String, password: String): String {
+        val result = FirebaseAuth.getInstance()
+            .signInWithEmailAndPassword(email, password).await()
+
+        return result.user?.uid ?: throw IllegalStateException("로그인 실패, 유저 없음")
+
     }
 
     suspend fun deleteUser(userId: String) {

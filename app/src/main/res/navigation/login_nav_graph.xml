@@ -11,36 +11,53 @@
         android:label="fragment_start_login"
         tools:layout="@layout/fragment_start_login">
         <action
-            android:id="@+id/action_startLoginFragment_to_emailVerifyFragment"
-            app:destination="@id/emailVerifyFragment" />
+            android:id="@+id/action_startLoginFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_startLoginFragment_to_joinFragment"
+            app:destination="@id/joinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.baek.untitledproject.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/joinFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinFragment"
+        android:label="fragment_join"
+        tools:layout="@layout/fragment_join">
+        <deepLink app:uri="muje://email-verified" />
+        <action
+            android:id="@+id/action_joinFragment_to_joinPasswordFragment"
+            app:destination="@id/joinPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinPasswordFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinPasswordFragment"
+        android:label="fragment_join_password"
+        tools:layout="@layout/fragment_join_password">
+        <action
+            android:id="@+id/action_joinPasswordFragment_to_joinInfoFragment"
+            app:destination="@id/joinInfoFragment" />
     </fragment>
     <fragment
         android:id="@+id/joinInfoFragment"
         android:name="com.baek.untitledproject.ui.login.JoinInfoFragment"
         android:label="fragment_join_info"
-        tools:layout="@layout/fragment_join_info" >
+        tools:layout="@layout/fragment_join_info">
         <action
             android:id="@+id/action_joinInfoFragment_to_completeJoinFragment"
             app:destination="@id/completeJoinFragment" />
     </fragment>
     <fragment
-        android:id="@+id/emailVerifyFragment"
-        android:name="com.baek.untitledproject.ui.login.EmailVerifyFragment"
-        android:label="fragment_email_verify"
-        tools:layout="@layout/fragment_email_verify">
-        <deepLink app:uri="muje://email-verified" />
-        <argument
-            android:name="entry"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_emailVerifyFragment_to_joinInfoFragment"
-            app:destination="@id/joinInfoFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/completeJoinFragment"
         android:name="com.baek.untitledproject.ui.login.CompleteJoinFragment"
         android:label="fragment_complete_join"
-        tools:layout="@layout/fragment_complete_join" />
+        tools:layout="@layout/fragment_complete_join" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+
 </navigation>

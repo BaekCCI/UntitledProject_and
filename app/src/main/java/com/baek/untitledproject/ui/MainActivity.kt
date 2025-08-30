@@ -9,7 +9,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.ActivityMainBinding
-import com.baek.untitledproject.ui.login.EmailVerifyFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -16,9 +16,15 @@ interface UserRepository {
     //User 저장: 서버 및 Room에 저장
     suspend fun saveUser(userId: String, user: User): Result<User>
 
+    //비밀번호 설정
+    suspend fun setPassword(password: String): Result<Unit>
+
+    //로그인
+    suspend fun login(email: String, password: String): Result<User>
+
     //로그아웃 시 로컬 데이터 삭제
-    suspend fun deleteUserFromLocal(): Result<Unit>
+    suspend fun logoutAndClearLocalData(): Result<Unit>
 
     //회원탈퇴 시 서버/로컬 데이터 삭제
-    suspend fun deleteUserFromAll(userId: String): Result<Unit>
+    suspend fun deleteUserAccount(userId: String): Result<Unit>
 }

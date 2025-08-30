@@ -10,10 +10,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentCompleteJoinBinding
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -23,7 +25,7 @@ class CompleteJoinFragment : Fragment() {
     private var _binding: FragmentCompleteJoinBinding? = null
     private val binding get() = _binding!!
 
-    private val loginViewModel: LoginViewModel by hiltNavGraphViewModels(R.id.login_nav_graph)
+    private val args: CompleteJoinFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,26 +37,11 @@ class CompleteJoinFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        bindNameTxt()
+        val name = args.name
+        binding.welcomeTxt.text = "${name}님 환영해요!"
         setBtn()
     }
 
-    private fun bindNameTxt(){
-        viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                loginViewModel.joinState.collect { state ->
-                    when (state) {
-                        is Result.Success -> {
-                            binding.welcomeTxt.text = "${state.data.name}님 환영해요!"
-                        }
-
-                        else -> {
-                        }
-                    }
-                }
-            }
-        }
-    }
     private fun setBtn(){
         val navController = findNavController()
 
@@ -68,6 +55,10 @@ class CompleteJoinFragment : Fragment() {
         binding.completeBtn.setOnClickListener {
             navController.navigate(R.id.settingFragment, null, navOptions)
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "회원가입")
     }
 
     override fun onDestroyView() {

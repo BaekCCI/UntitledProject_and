@@ -29,13 +29,13 @@ class StartLoginFragment : Fragment() {
 
         binding.loginBtn.setOnClickListener {
             val action =
-                StartLoginFragmentDirections.actionStartLoginFragmentToEmailVerifyFragment(AuthEntry.LOGIN.name)
+                StartLoginFragmentDirections.actionStartLoginFragmentToLoginFragment()
             findNavController().navigate(action)
         }
 
         binding.joinBtn.setOnClickListener {
             val action =
-                StartLoginFragmentDirections.actionStartLoginFragmentToEmailVerifyFragment(AuthEntry.JOIN.name)
+                StartLoginFragmentDirections.actionStartLoginFragmentToJoinFragment()
             findNavController().navigate(action)
         }
     }

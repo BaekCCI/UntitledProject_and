@@ -51,6 +51,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+
     //User 저장: 서버 및 Room에 저장
     override suspend fun saveUser(userId: String, user: User): Result<User> {
         return try {
@@ -63,8 +64,30 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    //비밀번호 설정
+    override suspend fun setPassword(password: String): Result<Unit> {
+        return try {
+            UserRemote.setPassword(password)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "비밀번호 저장 실패", e)
+            Result.Error("비밀번호를 저장하는 데 실패하였습니다.", e)
+        }
+    }
+
+    //로그인 후 roomDb에 유저 정보 저장
+    override suspend fun login(email: String, password: String): Result<User> {
+        return try {
+            val userId = UserRemote.login(email, password)
+            syncUser(userId)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "로그인 실패", e)
+            Result.Error("로그인을 실패하였습니다.", e)
+        }
+    }
+
     //로그아웃 시 로컬 데이터 삭제
-    override suspend fun deleteUserFromLocal(): Result<Unit> {
+    override suspend fun logoutAndClearLocalData(): Result<Unit> {
         return try {
             userDao.deleteAllData()
             Result.Success(Unit)
@@ -75,7 +98,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     //회원탈퇴 시 서버/로컬 데이터 삭제
-    override suspend fun deleteUserFromAll(userId: String): Result<Unit> {
+    override suspend fun deleteUserAccount(userId: String): Result<Unit> {
         return try {
             UserRemote.deleteUser(userId)
             userDao.deleteAllData()
