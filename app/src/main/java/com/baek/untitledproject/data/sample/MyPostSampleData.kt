@@ -23,7 +23,7 @@ object MyPostSampleData {
             requires_department = false,
             requires_gender = false,
             requires_age = false,
-            requires_phone = true,
+            //requires_phone = true,
             author_name = "김철수",
             author_organization = "코딩클럽",
             created_at = Timestamp(Date(System.currentTimeMillis() - 86400000 * 10)), // 10일 전 작성
@@ -45,7 +45,7 @@ object MyPostSampleData {
             requires_department = true,
             requires_gender = false,
             requires_age = false,
-            requires_phone = false,
+            //requires_phone = false,
             author_name = "김철수",
             author_organization = "웹스터디",
             created_at = Timestamp(Date(System.currentTimeMillis() - 86400000 * 8)), // 8일 전 작성
@@ -67,7 +67,7 @@ object MyPostSampleData {
             requires_department = true,
             requires_gender = false,
             requires_age = true,
-            requires_phone = true,
+            //requires_phone = true,
             author_name = "김철수",
             author_organization = "앱팩토리",
             created_at = Timestamp(Date(System.currentTimeMillis() - 86400000 * 20)), // 20일 전 작성

@@ -16,22 +16,31 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="email-verified"
+                    android:scheme="muje" />
+            </intent-filter>
         </activity>
 
         <activity android:name=".ui.recruit.ApplicantManagementActivity" />
-        <activity
-            android:name=".ui.recruit.ApplicantDetailActivity" />
+        <activity android:name=".ui.recruit.ApplicantDetailActivity" />
         <activity
             android:name=".ui.recruit.InterviewReservationActivity"
             android:theme="@style/Theme.UntitledProject"
             android:exported="false" />
-
     </application>
 
 </manifest>

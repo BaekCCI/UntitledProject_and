@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav_graph"
+    app:startDestination="@id/startLoginFragment">
+
+    <fragment
+        android:id="@+id/startLoginFragment"
+        android:name="com.baek.untitledproject.ui.login.StartLoginFragment"
+        android:label="fragment_start_login"
+        tools:layout="@layout/fragment_start_login">
+        <action
+            android:id="@+id/action_startLoginFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_startLoginFragment_to_joinFragment"
+            app:destination="@id/joinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.baek.untitledproject.ui.login.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/joinFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinFragment"
+        android:label="fragment_join"
+        tools:layout="@layout/fragment_join">
+        <deepLink app:uri="muje://email-verified" />
+        <action
+            android:id="@+id/action_joinFragment_to_joinPasswordFragment"
+            app:destination="@id/joinPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinPasswordFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinPasswordFragment"
+        android:label="fragment_join_password"
+        tools:layout="@layout/fragment_join_password">
+        <action
+            android:id="@+id/action_joinPasswordFragment_to_joinInfoFragment"
+            app:destination="@id/joinInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/joinInfoFragment"
+        android:name="com.baek.untitledproject.ui.login.JoinInfoFragment"
+        android:label="fragment_join_info"
+        tools:layout="@layout/fragment_join_info">
+        <action
+            android:id="@+id/action_joinInfoFragment_to_completeJoinFragment"
+            app:destination="@id/completeJoinFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/completeJoinFragment"
+        android:name="com.baek.untitledproject.ui.login.CompleteJoinFragment"
+        android:label="fragment_complete_join"
+        tools:layout="@layout/fragment_complete_join" >
+        <argument
+            android:name="name"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

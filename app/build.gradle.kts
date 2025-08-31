@@ -5,8 +5,11 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.56.2"
     id("androidx.navigation.safeargs.kotlin")
     id("com.google.gms.google-services")
+    id("androidx.room") version "2.7.2"
 }
-
+room {
+    schemaDirectory("$projectDir/schemas")
+}
 android {
     namespace = "com.baek.untitledproject"
     compileSdk = 35
@@ -83,6 +86,7 @@ dependencies {
     //Room
     val room_version = "2.7.2"
     implementation("androidx.room:room-runtime:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
 
     //hilt
@@ -100,6 +104,7 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.firebase:firebase-storage")
+    implementation("com.google.firebase:firebase-auth")
 
     //Kizitonwose CalendarView
     implementation("com.kizitonwose.calendar:view:2.6.1")
@@ -110,4 +115,8 @@ dependencies {
     implementation("com.github.chrisbanes:PhotoView:2.3.0")
 
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    //datastore
+    implementation("androidx.datastore:datastore-preferences:1.1.7")
+    implementation("androidx.datastore:datastore-preferences-core:1.1.7")
 }

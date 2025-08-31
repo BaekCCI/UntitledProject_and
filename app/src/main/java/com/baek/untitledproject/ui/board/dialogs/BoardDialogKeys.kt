@@ -16,5 +16,4 @@ object BoardDialogKeys {
     const val ACTION_EDIT = "edit"
     const val ACTION_DELETE = "delete"
 
-
 }

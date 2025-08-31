@@ -137,7 +137,8 @@ class BoardFragment : Fragment() {
                     }
 
                     R.id.action_setting -> {
-                        //설정 화면
+                        val action = BoardFragmentDirections.actionBoardFragmentToSettingFragment()
+                        findNavController().navigate(action)
                         true
                     }
 
@@ -165,5 +166,4 @@ class BoardFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
