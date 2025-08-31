@@ -39,10 +39,12 @@ class AuthRemote @Inject constructor(
         auth.signOut()
     }
 
-    suspend fun reauthenticate(email: String, password: String) {
+    suspend fun reAuthenticate(password: String): String {
         val u = auth.currentUser ?: error("로그인 필요")
+        val email = u.email ?: error("이메일 없음")
         val cred = EmailAuthProvider.getCredential(email, password)
         u.reauthenticate(cred).await()
+        return u.uid
     }
 
     suspend fun deleteAuthAccount() {

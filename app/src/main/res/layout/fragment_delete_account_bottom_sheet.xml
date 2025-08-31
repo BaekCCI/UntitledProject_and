@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bottom_sheet_background"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="48dp"
+    tools:context=".ui.setting.DeleteAccountBottomSheetFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:gravity="center_horizontal"
+        android:text="정말로 탈퇴하시겠습니까??\n작성한 공고와 채팅 기록이 모두 삭제됩니다" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/deleteAccountBtn"
+        style="@style/Widget.Untitled.Button.Base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/accent_red"
+        android:text="탈퇴" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/cancelBtn"
+        style="@style/Widget.Untitled.Button.Base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:text="취소"
+        android:textColor="@color/gray_600"
+        android:textSize="18sp" />
+</LinearLayout>

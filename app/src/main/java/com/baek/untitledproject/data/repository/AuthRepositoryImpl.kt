@@ -30,10 +30,10 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun reauthenticate(email: String, password: String): Result<Unit> {
+    override suspend fun reAuthenticate(password: String): Result<String> {
         return try {
-            authRemote.reauthenticate(email, password)
-            Result.Success(Unit)
+            val userId = authRemote.reAuthenticate(password)
+            Result.Success(userId)
         } catch (e: Exception) {
             Log.e("AuthRepository", "재인증 실패", e)
             Result.Error("재인증에 실패했습니다. 이메일/비밀번호를 확인해주세요.", e)

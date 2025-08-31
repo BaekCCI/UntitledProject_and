@@ -28,9 +28,4 @@ class SettingViewModel @Inject constructor(
         }
     }
 
-    fun deleteAccount() {
-        viewModelScope.launch {
-            authRepository.deleteAccount()
-        }
-    }
 }

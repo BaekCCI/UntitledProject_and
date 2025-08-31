@@ -82,4 +82,15 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+    //회원탈퇴 시 서버 데이터 삭제
+    override suspend fun deleteUser(userId: String): Result<Unit> {
+        return try {
+            userRemote.deleteUser(userId)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "유저 정보 삭제 실패", e)
+            Result.Error("유저 데이터 삭제를 실패하였습니다.", e)
+        }
+    }
+
 }

@@ -97,5 +97,13 @@
         <action
             android:id="@+id/action_settingFragment_to_login_nav_graph"
             app:destination="@id/login_nav_graph" />
+        <action
+            android:id="@+id/action_settingFragment_to_deleteAccountFragment"
+            app:destination="@id/deleteAccountFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/deleteAccountFragment"
+        android:name="com.baek.untitledproject.ui.setting.DeleteAccountFragment"
+        android:label="fragment_delete_account"
+        tools:layout="@layout/fragment_delete_account" />
 </navigation>

@@ -44,6 +44,7 @@ class SettingFragment : Fragment() {
         setCommunityFieldBtn()
         setServiceGuideLinesFieldBtn()
         setEtcFieldBtn()
+        setupDialogs()
 
         binding.loginBtn.setOnClickListener {
             val action = SettingFragmentDirections.actionSettingFragmentToLoginNavGraph()
@@ -68,7 +69,7 @@ class SettingFragment : Fragment() {
     private fun showGuestUi() {
         binding.profileLayout.visibility = View.GONE
         binding.reportBlockLayout.visibility = View.GONE
-        binding.etcLayout.visibility = View.VISIBLE
+        binding.etcLayout.visibility = View.GONE
         binding.loginBtn.visibility = View.VISIBLE
     }
 
@@ -118,11 +119,22 @@ class SettingFragment : Fragment() {
             //TODO: 정보 동의 설정 이동
         }
         binding.logoutBtn.setOnClickListener {
-            //TODO: alert 띄우기 -> ok면 logout
-            settingViewModel.logout()
+            LogoutBottomSheetFragment().show(parentFragmentManager, "logout_dialog")
         }
         binding.deleteAccountBtn.setOnClickListener {
-            //TODO: 회원탈퇴 페이지 이동
+            val action = SettingFragmentDirections.actionSettingFragmentToDeleteAccountFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun setupDialogs() {
+        parentFragmentManager.setFragmentResultListener(
+            "req_logout",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean("confirmed", false)) {
+                settingViewModel.logout()
+            }
         }
     }
 

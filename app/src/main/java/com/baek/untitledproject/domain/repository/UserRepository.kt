@@ -23,4 +23,6 @@ interface UserRepository {
 
     //로그아웃 시 로컬 데이터 삭제
     suspend fun clearLocal(): Result<Unit>
+
+    suspend fun deleteUser(userId: String): Result<Unit>
 }
