@@ -21,6 +21,11 @@ interface ApplicantRepository {
     suspend fun getApplicantDetail(applicationId: String): ApplicantSummary
 
     /**
+     * 특정 공고에 면접 일정이 설정되어 있는지 확인
+     */
+    suspend fun hasInterviewSlots(postId: String): Result<Boolean>
+
+    /**
      * 지원자들을 면접 대기 상태로 변경
      */
     suspend fun scheduleInterviews(applicationIds: List<String>): Result<Unit>
@@ -44,4 +49,9 @@ interface ApplicantRepository {
      * 지원자들에게 결과 알림 발송
      */
     suspend fun notifyResults(applicationIds: List<String>): Result<Unit>
+
+    /**
+     * 지원자들을 이전 단계로 되돌리기
+     */
+    suspend fun revertToPreviousStage(applicationIds: List<String>): Result<Unit>
 }

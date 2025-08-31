@@ -7,6 +7,7 @@ data class AppliedRecruitSummary(
     val category: String,                    // post_organization (비정규화)
     val recruitStatus: String,               // 공고 상태 (posts.status에서 조회)
     val applicationStatus: String,           // 지원 상태 (applications.status + is_passed 조합)
+    val thumbnailUrl: String? = null,
 
     // 면접 관련 정보
     val hasInterview: Boolean = false,       // 면접 있는 공고인지 (posts.has_interview에서 조회)

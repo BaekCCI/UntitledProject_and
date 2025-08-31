@@ -5,6 +5,9 @@ import com.baek.untitledproject.domain.data.AppliedRecruitSummary
 import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ScheduleGroupSummary
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,6 +25,11 @@ object MyRecruitsRemote {
             .get()
             .await()
 
+        val postIds = postsSnap.documents.map { it.id }
+
+        // 썸네일 이미지 조회
+        val thumbMap = fetchThumbnailByPostId(db, postIds)
+
         return postsSnap.documents.mapNotNull { doc ->
             try {
                 val data = doc.data ?: return@mapNotNull null
@@ -31,7 +39,7 @@ object MyRecruitsRemote {
                     title = data["title"] as? String ?: "제목 없음",
                     category = data["organization"] as? String ?: "단체명 없음",
                     recruitStatus = getRecruitStatusText(data["status"] as? String),
-                    thumbnailUrl = null,
+                    thumbnailUrl = thumbMap[doc.id], // 실제 이미지 URL
                     hasInterview = data["has_interview"] as? Boolean ?: false,
                     applicantCount = 0,
                     recruitmentEnd = formatRecruitmentEnd(data["recruitment_end"])
@@ -43,6 +51,29 @@ object MyRecruitsRemote {
         }
     }
 
+    // 썸네일 이미지 조회 함수 추가
+    private suspend fun fetchThumbnailByPostId(
+        db: FirebaseFirestore,
+        postIds: List<String>
+    ): Map<String, String> = coroutineScope {
+        val chunks = postIds.chunked(10) // whereIn 최대 10개 제한
+        val jobs = chunks.map { chunk ->
+            async {
+                db.collection("post_images")
+                    .whereIn("post_id", chunk)
+                    .whereEqualTo("image_order", 0) // 첫 번째 이미지만
+                    .get()
+                    .await()
+                    .documents
+                    .mapNotNull { d ->
+                        val pId = d.getString("post_id")
+                        val url = d.getString("image_url")
+                        if (pId != null && url != null) pId to url else null
+                    }
+            }
+        }
+        jobs.awaitAll().flatten().toMap()
+    }
     suspend fun getAppliedRecruits(): List<AppliedRecruitSummary> {
         val db = FirebaseFirestore.getInstance()
 
@@ -50,6 +81,14 @@ object MyRecruitsRemote {
             .whereEqualTo("applicant_user_id", myAppliedUserId)
             .get()
             .await()
+
+        // post_id 목록 추출
+        val postIds = applicationsSnap.documents.mapNotNull { doc ->
+            doc.data?.get("post_id") as? String
+        }.distinct()
+
+        // 썸네일 이미지 조회
+        val thumbMap = fetchThumbnailByPostId(db, postIds)
 
         return applicationsSnap.documents.mapNotNull { doc ->
             try {
@@ -73,7 +112,8 @@ object MyRecruitsRemote {
                     canReserveInterview = canReserveInterview(
                         data["status"] as? String,
                         data["interview_slot_id"] as? String
-                    )
+                    ),
+                    thumbnailUrl = thumbMap[postId] // 이미지 URL 추가
                 )
             } catch (e: Exception) {
                 Log.e("MyRecruitsRemote", "지원한 공고 데이터 변환 실패: ${doc.id}", e)

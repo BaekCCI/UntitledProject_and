@@ -37,6 +37,10 @@
 
         <activity android:name=".ui.recruit.ApplicantManagementActivity" />
         <activity android:name=".ui.recruit.ApplicantDetailActivity" />
+        <activity
+            android:name=".ui.recruit.InterviewReservationActivity"
+            android:theme="@style/Theme.UntitledProject"
+            android:exported="false" />
     </application>
 
 </manifest>

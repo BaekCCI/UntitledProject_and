@@ -131,11 +131,54 @@ object ApplicantRemote {
     }
 
     /**
-     * 지원자들을 면접 대기 상태로 변경
+     * 특정 공고에 면접 일정이 설정되어 있는지 확인
+     */
+    suspend fun hasInterviewSlots(postId: String): Boolean {
+        val db = FirebaseFirestore.getInstance()
+
+        return try {
+            val slotsSnapshot = db.collection("interview_slots")
+                .whereEqualTo("post_id", postId)
+                .limit(1)  // 하나만 있어도 되므로 limit 설정
+                .get()
+                .await()
+
+            val hasSlots = !slotsSnapshot.isEmpty
+            Log.d("ApplicantRemote", "공고 $postId 면접 슬롯 확인: $hasSlots")
+
+            hasSlots
+        } catch (e: Exception) {
+            Log.e("ApplicantRemote", "면접 슬롯 확인 실패: $postId", e)
+            false  // 에러 발생 시 false 반환 (안전한 기본값)
+        }
+    }
+
+    /**
+     * 지원자들을 면접 대기 상태로 변경 (면접 일정 체크 포함)
      */
     suspend fun scheduleInterviews(applicationIds: List<String>) {
         val db = FirebaseFirestore.getInstance()
 
+        // 첫 번째 지원서를 통해 postId 확인
+        if (applicationIds.isEmpty()) {
+            throw IllegalArgumentException("지원자 ID 목록이 비어있습니다.")
+        }
+
+        val firstApplicationDoc = db.collection("applications")
+            .document(applicationIds.first())
+            .get()
+            .await()
+
+        val postId = firstApplicationDoc.getString("post_id")
+            ?: throw IllegalStateException("공고 ID를 찾을 수 없습니다.")
+
+        // 면접 일정 설정 확인
+        val hasSlots = hasInterviewSlots(postId)
+        if (!hasSlots) {
+            throw IllegalStateException("면접 일정이 설정되지 않았습니다. 먼저 면접 일정을 설정해주세요.")
+        }
+
+        // 면접 일정이 있으면 상태 변경 진행
         applicationIds.forEach { applicationId ->
             db.collection("applications")
                 .document(applicationId)
@@ -146,6 +189,52 @@ object ApplicantRemote {
                     )
                 )
                 .await()
+        }
+    }
+
+    /**
+     * 지원자들을 이전 단계로 되돌리기
+     */
+    suspend fun revertToPreviousStage(applicationIds: List<String>) {
+        val db = FirebaseFirestore.getInstance()
+
+        applicationIds.forEach { applicationId ->
+            // 현재 상태 확인
+            val applicationDoc = db.collection("applications")
+                .document(applicationId)
+                .get()
+                .await()
+
+            val currentStatus = applicationDoc.getString("status")
+
+            // 이전 단계로 되돌리기
+            val previousStatus = when (currentStatus) {
+                "면접 대기 중" -> "지원서 제출됨"
+                "심사 대기 중" -> "면접 대기 중"
+                "심사 완료됨" -> "심사 대기 중"
+                else -> {
+                    Log.w("ApplicantRemote", "되돌릴 수 없는 상태: $currentStatus")
+                    return@forEach // 이 지원자는 건너뛰기
+                }
+            }
+
+            // 상태 업데이트
+            val updateData = mutableMapOf<String, Any>(
+                "status" to previousStatus,
+                "updated_at" to com.google.firebase.Timestamp.now()
+            )
+
+            // 심사 완료됨에서 되돌릴 때는 is_passed 필드 삭제
+            if (currentStatus == "심사 완료됨") {
+                updateData["is_passed"] = com.google.firebase.firestore.FieldValue.delete()
+            }
+
+            db.collection("applications")
+                .document(applicationId)
+                .update(updateData)
+                .await()
+
+            Log.d("ApplicantRemote", "단계 되돌리기: $applicationId ($currentStatus → $previousStatus)")
         }
     }
 
