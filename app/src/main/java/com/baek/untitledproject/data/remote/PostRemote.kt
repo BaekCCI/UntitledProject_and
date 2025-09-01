@@ -25,8 +25,11 @@ object PostRemote {
         val db = FirebaseFirestore.getInstance()
 
         //posts 조회
-        val postsSnap = db.collection("posts").get().await()
-        val postDocs = postsSnap.documents
+        val postsSnap = db.collection("posts")
+            .whereEqualTo("status", "recruiting")
+            .get()
+            .await()
+        val postDocs = postsSnap.documents.sortedByDescending { it.getTimestamp("created_at") }
         val postIds = postDocs.map { it.id }
 
         //썸네일 이미지 조회(postId to Uri)
