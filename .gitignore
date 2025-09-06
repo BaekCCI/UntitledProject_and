@@ -1,19 +1,21 @@
+# Gradle
+.gradle/
+build/
+*/build/
+
+# Kotlin/Native
+.kotlin/
+.cxx/
+.externalNativeBuild/
+
+# Android Studio / IntelliJ
+.idea/
 *.iml
-.gradle
-/.kotlin/
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-/.idea/misc.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Local config
 local.properties
-# .gitignore
 app/google-services.json
+
+# OS
+.DS_Store
+captures/
