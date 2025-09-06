@@ -5,8 +5,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.TimeSlot
+import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.BoardRepository
+import com.baek.untitledproject.domain.repository.SessionRepository
+import com.baek.untitledproject.domain.repository.UserRepository
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.domain.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,120 +24,133 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoardWriteViewModel @Inject constructor(
-    private val boardRepository: BoardRepository
+    private val boardRepository: BoardRepository,
+    private val sessionRepository: SessionRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
-    var isLoaded = false
-    var isApplicantExist = false
+    private var _user = MutableStateFlow<Result<User>>(Result.Loading)
+    val user: StateFlow<Result<User>> = _user
 
-    private val _prevPost = MutableStateFlow<Result<Post>>(Result.None)
-    val prevPost: StateFlow<Result<Post>> = _prevPost
-
-    private val _editingPost = MutableStateFlow(Post())
-    val editingPost: StateFlow<Post> = _editingPost
-
-    //첫번째 화면 진입 시 데이터 불러오기(수정 버튼으로 접근시)
-    fun initPostData(postId: String?) {
-        if (postId == null || isLoaded) return
-
+    init {
         viewModelScope.launch {
-            _prevPost.value = Result.Loading
-            val result = boardRepository.getPostById(postId)
-            Log.d("BoardWriteViewModel", "initField: $postId 결과 = $result")
-            _prevPost.value = result
-            if (result is Result.Success) {
-                _editingPost.value = result.data
-                initUiImagesFromPost()
-                isLoaded = true
+            _user.value = Result.Loading
+            //userId 가져오기
+            val userId = sessionRepository.currentUid()
+            if (userId == null) { //로그아웃 상태이면
+                _user.value = Result.Error()
+                return@launch
             }
+            //user정보 가져오기
+            val result = userRepository.getUser(userId)
+            _user.value = result
         }
-        //TODO: 지원자 존재 여부 확인하여 isApplicantExist 정보업데이트하기
     }
 
+    private val _post = MutableStateFlow(PostWrite())
+    val post: StateFlow<PostWrite> = _post
 
-    fun updateRecruitPeriod(startDate: LocalDate, endDate: LocalDate) {
-        _editingPost.value = _editingPost.value.copy(
-            recruitmentStart = startDate,
-            recruitmentEnd = endDate
-        )
-    }
+    var endMillis: Long? = null
 
-    //화면용 임시 이미지 리스트(첫번째 화면에서만 활용)
-    private val _editingImages = MutableStateFlow<List<Uri>>(emptyList())
-    val editingImages: StateFlow<List<Uri>> = _editingImages
-
-    private fun initUiImagesFromPost() {
-        _editingImages.value = _editingPost.value.imageUris
-    }
-
-    fun addUiImage(uri: Uri) {
-        val cur = _editingImages.value
-        if (cur.size >= 5) return
-        _editingImages.value = cur + uri
-    }
-
-    fun removeUiImage(idx: Int) {
-        val list = _editingImages.value.toMutableList()
-        list.removeAt(idx)
-        _editingImages.value = list
-    }
-
-    fun updateInfoWrite(
+    fun updateInfo(
         title: String,
         organization: String,
         content: String
     ) {
-        _editingPost.value = _editingPost.value.copy(
+        _post.value = post.value.copy(
             title = title,
             organization = organization,
-            content = content,
-            imageUris = editingImages.value
+            recruitmentStart = LocalDate.now(),
+            recruitmentEnd = endMillis?.toLocalDate(),
+            content = content
         )
     }
 
-    //두번째 페이지
+    private val _images = MutableStateFlow<List<Uri>>(emptyList())
+    val images: StateFlow<List<Uri>> = _images
 
-    //면접 여부 설정 시 업데이트
-    fun setHasInterview(hasInterview: Boolean) {
-        _editingPost.update { cur ->
+    fun addImage(uri: Uri) {
+        val cur = _images.value
+        if (cur.size >= 5) return
+        _images.value = cur + uri
+    }
+
+    fun removeImage(idx: Int) {
+        val list = _images.value.toMutableList()
+        list.removeAt(idx)
+        _images.value = list
+    }
+
+    //두번째
+    fun updateHasInterview(hasInterview: Boolean) {
+        _post.update { cur ->
             cur.copy(hasInterview = hasInterview)
         }
     }
 
-    //세번째 페이지
+    fun updateInterviewLocation(loc: String) {
+        _post.value = post.value.copy(
+            interviewLocation = loc
+        )
+    }
+
+    fun updateInterviewSlot(slot: Map<LocalDate, List<TimeSlot>>, capacity: Int, step: Int) {
+        _post.update { cur ->
+            cur.copy(
+                interviewSlot = slot,
+                maxCapacity = capacity,
+                interviewSlotStep = step
+            )
+        }
+    }
+
+    //세번째
+    fun updateRequirements(
+        name: Boolean = false,
+        gender: Boolean = false,
+        age: Boolean = false,
+        dept: Boolean = false,
+        studentId: Boolean = false,
+    ) {
+        _post.value = post.value.copy(
+            requiresName = name,
+            requiresGender = gender,
+            requiresAge = age,
+            requiresDepartment = dept,
+            requiresStudentId = studentId,
+        )
+    }
+
+    private val _customQuestions = MutableStateFlow<List<String>>(emptyList())
+    val customQuestions: StateFlow<List<String>> = _customQuestions
+
+    fun updateQuestion(questions: List<String>) {
+        _customQuestions.value = questions
+    }
+
+    //작성 완료
+
     private val _submitResult = MutableStateFlow<Result<String>>(Result.None)
     val submitResult: StateFlow<Result<String>> = _submitResult
 
     fun completePost() {
         if (_submitResult.value is Result.Loading) return
 
+        _post.value = post.value.copy(
+            imageUris = images.value,
+            customQuestions = customQuestions.value
+        )
         viewModelScope.launch {
+            val currentUser = (user.value as? Result.Success<User>)?.data
+                ?: run {
+                    _submitResult.value = Result.Error("유저 정보가 없습니다.")
+                    return@launch
+                }
             _submitResult.value = Result.Loading
-            val result = boardRepository.submitPost(editingPost.value)
+            val result = boardRepository.submitPost(post.value, currentUser)
             _submitResult.value = result
             Log.d("BoardWriteViewModel", "completePost 결과: $result")
         }
-    }
-
-    //수집 항목 체크 시 업데이트
-    fun updateRequirements(
-        name: Boolean? = null,
-        gender: Boolean? = null,
-        age: Boolean? = null,
-        dept: Boolean? = null,
-        studentId: Boolean? = null,
-        phone: Boolean? = null,
-        questions: List<String>
-    ) {
-        _editingPost.value = _editingPost.value.copy(
-            requiresName = name ?: _editingPost.value.requiresName,
-            requiresGender = gender ?: _editingPost.value.requiresGender,
-            requiresAge = age ?: _editingPost.value.requiresAge,
-            requiresDepartment = dept ?: _editingPost.value.requiresDepartment,
-            requiresStudentId = studentId ?: _editingPost.value.requiresStudentId,
-            requiresPhone = phone ?: _editingPost.value.requiresPhone,
-            customQuestions = questions
-        )
     }
 
 }

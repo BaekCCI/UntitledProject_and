@@ -209,7 +209,7 @@ class InterviewReservationActivity : AppCompatActivity() {
     inner class DayViewContainer(view: View) : ViewContainer(view) {
         private val dayText = view.findViewById<android.widget.TextView>(com.baek.untitledproject.R.id.dayText)
         private val selectedBg = view.findViewById<View>(com.baek.untitledproject.R.id.selectedBg)
-        private val savedBg = view.findViewById<View>(com.baek.untitledproject.R.id.savedBg)
+        private val savedBg = view.findViewById<View>(com.baek.untitledproject.R.id.todayBg)
 
         fun bind(day: CalendarDay) {
             dayText.text = day.date.dayOfMonth.toString()

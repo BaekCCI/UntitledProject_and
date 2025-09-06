@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
@@ -19,14 +20,21 @@ import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentInfoWriteBinding
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.utils.DateUiStyle
+import com.baek.untitledproject.domain.utils.toLocalDate
 import com.baek.untitledproject.domain.utils.toUiString
 import com.baek.untitledproject.ui.MainActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
+import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -52,32 +60,24 @@ class InfoWriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initField()
-        setUpRecruitDateSelectBtn()
         observeEditingPost()
         observeEditingImages()
+
+        setupDateBtn()
         setupImageSelect()
         setupTextWatchers()
         validateInputs()
         setupNextBtn()
+
+        setupBackPressHandler()
+        setupDialogs()
     }
 
-
-    //수정으로 접근 시 해당 게시글 데이터 불러오기
-    private fun initField() {
-        val postId = arguments?.getString("postId")
-        if (postId != null) {
-            viewModel.initPostData(postId)
-        }
-    }
-
-    //수정 or 이전 버튼으로 접근 시 필드 초기화
     private fun observeEditingPost() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.editingPost.collect { post ->
+                viewModel.post.collect { post ->
                     bindPostData(post)
-
                 }
             }
         }
@@ -87,14 +87,14 @@ class InfoWriteFragment : Fragment() {
     private fun observeEditingImages() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.editingImages.collect { uris ->
+                viewModel.images.collect { uris ->
                     renderImages(uris)
                 }
             }
         }
     }
 
-    private fun bindPostData(post: Post) {
+    private fun bindPostData(post: PostWrite) {
         post.title?.let {
             if (it != binding.titleInput.text.toString()) {
                 binding.titleInput.setText(it)
@@ -105,10 +105,10 @@ class InfoWriteFragment : Fragment() {
                 binding.groupNameInput.setText(it)
             }
         }
-        if (post.recruitmentStart != null && post.recruitmentEnd != null) {
-            val startDate = post.recruitmentStart.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
-            val endDate = post.recruitmentEnd.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
-            binding.recruitDate.text = "$startDate ~ $endDate"
+        val endMillis = viewModel.endMillis
+        if (endMillis != null) {
+            val endDate = endMillis.toLocalDate().toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
+            binding.recruitDateSelectBtn.text = endDate
         }
         post.content?.let {
             if (it != binding.contentInput.text.toString()) {
@@ -118,22 +118,44 @@ class InfoWriteFragment : Fragment() {
         validateInputs()
     }
 
-
-    //모집 일정 버튼
-    private fun setUpRecruitDateSelectBtn() {
+    private fun setupDateBtn() {
         binding.recruitDateSelectBtn.setOnClickListener {
-            findNavController().navigate(
-                InfoWriteFragmentDirections.actionInfoWriteFragmentToRecruitDateSelectDialogFragment()
-            )
+            //오늘 이후만 선택 가능하도록
+            val todayMillis = MaterialDatePicker.todayInUtcMilliseconds()
+
+            val constraints = CalendarConstraints.Builder()
+                .setValidator(DateValidatorPointForward.from(todayMillis))
+                .build()
+
+            //TODO: Style 적용하기 ->.setTheme(R.style.~~)
+            val builder = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Select date")
+                .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+                .setCalendarConstraints(constraints)
+
+            // 이전에 선택한 날짜 유지
+
+            viewModel.endMillis?.let { builder.setSelection(it) }
+
+            val picker = builder.build()
+
+            picker.addOnPositiveButtonClickListener { selection ->
+                viewModel.endMillis = selection
+                val date = selection.toLocalDate()
+                binding.recruitDateSelectBtn.text = date.toUiString(DateUiStyle.YMD_WITH_WEEKDAY)
+            }
+
+            picker.show(parentFragmentManager, "Select date")
         }
     }
+
 
     /*
         이미지 선택 로직
      */
     private fun setupImageSelect() {
         binding.selectImgBtn.setOnClickListener {
-            if (viewModel.editingImages.value.size >= 5) {
+            if (viewModel.images.value.size >= 5) {
                 Toast.makeText(requireContext(), "이미지는 최대 5장까지 등록 가능합니다.", Toast.LENGTH_SHORT)
                     .show()
                 return@setOnClickListener
@@ -145,12 +167,12 @@ class InfoWriteFragment : Fragment() {
     private val pickImageLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
-                if (viewModel.editingImages.value.size >= 5) {
+                if (viewModel.images.value.size >= 5) {
                     Toast.makeText(requireContext(), "이미지는 최대 5장까지 등록 가능합니다.", Toast.LENGTH_SHORT)
                         .show()
                     return@registerForActivityResult
                 }
-                viewModel.addUiImage(it)
+                viewModel.addImage(it)
             }
         }
 
@@ -172,7 +194,7 @@ class InfoWriteFragment : Fragment() {
                 .transform(CenterCrop(), RoundedCorners(radiusPx))
                 .into(thumb)
             thumb.tag = uri
-            cancel.setOnClickListener { viewModel.removeUiImage(idx) }
+            cancel.setOnClickListener { viewModel.removeImage(idx) }
 
             binding.imgContainer.addView(item)
         }
@@ -183,14 +205,15 @@ class InfoWriteFragment : Fragment() {
         setImageCount(binding.imgContainer.childCount - 1)
     }
 
-    private fun setImageCount(count:Int){
+    private fun setImageCount(count: Int) {
         binding.curImgCount.text = "$count"
-        if(count>0){
+        if (count > 0) {
             binding.curImgCount.setTextColor(
                 ContextCompat.getColor(binding.root.context, R.color.point_purple)
             )
         }
     }
+
     // 텍스트 변경 감지 -> 버튼 활성화 여부 검증
     private fun setupTextWatchers() {
         binding.titleInput.doAfterTextChanged { validateInputs() }
@@ -203,11 +226,8 @@ class InfoWriteFragment : Fragment() {
         val titleNotNull = !binding.titleInput.text.isNullOrBlank()
         val groupNameNotNull = !binding.groupNameInput.text.isNullOrBlank()
         val contentNotNull = !binding.contentInput.text.isNullOrBlank()
-        val isRecruitDateSelected = viewModel.editingPost.value.run {
-            recruitmentStart != null && recruitmentEnd != null
-        }
         binding.nextBtn.isEnabled =
-            titleNotNull && groupNameNotNull && contentNotNull && isRecruitDateSelected
+            titleNotNull && groupNameNotNull && contentNotNull
     }
 
     //작성 내용 viewModel에 업데이트 후 이동
@@ -226,21 +246,30 @@ class InfoWriteFragment : Fragment() {
         val groupName = binding.groupNameInput.text.toString()
         val content = binding.contentInput.text.toString()
 
-        viewModel.updateInfoWrite(title, groupName, content)
+        viewModel.updateInfo(title, groupName, content)
+    }
+
+    private fun setupBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            ExitConfirmDialogFragment().show(parentFragmentManager, "exit_dialog")
+        }
+    }
+
+    private fun setupDialogs() {
+        parentFragmentManager.setFragmentResultListener(
+            "req_exit",
+            viewLifecycleOwner
+        ) { _, bundle ->
+            if (bundle.getBoolean("confirmed", false)) {
+                findNavController().popBackStack()
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        val postId = arguments?.getString("postId")
-        if (postId.isNullOrEmpty()) {
-            // 작성 모드
-            (activity as? MainActivity)
-                ?.setToolbar(detailVisible = true, title = "공고 올리기")
-        } else {
-            // 수정 모드
-            (activity as? MainActivity)
-                ?.setToolbar(detailVisible = true, title = "공고 수정")
-        }
+        (activity as? MainActivity)
+            ?.setToolbar(detailVisible = true, title = "모임 올리기")
     }
 
     override fun onDestroyView() {

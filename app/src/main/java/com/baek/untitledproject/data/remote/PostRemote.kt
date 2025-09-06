@@ -9,14 +9,21 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import androidx.core.net.toUri
+import com.baek.untitledproject.common.utils.toTimestamp
 import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.data.model.InterviewSlotResponse
 import com.baek.untitledproject.data.model.PostResponse
+import com.baek.untitledproject.data.model.mapper.separate
 import com.baek.untitledproject.data.model.mapper.toDomain
+import com.baek.untitledproject.data.model.mapper.toPostRead
 import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostRead
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.User
 import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.storage.storage
 
 object PostRemote {
@@ -128,79 +135,64 @@ object PostRemote {
     }
 
     //-----공고 올리기-----
-
-    suspend fun uploadPost(post: Post): String = coroutineScope {
+    suspend fun uploadPost(post: PostWrite, user: User): String = coroutineScope {
         val now = Timestamp.now()
 
         val db = FirebaseFirestore.getInstance()
         val storage = Firebase.storage
 
-        //posts 문서: 새로 생성 || 기존 문서
-        val isUpdate = !post.postId.isNullOrBlank()
-        val postRef = if (isUpdate) {
-            // isUpdate == true면 postId가 null/blank가 아니어야 함
-            db.collection("posts").document(post.postId!!)  // !! 안전 보장
-        } else {
-            db.collection("posts").document()
-        }
+        val postRef = db.collection("posts").document()
         val postId = postRef.id
 
-        //기존 생성 시간 보존
-        val createdAt =
-            if (isUpdate) postRef.get().await().getTimestamp("created_at") ?: now else now
-
-        //수정 시에 기존 데이터 미리 읽어둠
-        val oldImgsSnap = if (isUpdate) db.collection("post_images")
-            .whereEqualTo("post_id", postId).get().await() else null
-        val oldSlotsSnap = if (isUpdate) db.collection("interview_slots")
-            .whereEqualTo("post_id", postId).get().await() else null
-        val oldQuestionsSnap = if (isUpdate) db.collection("custom_questions")
-            .whereEqualTo("post_id", postId).get().await() else null
-
-        //기존 이미지 경로 수집
-        val oldImagePaths: List<String> = oldImgsSnap?.documents?.mapNotNull { d ->
-            d.getString("image_path") ?: d.getString("image_url")
-        } ?: emptyList()
-
-        //새 이미지 업로드
         val uploadedPaths = mutableListOf<String>()
 
-        val imageResult = post.imageUris.mapIndexed { index, uri ->
-            async {
-                //post_images 컬렉션 문서 생성
-                val imgRef = db.collection("post_images").document()
-                val imgId = imgRef.id
+        val imgDocs: List<Pair<DocumentReference, Map<String, Any>>> = try {
+            post.imageUris.mapIndexed { index, uri ->
+                async {
+                    val imgRef = db.collection("post_images").document()
+                    val imgId = imgRef.id
 
-                //Storage에 저장할 경로 정의
-                val path = "post_images/$postId/$imgId.jpg"
-                storage.reference.child(path).putFile(uri).await()
-                uploadedPaths += path
+                    val path = "post_images/$postId/$imgId.jpg"
+                    val storageRef = storage.reference.child(path)
 
-                //Firestore에 넣을 데이터
-                imgRef to mapOf(
-                    "image_id" to imgId,
-                    "post_id" to postId,
-                    "image_path" to path,
-                    "image_order" to index.toLong(),
-                    "created_at" to now
-                )
+                    storageRef.putFile(uri).await()
+                    uploadedPaths += path
+                    val imgUrl = storageRef.downloadUrl.await().toString()
+                    imgRef to mapOf(
+                        "image_id" to imgId,
+                        "post_id" to postId,
+                        "image_url" to imgUrl,
+                        "image_order" to index.toLong(),
+                        "created_at" to now
+                    )
+                }
+            }.awaitAll()
+        } catch (e: Exception) {
+            uploadedPaths.forEach { p ->
+                runCatching {
+                    storage.reference.child(p).delete().await()
+                }
             }
-        }.awaitAll()// 모든 이미지 업로드가 완료될 때까지 대기
+            throw e
+        }
 
         //interview slot 데이터 생성
         val slotDocs = post.interviewSlot.flatMap { (date, times) ->
-            times.map { time ->
-                val slotRef = db.collection("interview_slots").document()
-                val slotId = slotRef.id
-                slotRef to mapOf(
-                    "slot_id" to slotId,
-                    "post_id" to postId,
-                    "interview_date" to date,
-                    "interview_time" to time,
-                    "max_capacity" to post.maxCapacity,
-                    "current_reservations" to 0,
-                    "created_at" to now
-                )
+            val formattedDate = date.toTimestamp()
+            times.flatMap { timeslot ->
+                timeslot.separate(post.interviewSlotStep).map { time ->
+                    val slotRef = db.collection("interview_slots").document()
+                    val slotId = slotRef.id
+                    slotRef to mapOf(
+                        "slot_id" to slotId,
+                        "post_id" to postId,
+                        "interview_date" to formattedDate,
+                        "interview_time" to time,
+                        "max_capacity" to post.maxCapacity,
+                        "current_reservations" to 0,
+                        "created_at" to now
+                    )
+                }
             }
         }
 
@@ -218,23 +210,18 @@ object PostRemote {
         }
 
         try {
-            db.runBatch { b ->
-                b.set(postRef, post.toResponse(postId, now, createdAt, isUpdate))
+            val writes = buildList {
+                add(postRef to post.toResponse(postId, user, now))
+                addAll(imgDocs)
+                addAll(slotDocs)
+                addAll(questionDocs)
+            }
 
-                oldImgsSnap?.documents?.forEach { b.delete(it.reference) }
-                oldSlotsSnap?.documents?.forEach { b.delete(it.reference) }
-                oldQuestionsSnap?.documents?.forEach { b.delete(it.reference) }
-
-                imageResult.forEach { (ref, data) -> b.set(ref, data) }
-                slotDocs.forEach { (ref, data) -> b.set(ref, data) }
-                questionDocs.forEach { (ref, data) -> b.set(ref, data) }
-            }.await()
-            oldImagePaths.forEach { p ->
-                val ref = if (p.startsWith("gs://") || p.startsWith("http"))
-                    storage.getReferenceFromUrl(p)
-                else
-                    storage.reference.child(p)
-                runCatching { ref.delete().await() }
+            //배치 한도 500 제한 -> chunk 처리
+            writes.chunked(450).forEach { chunk ->
+                db.runBatch { b ->
+                    chunk.forEach { (ref, data) -> b.set(ref, data) }
+                }.await()
             }
         } catch (e: Exception) {
             // Firestore 실패 시 업로드 롤백
@@ -246,4 +233,96 @@ object PostRemote {
 
         postId
     }
+
+    suspend fun getPostForRead(postId: String): PostRead = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        //post 조회
+        val postDoc = db.collection("posts")
+            .document(postId)
+            .get()
+            .await()
+
+        require(postDoc.exists()) { "존재하지 않는 게시글입니다." }
+        //Firestore 스냅샷 -> 서버 모델 (PostResponse)
+        val postResponse = requireNotNull(postDoc.toObject(PostResponse::class.java)) {
+            "PostResponse 매핑 실패"
+        }
+
+        //----- 연관 데이터 병렬 조회 -----
+
+        //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
+        val imagesDef = async {
+            db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .sortedBy { it.getLong("image_order") ?: 0L }
+                .mapNotNull { it.getString("image_url")?.toUri() }
+        }
+
+        //interview_slots 조회: 마찬가지로 직접 정렬
+        val slotsDef = async {
+            db.collection("interview_slots")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .mapNotNull { it.toObject(InterviewSlotResponse::class.java) }
+        }
+
+
+        //----- 조회 결과 -----
+        val imageUris = imagesDef.await()
+        val interviewSlot = slotsDef.await()
+
+        postResponse.toPostRead(imageUris, interviewSlot)
+    }
+
+    //TODO: 수정 시 사용, 로직 변경 필요
+    suspend fun getPostForEdit(postId: String): PostWrite = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        //post 조회
+        val postDoc = db.collection("posts")
+            .document(postId)
+            .get()
+            .await()
+
+        require(postDoc.exists()) { "존재하지 않는 게시글입니다." }
+        //Firestore 스냅샷 -> 서버 모델 (PostResponse)
+        val postResponse = requireNotNull(postDoc.toObject(PostResponse::class.java)) {
+            "PostResponse 매핑 실패"
+        }
+
+        //----- 연관 데이터 병렬 조회 -----
+
+        //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
+        val imagesDef = async {
+            db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .sortedBy { it.getLong("image_order") ?: 0L }
+                .mapNotNull { it.getString("image_url")?.toUri() }
+        }
+
+        //interview_slots 조회: 마찬가지로 직접 정렬
+        val slotsDef = async {
+            db.collection("interview_slots")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .mapNotNull { it.toObject(InterviewSlotResponse::class.java) }
+        }
+
+
+        //----- 조회 결과 -----
+        val imageUris = imagesDef.await()
+        val interviewSlot = slotsDef.await()
+
+        postResponse.toPostRead(imageUris, interviewSlot)
+        PostWrite()
+    }
+
+
 }

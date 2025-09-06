@@ -7,6 +7,9 @@ import com.baek.untitledproject.domain.data.Board
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.data.PostSummary
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostRead
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.BoardRepository
 import javax.inject.Inject
 
@@ -31,13 +34,29 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
         }
     }
 
-    override suspend fun submitPost(post: Post): Result<String> {
+    override suspend fun submitPost(post: PostWrite, user: User): Result<String> {
         return try {
-            val result = PostRemote.uploadPost(post)
+            val result = PostRemote.uploadPost(post, user)
             return Result.Success(result)
         } catch (e: Exception) {
             Log.e("BoardRepository", "게시글 저장 실패", e)
             Result.Error("게시글을 저장하는데 실패하였습니다.", e)
         }
     }
+
+    override suspend fun getPostForRead(postId: String): Result<PostRead> {
+        return try {
+            val result = PostRemote.getPostForRead(postId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 로딩 실패", e)
+            Result.Error("$postId: 게시글을 불러오는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun getPostForEdit(postId: String): Result<PostWrite> {
+        TODO("Not yet implemented")
+    }
+
+
 }

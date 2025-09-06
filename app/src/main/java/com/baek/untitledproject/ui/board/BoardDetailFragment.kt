@@ -17,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardDetailBinding
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.toDateRange
@@ -108,35 +109,53 @@ class BoardDetailFragment : Fragment() {
         }
     }
 
-    private fun bindBoardData(post: Post) = with(binding) {
+    private fun bindBoardData(post: PostRead) = with(binding) {
 
         organizationTxt.text = post.organization
         titleTxt.text = post.title
 
-        if (post.hasInterview == true) {
+        if (post.hasInterview) {
             interviewChip.visibility = View.VISIBLE
+            //면접 일정 UI 설정
             if (post.interviewStart != null && post.interviewEnd != null) {
                 interviewScheduleTxt.text =
                     toDateRange(post.interviewStart, post.interviewEnd, DateUiStyle.MD_KR)
             } else {
                 interviewScheduleTxt.text = "추후 공지 예정"
             }
+            //면접 장소
+            binding.interviewLoc.text = post.interviewLocation ?: "추후 공지 예정"
         } else {
-            interviewScheduleTxt.text = "면접 없음"
+            binding.interviewLayout.visibility = View.GONE
         }
 
-        if (post.recruitmentStart != null && post.recruitmentEnd != null) {
-            recruitDateTxt.text =
-                toDateRange(post.recruitmentStart, post.recruitmentEnd, DateUiStyle.MD_WITH_WEEKDAY)
-            if (LocalDate.now() in post.recruitmentStart..post.recruitmentEnd) {
-                recruitOpenChip.visibility = View.VISIBLE
-                recruitingBottomBar.visibility = View.VISIBLE
-            } else {
-                closedBottomBar.visibility = View.VISIBLE
-            }
+        recruitDateTxt.text = post.recruitmentEnd?.let {
+            toDateRange(
+                post.recruitmentStart,
+                post.recruitmentEnd,
+                DateUiStyle.MD_WITH_WEEKDAY
+            )
         }
 
+
+        if (post.status == "recruiting") {
+            recruitOpenChip.visibility = View.VISIBLE
+            recruitClosedChip.visibility = View.GONE
+
+            closedBottomBar.visibility = View.GONE
+            recruitingBottomBar.visibility = View.VISIBLE
+        } else {
+            recruitOpenChip.visibility = View.GONE
+            recruitClosedChip.visibility = View.VISIBLE
+
+            closedBottomBar.visibility = View.VISIBLE
+            recruitingBottomBar.visibility = View.GONE
+        }
         contentTxt.text = post.content
+
+        if (viewModel.isWriter) {
+            bottomBarContainer.visibility = View.GONE
+        }
 
         //TODO: post.imageUris == empty -> 기본 이미지로 설정
         val uris = post.imageUris
@@ -158,7 +177,7 @@ class BoardDetailFragment : Fragment() {
 
     private fun setupImageSlider(uris: List<Uri>) {
         //이미지가 없으면
-        if(uris.isEmpty()){
+        if (uris.isEmpty()) {
             sliderAdapter = ImageSliderAdapter(emptyList())
             binding.imagePager.adapter = sliderAdapter
             binding.pagerBadge.visibility = View.GONE
@@ -171,13 +190,15 @@ class BoardDetailFragment : Fragment() {
         binding.imagePager.adapter = sliderAdapter
         binding.imagePager.setCurrentItem(0, false)
     }
-    private fun openImageViewer(uris:List<Uri>,startIdx : Int){
-        if(uris.isEmpty()) return
 
-        val action = BoardDetailFragmentDirections.actionBoardDetailFragmentToImageViewerDialogFragment(
-            imageUris = uris.toTypedArray(),
-            startIndex = startIdx
-        )
+    private fun openImageViewer(uris: List<Uri>, startIdx: Int) {
+        if (uris.isEmpty()) return
+
+        val action =
+            BoardDetailFragmentDirections.actionBoardDetailFragmentToImageViewerDialogFragment(
+                imageUris = uris.toTypedArray(),
+                startIndex = startIdx
+            )
         findNavController().navigate(action)
     }
 
@@ -211,7 +232,7 @@ class BoardDetailFragment : Fragment() {
         binding.imagePager.adapter = null
     }
 
-    private fun setupBottomBtn(){
+    private fun setupBottomBtn() {
         binding.recruitBtn.setOnClickListener {
             findNavController().navigate(
                 R.id.submit_application_nav,
@@ -223,9 +244,9 @@ class BoardDetailFragment : Fragment() {
     private fun setupMoreBtn() {
 
         binding.moreBtn.setOnClickListener {
-            if(viewModel.isWriter){
+            if (viewModel.isWriter) {
                 MoreActionBottomSheetFragment().show(parentFragmentManager, "more_action_dialog")
-            }else{
+            } else {
                 ReportBottomSheetFragment().show(parentFragmentManager, "repost_dialog")
             }
         }

@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.repository.BoardRepository
+import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,19 +16,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoardDetailViewModel @Inject constructor(
-    private val boardRepository: BoardRepository
+    private val boardRepository: BoardRepository,
+    private val sessionRepository: SessionRepository
 ) : ViewModel() {
 
-    private val _board = MutableStateFlow<Result<Post>>(Result.Loading)
-    val board: StateFlow<Result<Post>> = _board
+    private val _board = MutableStateFlow<Result<PostRead>>(Result.Loading)
+    val board: StateFlow<Result<PostRead>> = _board
 
-    val isWriter = true
+    private val userId = sessionRepository.currentUid()
+    var isWriter = false
 
     fun loadBoardData(id: String) {
         viewModelScope.launch {
             _board.value = Result.Loading
-            val result = boardRepository.getPostById(id)
+            val result = boardRepository.getPostForRead(id)
             Log.d("BoardDetailViewModel", "getBoard: $id 결과 = $result")
+            if (result is Result.Success) {
+                isWriter = result.data.authorUserId == userId
+            }
             _board.value = result
         }
     }
