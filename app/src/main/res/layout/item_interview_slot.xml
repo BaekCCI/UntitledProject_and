@@ -4,49 +4,68 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="16dp">
-
-    <ImageButton
-        android:id="@+id/deleteBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:src="@drawable/ic_remove_circle_filled" />
-
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="11일" />
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/startTimeBtn"
-            android:layout_width="84dp"
-            android:layout_height="34dp"
-            android:gravity="center"
-            android:text="13:00" />
-
-        <TextView
+        <ImageButton
+            android:id="@+id/deleteBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="7dp"
-            android:text="~" />
+            android:background="@null"
+            android:src="@drawable/ic_remove_circle_filled" />
 
-        <TextView
-            android:id="@+id/endTimeBtn"
-            android:layout_width="84dp"
-            android:layout_height="34dp"
-            android:gravity="center"
-            android:text="18:00" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/startTimeBtn"
+                style="@style/Widget.Untitled.Button.TimeSlot"
+                android:layout_width="84dp"
+                android:layout_height="34dp"
+                android:checkable="true"
+                android:gravity="center"
+                android:text="08:00" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:text="~" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/endTimeBtn"
+                style="@style/Widget.Untitled.Button.TimeSlot"
+                android:layout_width="84dp"
+                android:layout_height="34dp"
+                android:checkable="true"
+                android:gravity="center"
+                android:text="08:30" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/addBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add" />
+
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_200" />
 
 </LinearLayout>
