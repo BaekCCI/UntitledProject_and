@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,10 +11,9 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_weight="1"
         android:paddingVertical="16dp"
-        android:scrollbars="none"
-        app:layout_constraintBottom_toTopOf="@+id/bottomBarContainer"
-        app:layout_constraintTop_toTopOf="parent">
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,16 +58,30 @@
                 android:background="@color/gray_50" />
 
             <LinearLayout
-                android:id="@+id/questionLayout"
+                android:id="@+id/answerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="8dp"/>
+                android:paddingHorizontal="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/privacyPolicyBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="0dp"
+                android:text="개인정보 제3자 동의"
+                android:textColor="@color/gray_500"
+                app:icon="@drawable/ic_chevron_right"
+                app:iconGravity="end"
+                app:iconTint="@color/gray_500" />
         </LinearLayout>
 
     </ScrollView>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/bottomBarContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -82,13 +95,9 @@
             android:id="@+id/submitBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_gravity="start"
+            android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="지원서 작성 완료"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="지원서 작성 완료" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</LinearLayout>

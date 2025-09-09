@@ -98,11 +98,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/input_selector_bg"
                     android:hint="공고 제목을 적어주세요"
-                    android:inputType="textMultiLine"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:inputType="textMultiLine"/>
 
             </LinearLayout>
 
@@ -129,11 +125,7 @@
                     android:background="@drawable/input_selector_bg"
                     android:hint="단체명을 적어주세요"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:maxLines="1" />
 
             </LinearLayout>
 
@@ -293,11 +285,7 @@
                     android:gravity="start"
                     android:hint="활동 목적, 모집 인원, 활동 일정, 지원 자격 등을 자유롭게 작성해주세요"
                     android:inputType="textMultiLine"
-                    android:minHeight="246dp"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:minHeight="246dp" />
             </LinearLayout>
 
             <LinearLayout

@@ -14,14 +14,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentApplicationFormBinding
-import com.baek.untitledproject.databinding.ItemApplicationFormBinding
+import com.baek.untitledproject.databinding.ItemAnswerFieldBinding
 import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
+import com.baek.untitledproject.domain.data.QuestionAnswer
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.ui.MainActivity
 import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.KEY_CONFIRMED
 import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_APPLICATION_EXIT
-import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_CONFIRM_DELETE
+import com.baek.untitledproject.ui.login.TermSheet
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -64,6 +65,7 @@ class ApplicationFormFragment : Fragment() {
                     when (state) {
                         is Result.Success -> {
                             bindData(state.data)
+                            bindQuestion(viewModel.answers.value)
                         }
 
                         is Result.Loading -> {
@@ -91,34 +93,31 @@ class ApplicationFormFragment : Fragment() {
         chipGroupView.studentIdChip.isChecked = applicationRequirement.requiresStudentId
         chipGroupView.genderChip.isChecked = applicationRequirement.requiresGender
 
-        renderQuestions(applicationRequirement.customQuestions)
+        binding.privacyPolicyBtn.setOnClickListener {
+            //TODO: 개인 정보 3자 제공 다이얼로그 띄우기
+            PrivacyPolicyFragment().show(parentFragmentManager, "privacy_policy")
+
+        }
+
     }
 
     //완료 버튼 검증용
     private val questionItems =
-        mutableListOf<Pair<String, ItemApplicationFormBinding>>() // (questionId, binding)
+        mutableListOf<Pair<String, ItemAnswerFieldBinding>>() // (questionId, binding)
 
-
-    private fun renderQuestions(questions: List<CustomQuestion>) {
-
-        val parent = binding.questionLayout
+    private fun bindQuestion(answers: List<QuestionAnswer>) {
+        val parent = binding.answerLayout
         parent.removeAllViews()
         questionItems.clear()
 
         val inflater = LayoutInflater.from(requireContext())
 
-        val saved = viewModel.answers.value
-        questions.forEach { q ->
-            val itemBinding = ItemApplicationFormBinding.inflate(inflater, parent, false)
+        answers.forEach { q ->
+            val itemBinding = ItemAnswerFieldBinding.inflate(inflater, parent, false)
 
             itemBinding.question.text = q.questionText
-            val prev = saved[q.questionId].orEmpty()
-
-            if (prev.isNotEmpty()) {
-                itemBinding.input.setText(prev)
-                itemBinding.input.setSelection(prev.length)
-            }
-            itemBinding.input.doAfterTextChanged { validateInputs() }
+            q.answerText?.let { itemBinding.answerInput.setText(it) }
+            itemBinding.answerInput.doAfterTextChanged { validateInputs() }
 
             parent.addView(itemBinding.root)
             questionItems += q.questionId to itemBinding
@@ -128,7 +127,7 @@ class ApplicationFormFragment : Fragment() {
 
     private fun validateInputs() {
         val allFilled = questionItems
-            .map { it.second.input }
+            .map { it.second.answerInput }
             .all { !it.text.isNullOrBlank() }
 
         binding.submitBtn.isEnabled = allFilled
@@ -137,10 +136,12 @@ class ApplicationFormFragment : Fragment() {
     private fun setupSubmitBtn() {
         binding.submitBtn.setOnClickListener {
             val answers = questionItems.associate { (id, binding) ->
-                id to binding.input.text.toString()
+                id to binding.answerInput.text.toString()
             }
             viewModel.saveAnswers(answers)
-            //TODO: 미리보기 화면으로 이동
+            val action =
+                ApplicationFormFragmentDirections.actionApplicationFormFragmentToPreviewFragment()
+            findNavController().navigate(action)
         }
     }
 
@@ -149,7 +150,7 @@ class ApplicationFormFragment : Fragment() {
         (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "신청서 작성")
     }
 
-    private fun setupBackPressListener(){
+    private fun setupBackPressListener() {
         parentFragmentManager.setFragmentResultListener(
             REQ_APPLICATION_EXIT,
             viewLifecycleOwner
@@ -159,6 +160,7 @@ class ApplicationFormFragment : Fragment() {
             }
         }
     }
+
     private fun setupBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             val tag = "application_exit_dialog"

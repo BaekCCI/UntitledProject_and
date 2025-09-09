@@ -6,21 +6,18 @@
 
     <TextView
         android:id="@+id/question"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:textColor="@color/gray_700"
-        android:textSize="18sp" />
+        android:layout_marginBottom="8dp"
+        android:text="지원 동기는 무엇인가요?" />
 
     <EditText
-        android:id="@+id/input"
+        android:id="@+id/answerInput"
         style="@style/EditTextStyle"
         android:layout_width="match_parent"
-        android:layout_height="108dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/input_selector_bg"
         android:hint="내용을 입력해주세요"
-        android:inputType="textMultiLine"
-        android:padding="18dp" />
-
+        android:minHeight="108dp" />
 </LinearLayout>

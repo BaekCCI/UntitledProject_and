@@ -5,6 +5,7 @@ data class QuestionAnswer(
     val applicationId: String = "",  // application_id
     val questionId: String = "",     // question_id
     val questionText: String = "",   // question_text
-    val answerText: String = "",     // answer_text
+    val answerText: String? = null,     // answer_text
+    var isExpanded: Boolean = true,
     val createdAt: String = ""       // created_at (Timestamp → String)
 )
