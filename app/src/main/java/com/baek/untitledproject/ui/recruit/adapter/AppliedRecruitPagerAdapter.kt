@@ -1,6 +1,7 @@
 package com.baek.untitledproject.ui.recruit.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -8,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.baek.untitledproject.databinding.ItemAppliedRecruitCardBinding
 import com.baek.untitledproject.domain.data.AppliedRecruitSummary
 import com.bumptech.glide.Glide
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class AppliedRecruitPagerAdapter(
     private val onInterviewReserveClick: (String) -> Unit,
@@ -17,20 +20,12 @@ class AppliedRecruitPagerAdapter(
 
     companion object {
         private val AppliedRecruitDiffCallback = object : DiffUtil.ItemCallback<AppliedRecruitSummary>() {
-            override fun areItemsTheSame(
-                oldItem: AppliedRecruitSummary,
-                newItem: AppliedRecruitSummary
-            ): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(
-                oldItem: AppliedRecruitSummary,
-                newItem: AppliedRecruitSummary
-            ): Boolean {
-                return oldItem == newItem
-            }
+            override fun areItemsTheSame(oldItem: AppliedRecruitSummary, newItem: AppliedRecruitSummary) =
+                oldItem.id == newItem.id
+            override fun areContentsTheSame(oldItem: AppliedRecruitSummary, newItem: AppliedRecruitSummary) =
+                oldItem == newItem
         }
+        private val mdFormatter = DateTimeFormatter.ofPattern("M월 d일", Locale.KOREA)
     }
 
     inner class AppliedRecruitViewHolder(
@@ -38,7 +33,12 @@ class AppliedRecruitPagerAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: AppliedRecruitSummary) {
-            // 썸네일 이미지 설정
+            // 기본 정보
+            binding.categoryTxt.text = item.category
+            binding.titleTxt.text = item.title
+            binding.statusTxt.text = item.recruitStatus
+
+            // 썸네일
             if (!item.thumbnailUrl.isNullOrEmpty()) {
                 Glide.with(binding.root.context)
                     .load(item.thumbnailUrl)
@@ -49,31 +49,26 @@ class AppliedRecruitPagerAdapter(
                 binding.thumbnailImg.setImageResource(android.R.color.darker_gray)
             }
 
-            // 버튼 클릭 이벤트 설정
-            setupButtonClickEvents(item)
-
-            // 카드 클릭 이벤트
-            binding.root.setOnClickListener {
-                onCardClick(item.id)
-            }
-        }
-
-        private fun setupButtonClickEvents(item: AppliedRecruitSummary) {
-            binding.interviewReserveBtn.setOnClickListener {
-                onInterviewReserveClick(item.id)
+            // 모집 기간: 둘 다 있을 때만 "M월 d일 ~ M월 d일"
+            val s = item.recruitmentStart
+            val e = item.recruitmentEnd
+            if (s != null && e != null) {
+                binding.periodRow.visibility = View.VISIBLE
+                binding.periodDetailTxt.text = "${s.format(mdFormatter)} ~ ${e.format(mdFormatter)}"
+            } else {
+                binding.periodRow.visibility = View.GONE
             }
 
-            binding.viewPostBtn.setOnClickListener {
-                onViewPostClick(item.id)
-            }
+            // 클릭
+            binding.interviewReserveBtn.setOnClickListener { onInterviewReserveClick(item.id) }
+            binding.viewPostBtn.setOnClickListener { onViewPostClick(item.id) }
+            binding.root.setOnClickListener { onCardClick(item.id) }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppliedRecruitViewHolder {
         val binding = ItemAppliedRecruitCardBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
         return AppliedRecruitViewHolder(binding)
     }
