@@ -1,7 +1,6 @@
 package com.baek.untitledproject.data.remote
 
 import android.net.Uri
-import android.util.Log
 import com.baek.untitledproject.domain.data.PostSummary
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.async
@@ -21,9 +20,9 @@ import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.User
-import com.google.firebase.Firebase
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 
 object PostRemote {
@@ -139,7 +138,7 @@ object PostRemote {
         val now = Timestamp.now()
 
         val db = FirebaseFirestore.getInstance()
-        val storage = Firebase.storage
+        val storage = FirebaseStorage.getInstance("gs://muje_storage")
 
         val postRef = db.collection("posts").document()
         val postId = postRef.id
