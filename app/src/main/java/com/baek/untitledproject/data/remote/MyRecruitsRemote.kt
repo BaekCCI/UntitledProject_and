@@ -5,44 +5,50 @@ import com.baek.untitledproject.domain.data.AppliedRecruitSummary
 import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ScheduleGroupSummary
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FieldPath
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDate
+import com.baek.untitledproject.common.utils.toLocalDate
 
 object MyRecruitsRemote {
 
-    private const val myRecruitUserId = "test-author-123"
-    private const val myAppliedUserId = "user2"
-
-    suspend fun getMyRecruits(): List<MyRecruitSummary> {
+    suspend fun getMyRecruits(currentUserId: String): List<MyRecruitSummary> {
         val db = FirebaseFirestore.getInstance()
 
         val postsSnap = db.collection("posts")
-            .whereEqualTo("author_user_id", myRecruitUserId)
+            .whereEqualTo("author_user_id", currentUserId)
             .get()
             .await()
 
         val postIds = postsSnap.documents.map { it.id }
 
-        // 썸네일 이미지 조회
+        // 썸네일 맵
         val thumbMap = fetchThumbnailByPostId(db, postIds)
 
         return postsSnap.documents.mapNotNull { doc ->
             try {
-                val data = doc.data ?: return@mapNotNull null
+                val title = doc.getString("title") ?: "제목 없음"
+                val org = doc.getString("organization") ?: "단체명 없음"
+                val status = getRecruitStatusText(doc.getString("status"))
+                val hasInterview = doc.getBoolean("has_interview") ?: false
+
+                // Firestore Timestamp -> LocalDate
+                val start: LocalDate? = doc.getTimestamp("recruitment_start")?.toLocalDate()
+                val end: LocalDate? = doc.getTimestamp("recruitment_end")?.toLocalDate()
 
                 MyRecruitSummary(
                     id = doc.id,
-                    title = data["title"] as? String ?: "제목 없음",
-                    category = data["organization"] as? String ?: "단체명 없음",
-                    recruitStatus = getRecruitStatusText(data["status"] as? String),
-                    thumbnailUrl = thumbMap[doc.id], // 실제 이미지 URL
-                    hasInterview = data["has_interview"] as? Boolean ?: false,
+                    title = title,
+                    category = org,
+                    recruitStatus = status,
+                    thumbnailUrl = thumbMap[doc.id],
+                    hasInterview = hasInterview,
                     applicantCount = 0,
-                    recruitmentEnd = formatRecruitmentEnd(data["recruitment_end"])
+                    recruitmentStart = start,
+                    recruitmentEnd = end
                 )
             } catch (e: Exception) {
                 Log.e("MyRecruitsRemote", "내 공고 데이터 변환 실패: ${doc.id}", e)
@@ -51,17 +57,17 @@ object MyRecruitsRemote {
         }
     }
 
-    // 썸네일 이미지 조회 함수 추가
+    // 썸네일 조회 (post_images에서 order 0)
     private suspend fun fetchThumbnailByPostId(
         db: FirebaseFirestore,
         postIds: List<String>
     ): Map<String, String> = coroutineScope {
-        val chunks = postIds.chunked(10) // whereIn 최대 10개 제한
+        val chunks = postIds.chunked(10) // whereIn 제한
         val jobs = chunks.map { chunk ->
             async {
                 db.collection("post_images")
                     .whereIn("post_id", chunk)
-                    .whereEqualTo("image_order", 0) // 첫 번째 이미지만
+                    .whereEqualTo("image_order", 0)
                     .get()
                     .await()
                     .documents
@@ -74,35 +80,41 @@ object MyRecruitsRemote {
         }
         jobs.awaitAll().flatten().toMap()
     }
-    suspend fun getAppliedRecruits(): List<AppliedRecruitSummary> {
+
+    suspend fun getAppliedRecruits(currentUserId: String): List<AppliedRecruitSummary> {
         val db = FirebaseFirestore.getInstance()
 
         val applicationsSnap = db.collection("applications")
-            .whereEqualTo("applicant_user_id", myAppliedUserId)
+            .whereEqualTo("applicant_user_id", currentUserId)
             .get()
             .await()
 
-        // post_id 목록 추출
-        val postIds = applicationsSnap.documents.mapNotNull { doc ->
-            doc.data?.get("post_id") as? String
-        }.distinct()
+        // post_id 목록
+        val postIds = applicationsSnap.documents.mapNotNull { it.getString("post_id") }.distinct()
 
-        // 썸네일 이미지 조회
+        // 썸네일 맵
         val thumbMap = fetchThumbnailByPostId(db, postIds)
+
+        // posts 메타(상태/모집기간) 맵
+        val postMeta = fetchPostsMetaByIds(db, postIds)
 
         return applicationsSnap.documents.mapNotNull { doc ->
             try {
                 val data = doc.data ?: return@mapNotNull null
                 val postId = data["post_id"] as? String ?: return@mapNotNull null
-                val postTitle = data["post_title"] as? String ?: "공고 제목"
-                val postOrganization = data["post_organization"] as? String ?: "단체명"
+
+                val title = data["post_title"] as? String ?: "공고 제목"
+                val org = data["post_organization"] as? String ?: "단체명"
+
+                val meta = postMeta[postId]
+                val recruitStatus = getRecruitStatusText(meta?.status)
 
                 AppliedRecruitSummary(
                     id = doc.id,
                     postId = postId,
-                    title = postTitle,
-                    category = postOrganization,
-                    recruitStatus = "모집중",
+                    title = title,
+                    category = org,
+                    recruitStatus = recruitStatus,
                     applicationStatus = getApplicationStatusText(
                         data["status"] as? String,
                         data["is_passed"] as? Boolean
@@ -113,7 +125,10 @@ object MyRecruitsRemote {
                         data["status"] as? String,
                         data["interview_slot_id"] as? String
                     ),
-                    thumbnailUrl = thumbMap[postId] // 이미지 URL 추가
+                    thumbnailUrl = thumbMap[postId],
+
+                    recruitmentStart = meta?.recruitmentStart,
+                    recruitmentEnd = meta?.recruitmentEnd
                 )
             } catch (e: Exception) {
                 Log.e("MyRecruitsRemote", "지원한 공고 데이터 변환 실패: ${doc.id}", e)
@@ -122,7 +137,7 @@ object MyRecruitsRemote {
         }
     }
 
-    suspend fun getScheduleGroups(): List<ScheduleGroupSummary> {
+    suspend fun getScheduleGroups(currentUserId: String): List<ScheduleGroupSummary> {
         return emptyList()
     }
 
@@ -151,16 +166,34 @@ object MyRecruitsRemote {
         return status == "면접 대기 중" && interviewSlotId == null
     }
 
-    private fun formatRecruitmentEnd(recruitmentEnd: Any?): String? {
-        return try {
-            when (recruitmentEnd) {
-                is com.google.firebase.Timestamp -> {
-                    SimpleDateFormat("MM월 dd일", Locale.getDefault()).format(recruitmentEnd.toDate())
-                }
-                else -> null
+    private suspend fun fetchPostsMetaByIds(
+        db: FirebaseFirestore,
+        postIds: List<String>
+    ): Map<String, PostMeta> = coroutineScope {
+        if (postIds.isEmpty()) return@coroutineScope emptyMap()
+        val chunks = postIds.chunked(10)
+        val jobs = chunks.map { chunk ->
+            async {
+                db.collection("posts")
+                    .whereIn(FieldPath.documentId(), chunk)
+                    .get()
+                    .await()
+                    .documents
+                    .map { d ->
+                        val status = d.getString("status")
+                        val start: LocalDate? = d.getTimestamp("recruitment_start")?.toLocalDate()
+                        val end: LocalDate? = d.getTimestamp("recruitment_end")?.toLocalDate()
+                        d.id to PostMeta(status, start, end)
+                    }
             }
-        } catch (e: Exception) {
-            null
         }
+        jobs.awaitAll().flatten().toMap()
     }
+
+    // 내부용 메타
+    private data class PostMeta(
+        val status: String?,
+        val recruitmentStart: LocalDate?,
+        val recruitmentEnd: LocalDate?
+    )
 }
