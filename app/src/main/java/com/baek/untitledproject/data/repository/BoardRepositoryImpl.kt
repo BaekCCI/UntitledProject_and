@@ -44,9 +44,9 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
         }
     }
 
-    override suspend fun getPostForRead(postId: String): Result<PostRead> {
+    override suspend fun getPostForRead(postId: String, userId: String?): Result<PostRead> {
         return try {
-            val result = PostRemote.getPostForRead(postId)
+            val result = PostRemote.getPostForRead(postId, userId)
             Result.Success(result)
         } catch (e: Exception) {
             Log.e("BoardRepository", "게시글 로딩 실패", e)
@@ -55,7 +55,33 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
     }
 
     override suspend fun getPostForEdit(postId: String): Result<PostWrite> {
-        TODO("Not yet implemented")
+        return try {
+            val result = PostRemote.getPostForEdit(postId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 로딩 실패", e)
+            Result.Error("$postId: 게시글을 불러오는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun editPost(post: PostWrite): Result<String> {
+        return try {
+            val result = PostRemote.editPost(post)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 수정 실패", e)
+            Result.Error("게시글을 수정하는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun deletePost(postId: String): Result<Unit> {
+        return try {
+            val result = PostRemote.deletePost(postId)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "$postId: 게시글 삭제 실패", e)
+            Result.Error("게시글을 삭제하는데 실패하였습니다.", e)
+        }
     }
 
 

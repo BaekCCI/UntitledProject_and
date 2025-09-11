@@ -147,7 +147,9 @@ fun PostResponse.toMyRecruitSummary(
 //읽기 전용으로 변환
 fun PostResponse.toPostRead(
     images: List<Uri>,
-    interviewSlots: List<InterviewSlotResponse>
+    interviewSlots: List<InterviewSlotResponse>,
+    userId: String?,
+    isApplied: Boolean = false
 ): PostRead {
     return PostRead(
         postId = post_id,
@@ -171,7 +173,28 @@ fun PostResponse.toPostRead(
         requiresGender = requires_gender,
         requiresAge = requires_age,
         //requiresPhone = requires_phone
+
+        isAuthor = userId == author_user_id,
+        isApplied = isApplied
     )
+}
+
+fun PostResponse.toPostWrite(
+    images: List<Uri>
+): PostWrite {
+    return PostWrite(
+        postId = post_id,
+
+        title = title,
+        organization = organization,
+        content = content,
+        recruitmentStart = recruitment_start.toLocalDate(),
+        recruitmentEnd = recruitment_end?.toLocalDate(),
+        imageUris = images,
+        hasInterview = has_interview,
+        interviewLocation = interview_location,
+
+        )
 }
 
 fun List<InterviewSlotResponse>.getEarliestDate(): LocalDate? {
@@ -183,14 +206,15 @@ fun List<InterviewSlotResponse>.getLatestDate(): LocalDate? {
 }
 
 //게시글 업로드용
-fun PostWrite.toResponse(postId: String, user: User, createdAt: Timestamp): PostResponse {
+fun PostWrite.toResponse(id: String, user: User, now: Timestamp): PostResponse {
     return PostResponse(
-        post_id = postId,
+        post_id = postId ?: id,
+
         author_user_id = user.userId!!,
         title = title ?: "",
         organization = organization ?: "",
         content = content ?: "",
-        recruitment_start = recruitmentStart?.toTimestamp() ?: createdAt,
+        recruitment_start = recruitmentStart?.toTimestamp() ?: now,
         recruitment_end = recruitmentEnd?.toTimestamp(),
         has_interview = hasInterview ?: false,
         interview_location = interviewLocation,
@@ -205,8 +229,8 @@ fun PostWrite.toResponse(postId: String, user: User, createdAt: Timestamp): Post
         author_name = user.name,
         author_organization = organization ?: "",
 
-        created_at = createdAt,
-        updated_at = createdAt
+        created_at = now,
+        updated_at = now
     )
 }
 

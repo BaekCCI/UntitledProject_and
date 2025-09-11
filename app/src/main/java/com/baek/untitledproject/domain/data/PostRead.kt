@@ -26,4 +26,7 @@ data class PostRead(
     val requiresPhone: Boolean = false,
 
     val imageUris: List<Uri> = emptyList(), //업로드한 이미지
+
+    val isAuthor: Boolean = false,
+    val isApplied: Boolean = false
 )

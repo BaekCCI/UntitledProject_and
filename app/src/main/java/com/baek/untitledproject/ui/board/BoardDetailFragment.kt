@@ -66,9 +66,9 @@ class BoardDetailFragment : Fragment() {
 
         initData()
         observeBoard()
-        setupMoreBtn()
         setupDialogs()
         setupBottomBtn()
+        observeDeleteState()
         //toolbar 적용
         val navController = findNavController()
 
@@ -92,6 +92,7 @@ class BoardDetailFragment : Fragment() {
                     when (state) {
                         is Result.Success -> {
                             bindBoardData(state.data)
+                            setupMoreBtn(state.data)
                         }
 
                         is Result.Loading -> {
@@ -114,6 +115,7 @@ class BoardDetailFragment : Fragment() {
         organizationTxt.text = post.organization
         titleTxt.text = post.title
 
+        //면접 여부에 따른 ui 설정
         if (post.hasInterview) {
             interviewChip.visibility = View.VISIBLE
             //면접 일정 UI 설정
@@ -137,13 +139,25 @@ class BoardDetailFragment : Fragment() {
             )
         }
 
+        //작성자 여부에 따른 바텀바 설정
+        if (post.isAuthor) {
+            bottomBarContainer.visibility = View.GONE
+        } else {
+            bottomBarContainer.visibility = View.VISIBLE
+        }
 
+        //모집상태에 따른 ui 설정
         if (post.status == "recruiting") {
             recruitOpenChip.visibility = View.VISIBLE
             recruitClosedChip.visibility = View.GONE
 
             closedBottomBar.visibility = View.GONE
             recruitingBottomBar.visibility = View.VISIBLE
+
+            if (post.isApplied) {
+                recruitBtn.isEnabled = false
+                recruitBtn.text = "지원완료"
+            }
         } else {
             recruitOpenChip.visibility = View.GONE
             recruitClosedChip.visibility = View.VISIBLE
@@ -153,9 +167,6 @@ class BoardDetailFragment : Fragment() {
         }
         contentTxt.text = post.content
 
-        if (viewModel.isWriter) {
-            bottomBarContainer.visibility = View.GONE
-        }
 
         //TODO: post.imageUris == empty -> 기본 이미지로 설정
         val uris = post.imageUris
@@ -164,7 +175,7 @@ class BoardDetailFragment : Fragment() {
         registerPagerCallback(uris.size)
 
         //작성자이면
-        if (viewModel.isWriter) {
+        if (post.isAuthor) {
             submitInfoView.visibility = View.VISIBLE
             chipGroupView.nameChip.isChecked = post.requiresName
             chipGroupView.departmentChip.isChecked = post.requiresDepartment
@@ -241,10 +252,10 @@ class BoardDetailFragment : Fragment() {
         }
     }
 
-    private fun setupMoreBtn() {
+    private fun setupMoreBtn(post: PostRead) {
 
         binding.moreBtn.setOnClickListener {
-            if (viewModel.isWriter) {
+            if (post.isAuthor) {
                 MoreActionBottomSheetFragment().show(parentFragmentManager, "more_action_dialog")
             } else {
                 ReportBottomSheetFragment().show(parentFragmentManager, "repost_dialog")
@@ -267,10 +278,11 @@ class BoardDetailFragment : Fragment() {
         ) { _, bundle ->
             when (bundle.getString(KEY_ACTION)) {
                 ACTION_EDIT -> {
-                    findNavController().navigate(
-                        BoardDetailFragmentDirections.actionBoardDetailFragmentToWriteBoardNavGraph().actionId,
-                        bundleOf("postId" to args.id)
-                    )
+                    val action =
+                        BoardDetailFragmentDirections.actionBoardDetailFragmentToEditPostFragment(
+                            args.id
+                        )
+                    findNavController().navigate(action)
                 }
 
                 ACTION_DELETE -> {
@@ -283,7 +295,32 @@ class BoardDetailFragment : Fragment() {
             viewLifecycleOwner
         ) { _, bundle ->
             if (bundle.getBoolean(KEY_CONFIRMED, false)) {
-                //삭제 로직
+                viewModel.deletePost(args.id)
+
+            }
+        }
+    }
+
+    private fun observeDeleteState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deleteState.collect { state ->
+                    when (state) {
+                        is Result.Success -> {
+                            findNavController().popBackStack()
+                        }
+
+                        is Result.Loading -> {
+                            //TODO: loading ui 적용
+                        }
+
+                        is Result.Error -> {
+                            //TODO: Error 처리
+                        }
+
+                        else -> {} //None일 때는 아무 처리도 하지 않음
+                    }
+                }
             }
         }
     }

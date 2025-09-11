@@ -24,17 +24,25 @@ class BoardDetailViewModel @Inject constructor(
     val board: StateFlow<Result<PostRead>> = _board
 
     private val userId = sessionRepository.currentUid()
-    var isWriter = false
+
+    private val _deleteState = MutableStateFlow<Result<Unit>>(Result.None)
+    val deleteState: StateFlow<Result<Unit>> = _deleteState
 
     fun loadBoardData(id: String) {
         viewModelScope.launch {
             _board.value = Result.Loading
-            val result = boardRepository.getPostForRead(id)
+            val result = boardRepository.getPostForRead(id, userId)
             Log.d("BoardDetailViewModel", "getBoard: $id 결과 = $result")
-            if (result is Result.Success) {
-                isWriter = result.data.authorUserId == userId
-            }
             _board.value = result
+        }
+    }
+
+    fun deletePost(id: String) {
+        viewModelScope.launch {
+            _deleteState.value = Result.Loading
+            val result = boardRepository.deletePost(id)
+            Log.d("BoardDetailViewModel", "deletePost 결과: $result")
+            _deleteState.value = result
         }
     }
 }

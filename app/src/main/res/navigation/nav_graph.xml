@@ -58,6 +58,9 @@
         <action
             android:id="@+id/action_boardDetailFragment_to_applicationFormFragment"
             app:destination="@id/applicationFormFragment" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -106,4 +109,12 @@
         android:name="com.baek.untitledproject.ui.setting.DeleteAccountFragment"
         android:label="fragment_delete_account"
         tools:layout="@layout/fragment_delete_account" />
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.baek.untitledproject.ui.board.write.EditPostFragment"
+        android:label="EditPostFragment" >
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
 </navigation>

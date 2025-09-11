@@ -13,11 +13,6 @@
         <action
             android:id="@+id/action_infoWriteFragment_to_interviewSettingFragment"
             app:destination="@id/interviewSettingFragment" />
-        <argument
-            android:name="postId"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/interviewSettingFragment"

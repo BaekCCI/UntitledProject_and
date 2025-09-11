@@ -14,7 +14,11 @@ interface BoardRepository {
 
     suspend fun submitPost(post: PostWrite, user: User): Result<String>
 
-    suspend fun getPostForRead(postId: String): Result<PostRead>
+    suspend fun getPostForRead(postId: String, userId: String? = null): Result<PostRead>
 
     suspend fun getPostForEdit(postId: String): Result<PostWrite>
+
+    suspend fun editPost(post: PostWrite): Result<String>
+
+    suspend fun deletePost(postId: String): Result<Unit>
 }
