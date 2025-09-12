@@ -11,7 +11,8 @@ sealed class InterviewTimeSlot {
         val date: LocalDate,
         val index: Int,
         val start: LocalTime,
-        val end: LocalTime
+        val end: LocalTime,
+        var isLast : Boolean
     ) : InterviewTimeSlot()
 }
 

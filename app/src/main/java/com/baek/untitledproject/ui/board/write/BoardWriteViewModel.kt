@@ -1,17 +1,14 @@
 package com.baek.untitledproject.ui.board.write
 
-import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.TimeSlot
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.BoardRepository
 import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.repository.UserRepository
 import com.baek.untitledproject.domain.utils.Result
-import com.baek.untitledproject.domain.utils.toLocalDate
+import com.baek.untitledproject.ui.board.write.common.BaseWriteViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

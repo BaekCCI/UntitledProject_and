@@ -8,14 +8,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
-import com.baek.untitledproject.R
 import com.baek.untitledproject.domain.utils.Result
-import com.baek.untitledproject.ui.board.BoardDetailFragmentArgs
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.baek.untitledproject.ui.board.write.common.BaseWriteViewModel
+import com.baek.untitledproject.ui.board.write.common.InfoWriteBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

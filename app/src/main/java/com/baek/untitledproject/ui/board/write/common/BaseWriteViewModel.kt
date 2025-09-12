@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.board.write
+package com.baek.untitledproject.ui.board.write.common
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

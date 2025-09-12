@@ -2,6 +2,7 @@ package com.baek.untitledproject.ui.board.write
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -42,6 +43,10 @@ class InterviewScheduleAdapter(
             ): Boolean {
                 return oldItem == newItem
             }
+            override fun getChangePayload(old: InterviewTimeSlot, new: InterviewTimeSlot): Any? =
+                if (old is InterviewTimeSlot.SlotRow && new is InterviewTimeSlot.SlotRow &&
+                    old.isLast != new.isLast
+                ) "PAYLOAD_LAST" else null
         }
     }
 
@@ -69,6 +74,14 @@ class InterviewScheduleAdapter(
                 onAddSlot
             )
         }
+    }
+    override fun onBindViewHolder(h: RecyclerView.ViewHolder, pos: Int, payloads: MutableList<Any>) {
+        if (payloads.contains("PAYLOAD_LAST")) {
+            val item = getItem(pos) as InterviewTimeSlot.SlotRow
+            (h as SlotVH).setAddVisible(item.isLast) // 버튼만 토글
+            return
+        }
+        super.onBindViewHolder(h, pos, payloads)
     }
 
     class HeaderVH(private val b: ItemInterviewDateHeaderBinding) :
@@ -106,7 +119,12 @@ class InterviewScheduleAdapter(
             binding.addBtn.setOnClickListener {
                 onAdd(item.date)
             }
-
+            setAddVisible(item.isLast)
+        }
+        fun setAddVisible(show: Boolean) {
+            binding.addBtn.visibility = if (show) View.VISIBLE else View.INVISIBLE
+            // 레이아웃 재흐름 원하면 GONE 사용
         }
     }
+
 }

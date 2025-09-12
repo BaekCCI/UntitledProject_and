@@ -5,6 +5,8 @@ import android.view.View
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.R
+import com.baek.untitledproject.ui.board.write.common.BaseWriteViewModel
+import com.baek.untitledproject.ui.board.write.common.InfoWriteBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.board.write
+package com.baek.untitledproject.ui.board.write.common
 
 import android.net.Uri
 import android.os.Bundle
@@ -24,6 +24,7 @@ import com.baek.untitledproject.domain.utils.DateUiStyle
 import com.baek.untitledproject.domain.utils.toLocalDate
 import com.baek.untitledproject.domain.utils.toUiString
 import com.baek.untitledproject.ui.MainActivity
+import com.baek.untitledproject.ui.board.write.ExitConfirmDialogFragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners

@@ -35,12 +35,10 @@ class TimePickerDialogFragment(
             setNumberPicker()
         }
 
-
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(binding.root)
         dialog.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-
 
         binding.cancelBtn.setOnClickListener {
             dismiss()
@@ -52,13 +50,98 @@ class TimePickerDialogFragment(
     private fun setTimePicker() = with(binding) {
         timePicker.visibility = View.VISIBLE
         numberPicker.visibility = View.GONE
-        timePicker.setInterval()
-        timePicker.setIs24HourView(false)
-        timePicker.hour = cur.hour
-        timePicker.minute = cur.minute / 5
 
-        binding.completeBtn.setOnClickListener {
-            onPicked(LocalTime.of(timePicker.hour, timePicker.minute * 5))
+        // 12시간 UI 유지 + 5분 간격 표시(스피너 모드일 때 유효)
+        timePicker.setIs24HourView(false)
+        timePicker.setInterval()
+
+        // 상한: 자정 - step (예: step=30 → 23:30)
+        val maxStart = LocalTime.MIDNIGHT.minusMinutes(step.toLong())
+
+        // 초기값을 상한 이내로 클램프
+        val init = if (cur.isAfter(maxStart)) maxStart else cur
+        timePicker.hour = init.hour
+        timePicker.minute = init.minute / 5
+
+        // ── 내부 NumberPicker 참조(제조사별 id 차이 고려) ──
+        fun np(idName: String): NumberPicker? {
+            val id = Resources.getSystem().getIdentifier(idName, "id", "android")
+            return timePicker.findViewById(id)
+        }
+
+        val hourPicker = np("hour")
+        val minutePicker = np("minute")
+        val ampmPicker = np("amPm") ?: np("amPmSpinner") // 일부 OEM용 대체 id
+
+        // ── '돌리고 난 뒤' 판정: 모든 피커가 IDLE이고, 마지막 변경 이후 N ms 경과 ──
+        val handler = android.os.Handler(android.os.Looper.getMainLooper())
+        var pending: Runnable? = null
+        var lastChangeAt = android.os.SystemClock.uptimeMillis()
+        var hourScrolling = false
+        var minuteScrolling = false
+        var ampmScrolling = false
+        var internalChange = false
+
+        fun minuteFromPicker(): Int {
+            // setInterval 적용으로 minute는 0..11(=0..55 by *5) 인덱스가 일반적이나,
+            // 일부 테마는 0..59가 들어오기도 해서 둘 다 대응
+            val raw = minutePicker?.value ?: timePicker.minute
+            return if (raw in 0..11) raw * 5 else raw
+        }
+
+        fun currentPicked(): LocalTime =
+            LocalTime.of(timePicker.hour, minuteFromPicker())
+
+        // 최종 스냅: '사용자가 멈춘 뒤'이고 maxStart 초과면 maxStart로 이동
+        fun clampIfNeeded() {
+            if (internalChange) return
+            val picked = currentPicked()
+            if (picked.isAfter(maxStart)) {
+                internalChange = true
+                timePicker.hour = maxStart.hour
+                val idx = maxStart.minute / 5
+                timePicker.minute = idx
+                minutePicker?.value = idx // OEM 동기화
+                internalChange = false
+            }
+        }
+
+        fun scheduleCheck() {
+            pending?.let { handler.removeCallbacks(it) }
+            pending = Runnable {
+                val idle = !hourScrolling && !minuteScrolling && !ampmScrolling
+                val stable = android.os.SystemClock.uptimeMillis() - lastChangeAt >= 180L
+                if (idle && stable) clampIfNeeded() else scheduleCheck()
+            }
+            handler.postDelayed(pending!!, 120L) // 100~200ms 정도가 자연스러움
+        }
+
+        // 값이 변할 때: 즉시 스냅하지 않고 '마지막 변경 시각'만 갱신 → 멈춘 뒤에만 처리
+        timePicker.setOnTimeChangedListener { _, _, _ ->
+            if (internalChange) return@setOnTimeChangedListener
+            lastChangeAt = android.os.SystemClock.uptimeMillis()
+            scheduleCheck()
+        }
+
+        // 스크롤 상태 추적: IDLE일 때만 검사 트리거
+        val scrollL = NumberPicker.OnScrollListener { picker, state ->
+            val scrolling = state != NumberPicker.OnScrollListener.SCROLL_STATE_IDLE
+            when (picker) {
+                hourPicker -> hourScrolling = scrolling
+                minutePicker -> minuteScrolling = scrolling
+                ampmPicker -> ampmScrolling = scrolling
+            }
+            if (!scrolling) scheduleCheck()
+        }
+        hourPicker?.setOnScrollListener(scrollL)
+        minutePicker?.setOnScrollListener(scrollL)
+        ampmPicker?.setOnScrollListener(scrollL)
+
+        // 완료 버튼에서도 최종 안전 클램프
+        completeBtn.setOnClickListener {
+            clampIfNeeded()
+            val picked = currentPicked()
+            onPicked(if (picked.isAfter(maxStart)) maxStart else picked)
             dismiss()
         }
     }
@@ -114,7 +197,7 @@ class TimePickerDialogFragment(
         maxValue = slots.lastIndex
         displayedValues = labels
         wrapSelectorWheel = false
-        value = 0
+        value = slots.indexOf(cur)
     }
 
     override fun onDestroyView() {

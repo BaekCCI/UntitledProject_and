@@ -50,9 +50,10 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <include
-                android:id="@+id/calendarContainer"
-                layout="@layout/view_calendar" />
+            <com.baek.untitledproject.ui.board.write.common.SelectableCalendarView
+                android:id="@+id/calendarWidget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <LinearLayout
                 android:id="@+id/initialLayout"

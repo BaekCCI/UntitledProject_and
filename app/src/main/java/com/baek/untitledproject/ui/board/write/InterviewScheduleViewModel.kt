@@ -32,8 +32,8 @@ class InterviewScheduleViewModel @Inject constructor(
     )
 
     //인터뷰 시간
-    private val _interviewTime = MutableStateFlow(30)
-    val interviewTime: StateFlow<Int> = _interviewTime
+    private val _interviewStep = MutableStateFlow(30)
+    val interviewStep: StateFlow<Int> = _interviewStep
 
     private val _capacity = MutableStateFlow(1)
     val capacity: StateFlow<Int> = _capacity
@@ -43,14 +43,14 @@ class InterviewScheduleViewModel @Inject constructor(
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
 
-    fun init(post:PostWrite){
+    fun init(post: PostWrite) {
         val slots = post.interviewSlot
         val step = post.interviewSlotStep
         val capacity = post.maxCapacity
-        if(slots.isEmpty()) return
+        if (slots.isEmpty()) return
         _slotsByDay.value = slots.mapValues { it.value.toMutableList() }
             .toMutableMap()
-        _interviewTime.value = step
+        _interviewStep.value = step
         _capacity.value = capacity
     }
 
@@ -67,12 +67,12 @@ class InterviewScheduleViewModel @Inject constructor(
 
     //슬롯 추가
     fun addSlot(date: LocalDate? = null) {
-        if (date!=null &&  date!= selectedDate.value) {
+        if (date != null && date != selectedDate.value) {
             _selectedDate.value = date
         }
         val day = selectedDate.value ?: return
         val start = LocalTime.of(8, 0)
-        val end = start.plusMinutes(interviewTime.value.toLong())
+        val end = start.plusMinutes(interviewStep.value.toLong())
         _slotsByDay.update { map ->
             val list = (map[day] ?: mutableListOf()).toMutableList()
             list.add(TimeSlot(start, end))
@@ -99,7 +99,9 @@ class InterviewScheduleViewModel @Inject constructor(
             val list = map[date]?.toMutableList() ?: return@update map
             val prev = list.getOrNull(index) ?: return@update map
 
-            list[index] = prev.copy(start = start)
+            val newEnd = alignEndToStartGrid(start, prev.end, interviewStep.value)
+            list[index] = prev.copy(start = start, end = newEnd)
+            Log.d("InterviewScheduleViewModel","updateSlotStart: ${list[index]}")
             map.toMutableMap().apply { put(date, list) }
         }
     }
@@ -115,13 +117,15 @@ class InterviewScheduleViewModel @Inject constructor(
     }
 
     fun plusInterviewTime() {
-        if (interviewTime.value >= 30) return
-        _interviewTime.value += 10
+        if (interviewStep.value >= 30) return
+        _interviewStep.value += 10
+        adjustAllSlotEndsToStep(interviewStep.value)
     }
 
     fun minusInterviewTime() {
-        if (interviewTime.value <= 10) return
-        _interviewTime.value -= 10
+        if (interviewStep.value <= 10) return
+        _interviewStep.value -= 10
+        adjustAllSlotEndsToStep(interviewStep.value)
     }
 
     fun plusCapacity() {
@@ -136,6 +140,7 @@ class InterviewScheduleViewModel @Inject constructor(
 
     private fun buildItem(map: Map<LocalDate, List<TimeSlot>>): List<InterviewTimeSlot> {
         if (map.isEmpty()) return emptyList()
+
         return map.toSortedMap()
             .flatMap { (date, slots) ->
                 val rows = slots.mapIndexed { idx, slot ->
@@ -143,7 +148,8 @@ class InterviewScheduleViewModel @Inject constructor(
                         date = date,
                         index = idx,
                         start = slot.start,
-                        end = slot.end
+                        end = slot.end,
+                        isLast = idx == slots.lastIndex
                     )
                 }
                 listOf(InterviewTimeSlot.DateHeader(date)) + rows
@@ -186,5 +192,51 @@ class InterviewScheduleViewModel @Inject constructor(
         }
         return merged
     }
+
+    //--endTime 설정 로직
+
+    //시작시간 변경 시 endTime도 변경
+    private fun alignEndToStartGrid(start: LocalTime, curEnd: LocalTime, stepMin: Int): LocalTime {
+        val startMin = start.toSecondOfDay() / 60
+        val endMin   = curEnd.toSecondOfDay() / 60
+        if (endMin <= startMin) return start.plusMinutes(stepMin.toLong())
+
+        val delta = endMin - startMin
+        val k = delta / stepMin
+        val aligned = startMin + k * stepMin
+        val alignedTime = LocalTime.ofSecondOfDay(aligned.toLong() * 60)
+
+        return if (!alignedTime.isAfter(start)) start.plusMinutes(stepMin.toLong()) else alignedTime
+    }
+
+
+    //endTime을 interviewtime 배수로 내림 정렬
+    private fun floorAlignToStep(time: LocalTime, stepMin: Int): LocalTime {
+        val totalMin = time.toSecondOfDay() / 60
+        val alignedMin = (totalMin / stepMin) * stepMin
+        return LocalTime.ofSecondOfDay(alignedMin.toLong() * 60)
+    }
+
+
+    private fun adjustAllSlotEndsToStep(newStep: Int) {
+        if (_slotsByDay.value.isEmpty()) return
+
+        _slotsByDay.update { map ->
+            val newMap = map.toMutableMap()
+            newMap.keys.forEach { date ->
+                val list = (newMap[date] ?: mutableListOf()).toMutableList()
+                val updated = list.map { ts ->
+                    var newEnd = floorAlignToStep(ts.end, newStep)
+                    if (!newEnd.isAfter(ts.start)) {
+                        newEnd = ts.start.plusMinutes(newStep.toLong())
+                    }
+                    ts.copy(end = newEnd)
+                }
+                newMap[date] = updated.toMutableList()
+            }
+            newMap
+        }
+    }
+
 
 }
