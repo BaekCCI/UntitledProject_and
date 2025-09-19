@@ -8,14 +8,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentMyRecruitsBinding
+import com.baek.untitledproject.ui.MainActivity
 import com.baek.untitledproject.ui.recruit.adapter.AppliedRecruitPagerAdapter
 import com.baek.untitledproject.ui.recruit.adapter.MyRecruitPagerAdapter
 import com.baek.untitledproject.ui.recruit.adapter.ScheduleGroupAdapter
@@ -54,6 +58,14 @@ class MyRecruitsFragment : Fragment() {
         viewModel.loadAllData()
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.setToolbar(
+            detailVisible = true,
+            title = "내 공고 관리"
+        )
+    }
+
     private fun initAdapters() {
         // 일정 그룹 어댑터
         scheduleGroupAdapter = ScheduleGroupAdapter { groupId ->
@@ -62,8 +74,11 @@ class MyRecruitsFragment : Fragment() {
 
         // 내 공고 ViewPager2 어댑터
         myRecruitPagerAdapter = MyRecruitPagerAdapter(
-            onInterviewManageClick = { recruitId ->
-                viewModel.onInterviewManageClick(recruitId)
+            onInterviewManageClick = { postId ->
+                findNavController().navigate(
+                    R.id.write_board_nav_graph,
+                    bundleOf("postId" to postId)
+                )
             },
             onApplicantManageClick = { recruitId ->
                 val intent = Intent(requireContext(), ApplicantManagementActivity::class.java)
@@ -71,7 +86,9 @@ class MyRecruitsFragment : Fragment() {
                 startActivity(intent)
             },
             onPostManageClick = { recruitId ->
-                viewModel.onPostManageClick(recruitId)
+                // 공고 상세보기로 이동
+                val bundle = bundleOf("id" to recruitId)
+                findNavController().navigate(R.id.boardDetailFragment, bundle)
             },
             onCardClick = { recruitId ->
                 // TODO: 상세 페이지로 이동
@@ -80,7 +97,6 @@ class MyRecruitsFragment : Fragment() {
 
         appliedRecruitPagerAdapter = AppliedRecruitPagerAdapter(
             onInterviewReserveClick = { recruitId ->
-
                 val appliedRecruit = viewModel.appliedRecruits.value.find { it.id == recruitId }
 
                 if (appliedRecruit != null) {
@@ -95,7 +111,13 @@ class MyRecruitsFragment : Fragment() {
                 }
             },
             onViewPostClick = { recruitId ->
-                viewModel.onViewPostClick(recruitId)
+                val appliedRecruit = viewModel.appliedRecruits.value.find { it.id == recruitId }
+                if (appliedRecruit != null) {
+                    val bundle = bundleOf("id" to appliedRecruit.postId)
+                    findNavController().navigate(R.id.boardDetailFragment, bundle)
+                } else {
+                    Toast.makeText(requireContext(), "공고를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                }
             },
             onCardClick = { recruitId ->
                 // TODO: 상세 페이지로 이동
@@ -145,7 +167,7 @@ class MyRecruitsFragment : Fragment() {
             adapter = appliedRecruitPagerAdapter
             orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-            // 부드러운 페이지 전환을 위한 설정
+            // 부드러운 페이지 전환
             offscreenPageLimit = 1
 
             // 페이지 변경 리스너 등록
@@ -168,25 +190,43 @@ class MyRecruitsFragment : Fragment() {
                     }
                 }
 
-                // 내 공고 관찰
+                // 내 공고 관찰 - 빈 상태 처리 추가
                 launch {
                     viewModel.myRecruits.collect { myRecruits ->
-                        myRecruitPagerAdapter.submitList(myRecruits)
-                        // 개수 업데이트
-                        binding.myRecruitCountTxt.text = myRecruits.size.toString()
-                        // 인디케이터 설정
-                        setupMyRecruitIndicator(myRecruits.size)
+                        if (myRecruits.isEmpty()) {
+                            // 빈 상태: ViewPager 숨기고 빈 상태 뷰 표시
+                            binding.myRecruitViewPager.visibility = View.GONE
+                            binding.myRecruitIndicator.visibility = View.GONE
+                            binding.myRecruitEmptyView.visibility = View.VISIBLE
+                            binding.myRecruitCountTxt.text = "0"
+                        } else {
+                            // 데이터 있음: 정상 표시
+                            binding.myRecruitViewPager.visibility = View.VISIBLE
+                            binding.myRecruitEmptyView.visibility = View.GONE
+                            myRecruitPagerAdapter.submitList(myRecruits)
+                            binding.myRecruitCountTxt.text = myRecruits.size.toString()
+                            setupMyRecruitIndicator(myRecruits.size)
+                        }
                     }
                 }
 
-                // 지원한 공고 관찰
+                // 지원한 공고 관찰 - 빈 상태 처리 추가
                 launch {
                     viewModel.appliedRecruits.collect { appliedRecruits ->
-                        appliedRecruitPagerAdapter.submitList(appliedRecruits)
-                        // 개수 업데이트
-                        binding.appliedRecruitCountTxt.text = appliedRecruits.size.toString()
-                        // 인디케이터 설정
-                        setupAppliedRecruitIndicator(appliedRecruits.size)
+                        if (appliedRecruits.isEmpty()) {
+                            // 빈 상태: ViewPager 숨기고 빈 상태 뷰 표시
+                            binding.appliedRecruitViewPager.visibility = View.GONE
+                            binding.appliedRecruitIndicator.visibility = View.GONE
+                            binding.appliedRecruitEmptyView.visibility = View.VISIBLE
+                            binding.appliedRecruitCountTxt.text = "0"
+                        } else {
+                            // 데이터 있음: 정상 표시
+                            binding.appliedRecruitViewPager.visibility = View.VISIBLE
+                            binding.appliedRecruitEmptyView.visibility = View.GONE
+                            appliedRecruitPagerAdapter.submitList(appliedRecruits)
+                            binding.appliedRecruitCountTxt.text = appliedRecruits.size.toString()
+                            setupAppliedRecruitIndicator(appliedRecruits.size)
+                        }
                     }
                 }
 

@@ -120,30 +120,3 @@ fun PostResponse.toApplicationRequirement(customQuestions: List<CustomQuestionRe
             .map { CustomQuestion(questionId = it.question_id, questionText = it.question_text) }
     )
 }
-
-fun PostResponse.toMyRecruitSummary(
-    thumbnailUrl: String? = null,
-    applicantCount: Int = 0
-): MyRecruitSummary {
-    return MyRecruitSummary(
-        id = post_id,
-        title = title,
-        category = organization,
-        recruitStatus = mapPostStatusToText(status),
-        thumbnailUrl = thumbnailUrl,
-        hasInterview = has_interview,
-        applicantCount = applicantCount,
-        recruitmentEnd = recruitment_end?.toLocalDate()?.format(
-            DateTimeFormatter.ofPattern("MM/dd")
-        )
-    )
-}
-
-// 공고 상태를 한글로 변환
-private fun mapPostStatusToText(status: String): String {
-    return when (status) {
-        "recruiting" -> "모집중"
-        "completed" -> "모집완료"
-        else -> "알 수 없음"
-    }
-}

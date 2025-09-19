@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,7 +24,7 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <!-- 일정 목록 (기존 RecyclerView 유지) -->
+        <!-- 일정 목록 -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/scheduleRecyclerView"
             android:layout_width="match_parent"
@@ -65,6 +66,56 @@
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:layout_marginBottom="4dp" />
+
+        <!-- 내 공고 빈 상태 뷰 -->
+        <LinearLayout
+            android:id="@+id/myRecruitEmptyView"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="4dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <!-- 메인 메시지 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="올린 공고가 없습니다"
+                        android:textColor="#666666"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <!-- 부가 설명 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="새로운 채용 공고를 작성해보세요"
+                        android:textColor="#999999"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
 
         <!-- 내 공고 페이지 인디케이터 -->
         <LinearLayout
@@ -110,6 +161,56 @@
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:layout_marginBottom="4dp" />
+
+        <!-- 지원한 공고 빈 상태 뷰 -->
+        <LinearLayout
+            android:id="@+id/appliedRecruitEmptyView"
+            android:layout_width="match_parent"
+            android:layout_height="280dp"
+            android:layout_marginBottom="4dp"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <!-- 메인 메시지 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="지원한 공고가 없습니다"
+                        android:textColor="#666666"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <!-- 부가 설명 -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="관심있는 공고에 지원해보세요"
+                        android:textColor="#999999"
+                        android:textSize="14sp"
+                        android:gravity="center" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
 
         <!-- 지원한 공고 페이지 인디케이터 -->
         <LinearLayout

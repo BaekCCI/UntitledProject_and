@@ -4,14 +4,20 @@ import android.util.Log
 import com.baek.untitledproject.data.remote.ApplicantRemote
 import com.baek.untitledproject.domain.data.ApplicantSummary
 import com.baek.untitledproject.domain.repository.ApplicantRepository
+import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.utils.Result
 import javax.inject.Inject
 
-class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
+class ApplicantRepositoryImpl @Inject constructor(
+    private val sessionRepository: SessionRepository
+) : ApplicantRepository {
 
     override suspend fun getApplicants(postId: String): List<ApplicantSummary> {
         return try {
-            val result = ApplicantRemote.getApplicants(postId)
+            val currentUserId = sessionRepository.currentUid()
+                ?: throw IllegalStateException("로그인이 필요합니다")
+
+            val result = ApplicantRemote.getApplicants(postId, currentUserId)
             Log.d("ApplicantRepository", "Repository에서 수신: ${result.size}개")
             result.forEach { applicant ->
                 Log.d("ApplicantRepository", "Repository 데이터: ${applicant.name}")
@@ -45,12 +51,14 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
 
     override suspend fun scheduleInterviews(applicationIds: List<String>): Result<Unit> {
         return try {
-            ApplicantRemote.scheduleInterviews(applicationIds)
+            val currentUserId = sessionRepository.currentUid()
+                ?: return Result.Error("로그인이 필요합니다.", IllegalStateException())
+
+            ApplicantRemote.scheduleInterviews(applicationIds, currentUserId)
             Log.d("ApplicantRepository", "면접 일정 설정 완료: $applicationIds")
             Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("ApplicantRepository", "면접 일정 설정 실패", e)
-            // 에러 메시지 구분해서 반환
             val errorMessage = when {
                 e.message?.contains("면접 일정이 설정되지 않았습니다") == true ->
                     "면접 일정이 설정되지 않았습니다. 먼저 면접 일정을 설정해주세요."
@@ -95,7 +103,13 @@ class ApplicantRepositoryImpl @Inject constructor() : ApplicantRepository {
 
     override suspend fun notifyResults(applicationIds: List<String>): Result<Unit> {
         return try {
-            ApplicantRemote.notifyResults(applicationIds)
+            val currentUserId = sessionRepository.currentUid()
+            if (currentUserId == null) {
+                Log.w("ApplicantRepository", "로그인되지 않음 - 알림 발송 불가")
+                return Result.Error("로그인이 필요합니다.", IllegalStateException())
+            }
+
+            ApplicantRemote.notifyResults(applicationIds, currentUserId)
             Log.d("ApplicantRepository", "결과 알림 발송 완료: $applicationIds")
             Result.Success(Unit)
         } catch (e: Exception) {

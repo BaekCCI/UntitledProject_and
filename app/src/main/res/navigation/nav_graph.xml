@@ -30,7 +30,14 @@
         android:id="@+id/myRecruitsFragment"
         android:name="com.baek.untitledproject.ui.recruit.MyRecruitsFragment"
         android:label="fragment_my_recruits"
-        tools:layout="@layout/fragment_my_recruits" />
+        tools:layout="@layout/fragment_my_recruits">
+         <action
+            android:id="@+id/action_myRecruitsFragment_to_boardDetailFragment"
+            app:destination="@id/boardDetailFragment" />
+        <action
+            android:id="@+id/action_myRecruitsFragment_to_interviewScheduleFragment"
+            app:destination="@id/interviewScheduleFragment" />
+    </fragment>
     <fragment
         android:id="@+id/messageFragment"
         android:name="com.baek.untitledproject.ui.message.MessageFragment"
@@ -106,4 +113,5 @@
         android:name="com.baek.untitledproject.ui.setting.DeleteAccountFragment"
         android:label="fragment_delete_account"
         tools:layout="@layout/fragment_delete_account" />
+
 </navigation>

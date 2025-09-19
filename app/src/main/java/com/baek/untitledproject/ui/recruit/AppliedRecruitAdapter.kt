@@ -6,15 +6,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.baek.untitledproject.databinding.ItemAppliedRecruitCardBinding
+import com.baek.untitledproject.databinding.ItemEmptyStateCardBinding
 import com.baek.untitledproject.domain.data.AppliedRecruitSummary
 
 class AppliedRecruitAdapter(
     private val onInterviewReserveClick: (String) -> Unit,
     private val onViewPostClick: (String) -> Unit,
     private val onCardClick: (String) -> Unit = {}
-) : ListAdapter<AppliedRecruitSummary, AppliedRecruitAdapter.AppliedRecruitViewHolder>(AppliedRecruitDiffCallback) {
+) : ListAdapter<AppliedRecruitSummary, RecyclerView.ViewHolder>(AppliedRecruitDiffCallback) {
 
     companion object {
+        private const val VIEW_TYPE_NORMAL = 0
+        private const val VIEW_TYPE_EMPTY = 1
+
         private val AppliedRecruitDiffCallback = object : DiffUtil.ItemCallback<AppliedRecruitSummary>() {
             override fun areItemsTheSame(
                 oldItem: AppliedRecruitSummary,
@@ -29,6 +33,60 @@ class AppliedRecruitAdapter(
             ): Boolean {
                 return oldItem == newItem
             }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (currentList.isEmpty()) {
+            VIEW_TYPE_EMPTY
+        } else {
+            VIEW_TYPE_NORMAL
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return if (currentList.isEmpty()) 1 else currentList.size
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            VIEW_TYPE_EMPTY -> {
+                val binding = ItemEmptyStateCardBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                EmptyViewHolder(binding)
+            }
+            else -> {
+                val binding = ItemAppliedRecruitCardBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                AppliedRecruitViewHolder(binding)
+            }
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (holder) {
+            is EmptyViewHolder -> {
+                holder.bind()
+            }
+            is AppliedRecruitViewHolder -> {
+                holder.bind(currentList[position])
+            }
+        }
+    }
+
+    inner class EmptyViewHolder(
+        private val binding: ItemEmptyStateCardBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind() {
+            binding.emptyTitle.text = "지원한 공고가 없습니다"
+            binding.emptyDescription.text = "관심있는 공고에 지원해보세요"
         }
     }
 
@@ -63,18 +121,5 @@ class AppliedRecruitAdapter(
                 onViewPostClick(item.id)
             }
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AppliedRecruitViewHolder {
-        val binding = ItemAppliedRecruitCardBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
-        )
-        return AppliedRecruitViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: AppliedRecruitViewHolder, position: Int) {
-        holder.bind(getItem(position))
     }
 }
