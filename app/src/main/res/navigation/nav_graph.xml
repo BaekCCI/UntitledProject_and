@@ -30,7 +30,11 @@
         android:id="@+id/myRecruitsFragment"
         android:name="com.baek.untitledproject.ui.recruit.MyRecruitsFragment"
         android:label="fragment_my_recruits"
-        tools:layout="@layout/fragment_my_recruits" />
+        tools:layout="@layout/fragment_my_recruits">
+        <action
+            android:id="@+id/action_myRecruitsFragment_to_interviewEditFragment"
+            app:destination="@id/interviewEditFragment" />
+    </fragment>
     <fragment
         android:id="@+id/messageFragment"
         android:name="com.baek.untitledproject.ui.message.MessageFragment"
@@ -96,7 +100,7 @@
         android:id="@+id/settingFragment"
         android:name="com.baek.untitledproject.ui.setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" >
+        tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_login_nav_graph"
             app:destination="@id/login_nav_graph" />
@@ -112,7 +116,16 @@
     <fragment
         android:id="@+id/editPostFragment"
         android:name="com.baek.untitledproject.ui.board.write.EditPostFragment"
-        android:label="EditPostFragment" >
+        android:label="EditPostFragment">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/interviewEditFragment"
+        android:name="com.baek.untitledproject.ui.board.write.Edit.InterviewEditFragment"
+        android:label="fragment_interview_edit"
+        tools:layout="@layout/fragment_interview_edit">
         <argument
             android:name="postId"
             app:argType="string" />

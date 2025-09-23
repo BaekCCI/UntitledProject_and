@@ -20,6 +20,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.ui.MainActivity
+import com.baek.untitledproject.ui.board.write.common.TimePickerDialogFragment
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
@@ -41,7 +42,7 @@ class InterviewScheduleFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        _binding = FragmentInterviewScheduleBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentInterviewScheduleBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -228,7 +229,10 @@ class InterviewScheduleFragment : Fragment() {
         adapter = InterviewScheduleAdapter(
             //시작 시간 선택
             onStartClick = { date, index, current ->
-                TimePickerDialogFragment(cur= current, step = interviewScheduleViewModel.interviewStep.value) { picked ->
+                TimePickerDialogFragment(
+                    cur = current,
+                    step = interviewScheduleViewModel.interviewStep.value
+                ) { picked ->
                     Log.d("InterviewScheduleFragment", "선택 시간: $picked")
                     interviewScheduleViewModel.updateSlotStart(date, index, picked)
                 }.show(parentFragmentManager, "timePicker")

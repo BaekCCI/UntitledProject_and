@@ -6,7 +6,7 @@
     android:background="@drawable/rounded_bg"
     android:backgroundTint="@color/white"
     android:orientation="vertical"
-    tools:context=".ui.board.write.TimePickerDialogFragment">
+    tools:context=".ui.board.write.common.TimePickerDialogFragment">
 
     <TextView
         android:layout_width="match_parent"

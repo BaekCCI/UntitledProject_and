@@ -1,4 +1,4 @@
-package com.baek.untitledproject.ui.board.write
+package com.baek.untitledproject.ui.board.write.common
 
 import android.app.Dialog
 import android.content.res.Resources
@@ -9,7 +9,6 @@ import android.view.Window
 import android.widget.NumberPicker
 import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
-import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentTimePickerDialogBinding
 import java.time.LocalTime
 import androidx.core.graphics.drawable.toDrawable
@@ -84,7 +83,6 @@ class TimePickerDialogFragment(
 
         fun minuteFromPicker(): Int {
             // setInterval 적용으로 minute는 0..11(=0..55 by *5) 인덱스가 일반적이나,
-            // 일부 테마는 0..59가 들어오기도 해서 둘 다 대응
             val raw = minutePicker?.value ?: timePicker.minute
             return if (raw in 0..11) raw * 5 else raw
         }

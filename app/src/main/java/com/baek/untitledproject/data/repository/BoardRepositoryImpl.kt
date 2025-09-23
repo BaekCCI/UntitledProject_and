@@ -1,9 +1,11 @@
 package com.baek.untitledproject.data.repository
 
 import android.util.Log
+import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.data.remote.PostRemote
 import com.baek.untitledproject.data.sample.BoardSampleData
 import com.baek.untitledproject.domain.data.Board
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.data.PostSummary
 import com.baek.untitledproject.domain.data.Post
@@ -84,5 +86,29 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
         }
     }
 
+    override suspend fun getInterviewSlot(postId: String): Result<List<InterviewSlot>> {
+        return try {
+            val result = PostRemote.getInterviewSlots(postId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "$postId: 인터뷰 슬롯 가져오기 실패", e)
+            Result.Error("인터뷰 슬롯 가져오기를 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun editInterviewSlot(
+        interviewSlots: List<InterviewSlot>,
+        deleteSlotId: List<String>
+    ): Result<Unit> {
+        return try {
+            val interviewSlotResponse = interviewSlots.map { it.toResponse() }
+            val result = PostRemote.editInterviewSlot(interviewSlotResponse, deleteSlotId)
+            Result.Success(result)
+
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "인터뷰 슬롯 수정 실패", e)
+            Result.Error("인터뷰 일정 수정에 실패하였습니다.", e)
+        }
+    }
 
 }

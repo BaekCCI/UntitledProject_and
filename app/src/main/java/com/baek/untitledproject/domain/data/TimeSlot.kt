@@ -12,11 +12,12 @@ sealed class InterviewTimeSlot {
         val index: Int,
         val start: LocalTime,
         val end: LocalTime,
-        var isLast : Boolean
+        var isLast: Boolean
     ) : InterviewTimeSlot()
 }
 
 data class TimeSlot(
     val start: LocalTime,
-    val end: LocalTime
+    val end: LocalTime,
+    val fromDb: Boolean = false
 )

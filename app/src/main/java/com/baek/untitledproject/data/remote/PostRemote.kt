@@ -17,12 +17,16 @@ import com.baek.untitledproject.data.model.mapper.toDomain
 import com.baek.untitledproject.data.model.mapper.toPostRead
 import com.baek.untitledproject.data.model.mapper.toPostWrite
 import com.baek.untitledproject.data.model.mapper.toResponse
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.User
+import com.baek.untitledproject.domain.data.toDomain
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
@@ -292,7 +296,6 @@ object PostRemote {
         postResponse.toPostRead(imageUris, interviewSlot, userId, isApplied)
     }
 
-    //TODO: 수정 시 사용, 로직 변경 필요
     suspend fun getPostForEdit(postId: String): PostWrite = coroutineScope {
         val db = FirebaseFirestore.getInstance()
 
@@ -541,5 +544,104 @@ object PostRemote {
             batch.commit().await()
         }
         postId
+    }
+
+    suspend fun getInterviewSlots(postId: String): List<InterviewSlot> {
+        val db = FirebaseFirestore.getInstance()
+        val slotDocs = db.collection("interview_slots")
+            .whereEqualTo("post_id", postId)
+            .get()
+            .await()
+        val response = slotDocs.documents.mapNotNull { doc ->
+            doc.toObject(InterviewSlotResponse::class.java)
+        }
+        return response.map {
+            it.toDomain()
+        }
+    }
+
+    suspend fun editInterviewSlot(
+        interviewSlots: List<InterviewSlotResponse>,
+        deleteSlotId: List<String>
+    ) = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        val applicationCollection = db.collection("applications")
+        val slotCollection = db.collection("interview_slots")
+
+        //삭제할 slot이 있다면
+        if (deleteSlotId.isNotEmpty()) {
+            val chunkSizeForIn = 10 //firestore wherein 제약
+            val deleteChunks = deleteSlotId.chunked(chunkSizeForIn)
+
+            //예약자 상태 수정
+            for (chunk in deleteChunks) {
+                val snapshot = applicationCollection
+                    .whereIn("interview_slot_id", chunk)
+                    .get()
+                    .await()
+
+                var batch = db.batch()
+                var opsInBatch = 0
+
+                for (doc in snapshot.documents) {
+                    val docRef = doc.reference
+
+                    val updates = mapOf<String, Any?>(
+                        "status" to "submitted",
+                        "interview_slot_id" to null,
+                        "interview_reservation_status" to null
+                    )
+                    batch.update(docRef, updates)
+                    opsInBatch++
+
+                    if (opsInBatch >= 500) { // Firestore 배치 최대 500 ops
+                        batch.commit().await()
+                        batch = db.batch()
+                        opsInBatch = 0
+                    }
+                }
+                if (opsInBatch > 0) {
+                    batch.commit().await()
+                }
+            }
+            //interview_slots 컬렉션에서 문서 삭제
+            deleteSlotId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (id in chunk) {
+                    val docRef = slotCollection.document(id)
+                    batch.delete(docRef)
+                }
+                batch.commit().await()
+            }
+        }
+
+        //interview_slot컬렉션에 슬롯 넣기
+        if (interviewSlots.isNotEmpty()) {
+
+            val existsId = interviewSlots.filter { !it.slot_id.isNullOrBlank() }
+            val newId = interviewSlots.filter { it.slot_id.isNullOrBlank() }
+
+            existsId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (slot in chunk) {
+                    val docRef = slotCollection.document(slot.slot_id!!)
+                    batch.set(docRef, slot, SetOptions.merge())
+                }
+                batch.commit().await()
+            }
+
+            newId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (slot in chunk) {
+                    val docRef = slotCollection.document()
+                    val slotId = docRef.id
+
+                    val slotWithId = slot.copy(slot_id = slotId)
+                    batch.set(docRef, slotWithId)
+                }
+                batch.commit().await()
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.baek.untitledproject.domain.repository
 
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.data.PostSummary
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.data.PostRead
@@ -21,4 +22,8 @@ interface BoardRepository {
     suspend fun editPost(post: PostWrite): Result<String>
 
     suspend fun deletePost(postId: String): Result<Unit>
+
+    suspend fun getInterviewSlot(postId: String): Result<List<InterviewSlot>>
+
+    suspend fun editInterviewSlot(interviewSlots: List<InterviewSlot>, deleteSlotId: List<String>): Result<Unit>
 }

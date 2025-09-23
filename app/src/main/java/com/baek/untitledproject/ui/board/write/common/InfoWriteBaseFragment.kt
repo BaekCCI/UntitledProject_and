@@ -43,7 +43,6 @@ abstract class InfoWriteBaseFragment : Fragment() {
 
     protected abstract val vm: BaseWriteViewModel
 
-    /** 화면별 커스터마이징 훅 */
     protected open val toolbarTitle: String = "모임 올리기"
     protected open val maxImageCount: Int = 5
     protected open fun onNext() {}                 // 다음 화면 이동
@@ -231,7 +230,7 @@ abstract class InfoWriteBaseFragment : Fragment() {
     // ---------- Exit confirm ----------
     private fun setupBackPressHandler() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            ExitConfirmDialogFragment().show(parentFragmentManager, "exit_dialog")
+            ExitConfirmDialogFragment.newInstance().show(parentFragmentManager, "exit_dialog")
         }
     }
 

@@ -2,12 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bottom_sheet_background"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
     android:paddingVertical="48dp"
-    tools:context=".ui.board.write.ExitConfirmDialogFragment">
+    tools:context=".ui.board.write.Edit.ConfirmEditDialogFragment">
 
     <TextView
         android:id="@+id/content"
@@ -15,23 +14,24 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="지금까지 작성한 내용이 저장되지 않습니다\n나가시겠어요?" />
+        android:text="기존 시간에 면접을 예약한 사람이 있어요.\n시간이 변경되면 기존 예약은 취소돼요." />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/exitBtn"
-        style="@style/Widget.Untitled.Button.StateToggle"
+        android:id="@+id/confirmBtn"
+        style="@style/Widget.Untitled.Button.Base"
+        android:backgroundTint="@color/accent_red"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="중단하고 나가기" />
+        android:text="시간 변경" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/continueBtn"
+        android:id="@+id/cancelBtn"
         style="@style/Widget.Untitled.Button.Base"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
-        android:text="계속 작성하기"
-        android:textColor="@color/gray_600" />
-
+        android:text="취소"
+        android:textColor="@color/gray_600"
+        android:textSize="18sp" />
 </LinearLayout>

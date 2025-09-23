@@ -10,12 +10,14 @@ import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.TimeSlot
 import com.baek.untitledproject.domain.data.User
 import com.google.firebase.Timestamp
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 fun PostResponse.toDomain(
@@ -234,6 +236,33 @@ fun PostWrite.toResponse(id: String, user: User, now: Timestamp): PostResponse {
     )
 }
 
+fun InterviewSlotResponse.toDomain():InterviewSlot{
+    return InterviewSlot(
+        slotId = slot_id!!,
+        postId=post_id!!,
+        interviewDate = interview_date!!.toLocalDate(),
+        interviewTime = interview_time.toLocalTime(),
+        maxCapacity = max_capacity,
+        currentReservations = current_reservations,
+        duration = duration
+    )
+}
+
+fun InterviewSlot.toResponse():InterviewSlotResponse{
+    return InterviewSlotResponse(
+        slot_id = if(slotId.isEmpty()) null else slotId,
+        post_id = postId,
+        interview_date = interviewDate.toTimestamp(),
+        interview_time = interviewTime.toString(),
+        max_capacity = maxCapacity,
+        current_reservations = currentReservations,
+        duration = duration
+    )
+}
+
+fun String.toLocalTime(): LocalTime {
+    return LocalTime.parse(this, DateTimeFormatter.ofPattern("HH:mm"))
+}
 fun TimeSlot.separate(step: Int): List<String> {
     val list = mutableListOf<String>()
     val fmt = DateTimeFormatter.ofPattern("HH:mm")
