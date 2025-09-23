@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="아래 정보가 함께 제출돼요"
-                        android:textColor="@color/point_purple"
+                        android:textColor="@color/point_skyblue"
                         android:textSize="16sp" />
                 </LinearLayout>
 

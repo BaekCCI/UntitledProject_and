@@ -26,7 +26,6 @@ import com.baek.untitledproject.ui.board.write.InterviewScheduleAdapter
 import com.baek.untitledproject.ui.board.write.InterviewToolTipDialogFragment
 import com.baek.untitledproject.ui.board.write.common.TimePickerDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -151,13 +150,13 @@ class InterviewEditFragment : Fragment() {
                                 ContextCompat.getColor(requireContext(), R.color.gray_300)
                             )
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                         }
 
                         30 -> {
                             binding.timeMinusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
                                 ContextCompat.getColor(requireContext(), R.color.gray_300)
@@ -166,11 +165,11 @@ class InterviewEditFragment : Fragment() {
 
                         else -> {
                             binding.timeMinusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
 
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                         }
                     }
@@ -190,14 +189,14 @@ class InterviewEditFragment : Fragment() {
                             ContextCompat.getColor(requireContext(), R.color.gray_300)
                         )
                         binding.capacityPlusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                     } else {
                         binding.capacityMinusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                         binding.capacityPlusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                     }
                 }

@@ -171,13 +171,13 @@ class InterviewScheduleFragment : Fragment() {
                                 ContextCompat.getColor(requireContext(), R.color.gray_300)
                             )
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                         }
 
                         30 -> {
                             binding.timeMinusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
                                 ContextCompat.getColor(requireContext(), R.color.gray_300)
@@ -186,11 +186,11 @@ class InterviewScheduleFragment : Fragment() {
 
                         else -> {
                             binding.timeMinusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
 
                             binding.timePlusBtn.imageTintList = ColorStateList.valueOf(
-                                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                             )
                         }
                     }
@@ -210,14 +210,14 @@ class InterviewScheduleFragment : Fragment() {
                             ContextCompat.getColor(requireContext(), R.color.gray_300)
                         )
                         binding.capacityPlusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                     } else {
                         binding.capacityMinusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                         binding.capacityPlusBtn.imageTintList = ColorStateList.valueOf(
-                            ContextCompat.getColor(requireContext(), R.color.point_purple)
+                            ContextCompat.getColor(requireContext(), R.color.point_skyblue)
                         )
                     }
                 }

@@ -30,7 +30,7 @@
                 android:hint="자기소개 300자를 작성해주세요"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColor="@color/black" />
+                android:textColor="@color/gray_black" />
 
             <ImageButton
                 android:id="@+id/removeBtn"

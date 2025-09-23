@@ -209,7 +209,7 @@ abstract class InfoWriteBaseFragment : Fragment() {
         binding.curImgCount.text = "$count"
         if (count > 0) {
             binding.curImgCount.setTextColor(
-                ContextCompat.getColor(requireContext(), R.color.point_purple)
+                ContextCompat.getColor(requireContext(), R.color.point_skyblue)
             )
         }
     }

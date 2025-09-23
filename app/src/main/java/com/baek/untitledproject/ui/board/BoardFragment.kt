@@ -59,7 +59,7 @@ class BoardFragment : Fragment() {
     //위로 당겨서 새로고침
     private fun setupSwipeRefresh() {
         binding.swipeRefresh.setColorSchemeResources(
-            R.color.point_purple, R.color.gray_100, R.color.black
+            R.color.point_skyblue, R.color.gray_100, R.color.gray_black
         )
 
         // 당겨서 새로고침

@@ -252,7 +252,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="커스텀 질문 추가하기"
-                        android:textColor="@color/point_purple"
+                        android:textColor="@color/point_skyblue"
                         android:textSize="16sp" />
 
                     <ImageView
