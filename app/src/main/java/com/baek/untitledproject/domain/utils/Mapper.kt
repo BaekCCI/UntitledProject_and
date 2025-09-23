@@ -4,7 +4,10 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import com.baek.untitledproject.domain.data.Notification
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
@@ -32,6 +35,13 @@ fun toDateRange(
     val formattedEnd = end.toUiString(style)
     return "$formattedStart ~ $formattedEnd"
 }
+private val KST: ZoneId = ZoneId.of("Asia/Seoul")
+
+fun Long.toLocalDate():LocalDate{
+    return Instant.ofEpochMilli(this)
+        .atZone(KST)
+        .toLocalDate()
+}
 
 fun Notification.timeText(now: Long): String {
     val diff = (now - createdAt).coerceAtLeast(0)
@@ -48,6 +58,7 @@ fun Notification.timeText(now: Long): String {
     }
 }
 
+//검색 시 글자 색 변경
 fun CharSequence.highlightQuery(
     query: String,
     color: Int

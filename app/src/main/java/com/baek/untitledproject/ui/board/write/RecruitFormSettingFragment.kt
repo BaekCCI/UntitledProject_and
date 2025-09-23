@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
@@ -23,6 +22,7 @@ import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentRecruitFormSettingBinding
 import com.baek.untitledproject.databinding.ItemCustomQuestionBinding
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.utils.Result
 import kotlinx.coroutines.launch
 
@@ -51,6 +51,7 @@ class RecruitFormSettingFragment : Fragment() {
 
         setupCustomQuestions()
         observeEditingPost()
+        observeCustomQuestion()
         setupBottomNav()
         observeSubmitState()
         setCompleteBtnEnable()
@@ -60,7 +61,7 @@ class RecruitFormSettingFragment : Fragment() {
     private fun observeEditingPost() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.editingPost.collect { post ->
+                viewModel.post.collect { post ->
                     render(post)
                 }
             }
@@ -68,8 +69,22 @@ class RecruitFormSettingFragment : Fragment() {
         }
     }
 
+    private fun observeCustomQuestion() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.customQuestions.collect { questions ->
+                    binding.customQuestionContainer.removeAllViews()
+                    questions.forEach {
+                        addCustomQuestion(it)
+                    }
+                }
+            }
+
+        }
+    }
+
     //화면 초기화
-    private fun render(post: Post) = with(binding) {
+    private fun render(post: PostWrite) = with(binding) {
         if (viewModel.submitResult.value is Result.Loading) return
         // 체크 박스 초기화
         nameCheckBox.isChecked = post.requiresName
@@ -77,11 +92,7 @@ class RecruitFormSettingFragment : Fragment() {
         ageCheckBox.isChecked = post.requiresAge
         majorCheckBox.isChecked = post.requiresDepartment
         studentNumberCheckBox.isChecked = post.requiresStudentId
-        phoneCheckBox.isChecked = post.requiresPhone
 
-        // 커스텀 질문 초기화
-        customQuestionContainer.removeAllViews()
-        post.customQuestions.forEach { q -> addCustomQuestion(q) }
 
         // 완료 버튼 상태 : 1개 이상 선택 시
         completeBtn.isEnabled = listOf(
@@ -89,22 +100,12 @@ class RecruitFormSettingFragment : Fragment() {
             post.requiresGender,
             post.requiresAge,
             post.requiresDepartment,
-            post.requiresStudentId,
-            post.requiresPhone
+            post.requiresStudentId
         ).any { it }
-
-        if (viewModel.isApplicantExist) {
-            addQuestionBtn.visibility = View.GONE
-        }
-        if (viewModel.isLoaded) {
-            completeBtn.text = "수정 저장하기"
-
-        }
     }
 
     private fun setupCustomQuestions() {
         binding.addQuestionBtn.setOnClickListener {
-            //TODO: 추천 질문?
             addCustomQuestion(requestFocus = true)
         }
     }
@@ -117,9 +118,6 @@ class RecruitFormSettingFragment : Fragment() {
         val input = itemBinding.questionInput
         input.setText(question)
 
-        if (viewModel.isApplicantExist) {
-            lockQuestionRow(itemBinding)
-        }
         itemBinding.removeBtn.setOnClickListener {
             binding.customQuestionContainer.removeView(itemBinding.root)
         }
@@ -135,38 +133,26 @@ class RecruitFormSettingFragment : Fragment() {
     }
 
     //완료 버튼 활성화 여부 설정
-    @SuppressLint("ClickableViewAccessibility")
     private fun setCompleteBtnEnable() = with(binding) {
         val boxes = listOf(
             nameCheckBox, genderCheckBox, ageCheckBox,
-            majorCheckBox, studentNumberCheckBox, phoneCheckBox
+            majorCheckBox, studentNumberCheckBox
         )
 
         fun updateEnable() {
             completeBtn.isEnabled = boxes.any { it.isChecked }
         }
-        if (viewModel.isApplicantExist) {
-            boxes.forEach { cb ->
-                cb.setOnTouchListener { _, event ->
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        showApplicantExistAlert()
-                    }
-                    true // ← 이벤트 소비: 체크 토글 자체가 일어나지 않음
-                }
-            }
-        }
         // 체크 상태 변할 때마다 enable 갱신
         boxes.forEach { cb ->
             cb.addOnCheckedStateChangedListener { _, _ -> updateEnable() }
         }
-
-
     }
 
 
     //이전/다음 버튼 이동 설정
     private fun setupBottomNav() {
         binding.prevBtn.setOnClickListener {
+            updateData()
             findNavController().popBackStack()
         }
 
@@ -185,10 +171,10 @@ class RecruitFormSettingFragment : Fragment() {
             gender = genderCheckBox.isChecked,
             age = ageCheckBox.isChecked,
             dept = majorCheckBox.isChecked,
-            studentId = studentNumberCheckBox.isChecked,
-            phone = phoneCheckBox.isChecked,
-            collectQuestions()
+            studentId = studentNumberCheckBox.isChecked
         )
+
+        viewModel.updateQuestion(collectQuestions())
     }
 
     //작성한 내용이 있는 질문들만 수집
@@ -215,24 +201,16 @@ class RecruitFormSettingFragment : Fragment() {
                         }
 
                         is Result.Success -> {
-                            if (viewModel.isLoaded) {
-                                Toast.makeText(requireContext(), "공고가 수정 되었어요", Toast.LENGTH_SHORT)
-                                    .show()
-                                findNavController().popBackStack(
-                                    R.id.write_board_nav_graph, /*inclusive=*/
-                                    true
-                                )
-                            } else {
-                                findNavController().navigate(
-                                    R.id.postCompleteFragment,
-                                    null,
-                                    navOptions {
-                                        //backstack 제거
-                                        popUpTo(R.id.infoWriteFragment) { inclusive = true }
-                                        launchSingleTop = true
-                                    }
-                                )
-                            }
+                            findNavController().navigate(
+                                R.id.postCompleteFragment,
+                                null,
+                                navOptions {
+                                    //backstack 제거
+                                    popUpTo(R.id.infoWriteFragment) { inclusive = true }
+                                    launchSingleTop = true
+                                }
+                            )
+
 
                         }
 
@@ -247,30 +225,6 @@ class RecruitFormSettingFragment : Fragment() {
         }
     }
 
-    private fun lockQuestionRow(item: ItemCustomQuestionBinding) {
-        val input = item.questionInput
-
-        // 수정 불가 설정 (키보드/커서/포커스 차단)
-        input.keyListener = null            // 입력 자체 비활성
-        input.isFocusable = false
-        input.isFocusableInTouchMode = false
-        input.isCursorVisible = false
-        input.isLongClickable = false
-
-        // 클릭하면 알림만
-        input.setOnClickListener { showApplicantExistAlert() }
-        input.setOnLongClickListener {
-            showApplicantExistAlert()
-            true
-        }
-
-        // 삭제 버튼도 막기
-        item.removeBtn.visibility = View.GONE
-    }
-
-    private fun showApplicantExistAlert() {
-        Toast.makeText(requireContext(), "지원자가 존재하여 수정이 불가능 합니다.", Toast.LENGTH_SHORT).show()
-    }
 
     private fun setupBackHandler() {
         // 시스템 뒤로가기(제스처 포함) 가로채기

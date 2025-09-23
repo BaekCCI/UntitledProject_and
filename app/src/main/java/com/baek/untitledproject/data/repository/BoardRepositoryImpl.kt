@@ -1,12 +1,17 @@
 package com.baek.untitledproject.data.repository
 
 import android.util.Log
+import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.data.remote.PostRemote
 import com.baek.untitledproject.data.sample.BoardSampleData
 import com.baek.untitledproject.domain.data.Board
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.data.PostSummary
 import com.baek.untitledproject.domain.data.Post
+import com.baek.untitledproject.domain.data.PostRead
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.BoardRepository
 import javax.inject.Inject
 
@@ -31,13 +36,79 @@ class BoardRepositoryImpl @Inject constructor() : BoardRepository {
         }
     }
 
-    override suspend fun submitPost(post: Post): Result<String> {
+    override suspend fun submitPost(post: PostWrite, user: User): Result<String> {
         return try {
-            val result = PostRemote.uploadPost(post)
+            val result = PostRemote.uploadPost(post, user)
             return Result.Success(result)
         } catch (e: Exception) {
             Log.e("BoardRepository", "게시글 저장 실패", e)
             Result.Error("게시글을 저장하는데 실패하였습니다.", e)
         }
     }
+
+    override suspend fun getPostForRead(postId: String, userId: String?): Result<PostRead> {
+        return try {
+            val result = PostRemote.getPostForRead(postId, userId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 로딩 실패", e)
+            Result.Error("$postId: 게시글을 불러오는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun getPostForEdit(postId: String): Result<PostWrite> {
+        return try {
+            val result = PostRemote.getPostForEdit(postId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 로딩 실패", e)
+            Result.Error("$postId: 게시글을 불러오는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun editPost(post: PostWrite): Result<String> {
+        return try {
+            val result = PostRemote.editPost(post)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "게시글 수정 실패", e)
+            Result.Error("게시글을 수정하는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun deletePost(postId: String): Result<Unit> {
+        return try {
+            val result = PostRemote.deletePost(postId)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "$postId: 게시글 삭제 실패", e)
+            Result.Error("게시글을 삭제하는데 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun getInterviewSlot(postId: String): Result<List<InterviewSlot>> {
+        return try {
+            val result = PostRemote.getInterviewSlots(postId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "$postId: 인터뷰 슬롯 가져오기 실패", e)
+            Result.Error("인터뷰 슬롯 가져오기를 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun editInterviewSlot(
+        interviewSlots: List<InterviewSlot>,
+        deleteSlotId: List<String>
+    ): Result<Unit> {
+        return try {
+            val interviewSlotResponse = interviewSlots.map { it.toResponse() }
+            val result = PostRemote.editInterviewSlot(interviewSlotResponse, deleteSlotId)
+            Result.Success(result)
+
+        } catch (e: Exception) {
+            Log.e("BoardRepository", "인터뷰 슬롯 수정 실패", e)
+            Result.Error("인터뷰 일정 수정에 실패하였습니다.", e)
+        }
+    }
+
 }

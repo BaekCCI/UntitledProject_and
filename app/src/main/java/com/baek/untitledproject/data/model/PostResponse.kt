@@ -10,7 +10,7 @@ data class PostResponse(
     val title: String = "",
     val organization: String = "",
     val content: String = "",
-    val recruitment_start: Timestamp? = null,
+    val recruitment_start: Timestamp = Timestamp.now(),
     val recruitment_end: Timestamp? = null,
     val has_interview: Boolean = false,
     val interview_location: String? = null,

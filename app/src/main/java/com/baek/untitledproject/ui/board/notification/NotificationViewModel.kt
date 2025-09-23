@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.Notification
 import com.baek.untitledproject.domain.repository.NotificationRepository
+import com.baek.untitledproject.domain.repository.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -14,17 +15,28 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    val repository: NotificationRepository
-) :ViewModel(){
+    private val notificationRepository: NotificationRepository,
+    private val sessionRepository: SessionRepository
+) : ViewModel() {
     private val _notifications = MutableStateFlow<Result<List<Notification>>>(Result.Loading)
     val notifications: StateFlow<Result<List<Notification>>> = _notifications
 
-    fun load(){
+    private val userId = sessionRepository.currentUid()
+
+    fun load() {
         viewModelScope.launch {
             _notifications.value = Result.Loading
-            val result = repository.getNotifications("user1")
-            Log.d("NotificationViewModel","load 결과 = $result")
+            if (userId == null) {
+                _notifications.value = Result.None
+                return@launch
+            }
+            val result = notificationRepository.getNotifications(userId)
             _notifications.value = result
+
+            //서버 값 is_read = true로 변경
+            if (result is Result.Success) {
+                notificationRepository.markNotificationsAsRead(userId)
+            }
         }
     }
 }

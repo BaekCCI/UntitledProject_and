@@ -46,7 +46,6 @@ class NotificationFragment : Fragment() {
         loadNotifications()
         observeNotification()
         initAdapter()
-        //TODO: is_read = true 로 변경하는 로직(기준=?)
     }
 
     private fun loadNotifications() {
@@ -102,9 +101,10 @@ class NotificationFragment : Fragment() {
             binding.notificationList.addItemDecoration(dec)
         }
     }
+
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setToolbar(detailVisible = true, title="알림")
+        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "알림")
     }
 
     override fun onDestroyView() {

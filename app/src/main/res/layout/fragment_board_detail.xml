@@ -156,24 +156,56 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/interviewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="16dp"
-                        android:text="면접 일정"
-                        android:textColor="@color/gray_400"
-                        android:textSize="16sp" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/interviewScheduleTxt"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="면접 일정"
+                            android:textColor="@color/gray_400"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/interviewScheduleTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="추후 공지 예정"
+                            android:textColor="@color/gray_700"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_700"
-                        android:textSize="16sp" />
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="면접 장소"
+                            android:textColor="@color/gray_400"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/interviewLoc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="추후 공지 예정"
+                            android:textColor="@color/gray_700"
+                            android:textSize="16sp" />
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -193,11 +225,11 @@
                 android:textSize="16sp" />
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/submitInfoView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="match_parent"
@@ -227,7 +259,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="아래 정보를 제출 받아요"
-                            android:textColor="@color/point_purple"
+                            android:textColor="@color/point_skyblue"
                             android:textSize="16sp" />
                     </LinearLayout>
 
@@ -241,75 +273,57 @@
         </LinearLayout>
     </ScrollView>
 
-    <FrameLayout
-        android:id="@+id/bottomBarContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/recruitingBottomBar"
+    <!-- 하단 액션 바-->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomBarContainer"
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_action_container_bg"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/closedBottomBar"
+            style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@drawable/bottom_action_container_bg"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="20dp"
+            android:enabled="false"
+            android:text="모집 마감"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/recruitingBottomBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/askBtn"
-                style="@style/Widget.Untitled.Button.Base"
-                android:layout_width="173dp"
-                android:layout_height="56dp"
-                android:layout_gravity="start"
-                android:text="문의하기"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                style="@style/Widget.Untitled.Button.ClickedToggle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1"
+                android:text="문의하기" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/recruitBtn"
-                style="@style/Widget.Untitled.Button.Base"
-                android:layout_width="173dp"
-                android:layout_height="56dp"
-                android:layout_gravity="end"
-                android:text="지원하기"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/closedBottomBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@drawable/bottom_action_container_bg"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="20dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/endRecruitBtn"
                 style="@style/Widget.Untitled.Button.StateToggle"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_gravity="start"
-                android:enabled="false"
-                android:text="모집 마감"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="신청하기" />
+        </LinearLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/detailToolbar"

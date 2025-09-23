@@ -15,7 +15,7 @@
         android:layout_marginBottom="40dp"
         android:gravity="center_horizontal"
         android:text="정말 공고를 삭제하시겠어요?\n삭제한 뒤에는 되돌릴 수 없어요"
-        android:textColor="@color/black"
+        android:textColor="@color/gray_black"
         android:textSize="20sp" />
 
     <com.google.android.material.button.MaterialButton

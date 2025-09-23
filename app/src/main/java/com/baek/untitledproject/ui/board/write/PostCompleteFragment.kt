@@ -5,10 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentPostCompleteBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class PostCompleteFragment : Fragment() {
 
@@ -30,27 +32,21 @@ class PostCompleteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val rootNavController = requireActivity().findNavController(R.id.nav_host_fragment)
+
+        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
+
+        val clearGraph = navOptions {
+            popUpTo(R.id.nav_graph) { inclusive = true }
+            launchSingleTop = true
+        }
         binding.toHomeBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.boardFragment,
-                null,
-                navOptions {
-                    popUpTo(R.id.write_board_nav_graph) { inclusive = true }
-                    launchSingleTop = true
-                }
-            )
+            rootNavController.navigate(R.id.boardFragment, null, clearGraph)
+            bottomNav?.selectedItemId = R.id.boardFragment
         }
         binding.toMyPostBtn.setOnClickListener {
-            findNavController().navigate(
-                R.id.myRecruitsFragment,
-                null,
-                navOptions {
-                    popUpTo(R.id.boardFragment) {
-                        inclusive = true
-                    }
-                    launchSingleTop = true
-                }
-            )
+            rootNavController.navigate(R.id.myRecruitsFragment, null, clearGraph)
+            bottomNav?.selectedItemId = R.id.myRecruitsFragment
         }
     }
 

@@ -21,7 +21,7 @@ class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
                 oldItem: PostSummary,
                 newItem: PostSummary
             ): Boolean {
-               return oldItem.postId == newItem.postId
+                return oldItem.postId == newItem.postId
             }
 
             override fun areContentsTheSame(
@@ -40,7 +40,7 @@ class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
             val radiusPx = (10f * binding.root.resources.displayMetrics.density).roundToInt()
             binding.organizationTxt.text = item.organization
             binding.titleTxt.text = item.title
-            binding.recruitStateTxt.text = item.status
+            binding.recruitStateTxt.text = if (item.status == "recruiting") "모집중" else ""
             Glide.with(binding.thumbnailImg)
                 .load(item.imgUri)
                 .transform(CenterCrop(), RoundedCorners(radiusPx))
@@ -53,7 +53,8 @@ class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BoardViewHolder {
-        val binding = ItemBoardLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding =
+            ItemBoardLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return BoardViewHolder(binding)
     }
 

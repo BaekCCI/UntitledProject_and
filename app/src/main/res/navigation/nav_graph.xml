@@ -31,12 +31,12 @@
         android:name="com.baek.untitledproject.ui.recruit.MyRecruitsFragment"
         android:label="fragment_my_recruits"
         tools:layout="@layout/fragment_my_recruits">
+        <action
+            android:id="@+id/action_myRecruitsFragment_to_interviewEditFragment"
+            app:destination="@id/interviewEditFragment" />
          <action
             android:id="@+id/action_myRecruitsFragment_to_boardDetailFragment"
             app:destination="@id/boardDetailFragment" />
-        <action
-            android:id="@+id/action_myRecruitsFragment_to_interviewScheduleFragment"
-            app:destination="@id/interviewScheduleFragment" />
     </fragment>
     <fragment
         android:id="@+id/messageFragment"
@@ -65,6 +65,9 @@
         <action
             android:id="@+id/action_boardDetailFragment_to_applicationFormFragment"
             app:destination="@id/applicationFormFragment" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -100,7 +103,7 @@
         android:id="@+id/settingFragment"
         android:name="com.baek.untitledproject.ui.setting.SettingFragment"
         android:label="fragment_setting"
-        tools:layout="@layout/fragment_setting" >
+        tools:layout="@layout/fragment_setting">
         <action
             android:id="@+id/action_settingFragment_to_login_nav_graph"
             app:destination="@id/login_nav_graph" />
@@ -113,5 +116,21 @@
         android:name="com.baek.untitledproject.ui.setting.DeleteAccountFragment"
         android:label="fragment_delete_account"
         tools:layout="@layout/fragment_delete_account" />
-
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.baek.untitledproject.ui.board.write.EditPostFragment"
+        android:label="EditPostFragment">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/interviewEditFragment"
+        android:name="com.baek.untitledproject.ui.board.write.Edit.InterviewEditFragment"
+        android:label="fragment_interview_edit"
+        tools:layout="@layout/fragment_interview_edit">
+        <argument
+            android:name="postId"
+            app:argType="string" />
+    </fragment>
 </navigation>

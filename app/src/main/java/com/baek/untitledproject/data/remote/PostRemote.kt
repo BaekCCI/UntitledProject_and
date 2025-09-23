@@ -1,7 +1,6 @@
 package com.baek.untitledproject.data.remote
 
 import android.net.Uri
-import android.util.Log
 import com.baek.untitledproject.domain.data.PostSummary
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.async
@@ -9,15 +8,31 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import androidx.core.net.toUri
+import com.baek.untitledproject.common.utils.toTimestamp
 import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.data.model.InterviewSlotResponse
 import com.baek.untitledproject.data.model.PostResponse
+import com.baek.untitledproject.data.model.mapper.separate
 import com.baek.untitledproject.data.model.mapper.toDomain
+import com.baek.untitledproject.data.model.mapper.toPostRead
+import com.baek.untitledproject.data.model.mapper.toPostWrite
 import com.baek.untitledproject.data.model.mapper.toResponse
+import com.baek.untitledproject.domain.data.InterviewSlot
 import com.baek.untitledproject.domain.data.Post
-import com.google.firebase.Firebase
+import com.baek.untitledproject.domain.data.PostRead
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.User
+import com.baek.untitledproject.domain.data.toDomain
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.toObject
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.storage
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 
 object PostRemote {
     //게시글 리스트 가져오기
@@ -25,8 +40,11 @@ object PostRemote {
         val db = FirebaseFirestore.getInstance()
 
         //posts 조회
-        val postsSnap = db.collection("posts").get().await()
-        val postDocs = postsSnap.documents
+        val postsSnap = db.collection("posts")
+            .whereEqualTo("status", "recruiting")
+            .get()
+            .await()
+        val postDocs = postsSnap.documents.sortedByDescending { it.getTimestamp("created_at") }
         val postIds = postDocs.map { it.id }
 
         //썸네일 이미지 조회(postId to Uri)
@@ -125,79 +143,64 @@ object PostRemote {
     }
 
     //-----공고 올리기-----
-
-    suspend fun uploadPost(post: Post): String = coroutineScope {
+    suspend fun uploadPost(post: PostWrite, user: User): String = coroutineScope {
         val now = Timestamp.now()
 
         val db = FirebaseFirestore.getInstance()
-        val storage = Firebase.storage
+        val storage = FirebaseStorage.getInstance("gs://muje_storage")
 
-        //posts 문서: 새로 생성 || 기존 문서
-        val isUpdate = !post.postId.isNullOrBlank()
-        val postRef = if (isUpdate) {
-            // isUpdate == true면 postId가 null/blank가 아니어야 함
-            db.collection("posts").document(post.postId!!)  // !! 안전 보장
-        } else {
-            db.collection("posts").document()
-        }
+        val postRef = db.collection("posts").document()
         val postId = postRef.id
 
-        //기존 생성 시간 보존
-        val createdAt =
-            if (isUpdate) postRef.get().await().getTimestamp("created_at") ?: now else now
-
-        //수정 시에 기존 데이터 미리 읽어둠
-        val oldImgsSnap = if (isUpdate) db.collection("post_images")
-            .whereEqualTo("post_id", postId).get().await() else null
-        val oldSlotsSnap = if (isUpdate) db.collection("interview_slots")
-            .whereEqualTo("post_id", postId).get().await() else null
-        val oldQuestionsSnap = if (isUpdate) db.collection("custom_questions")
-            .whereEqualTo("post_id", postId).get().await() else null
-
-        //기존 이미지 경로 수집
-        val oldImagePaths: List<String> = oldImgsSnap?.documents?.mapNotNull { d ->
-            d.getString("image_path") ?: d.getString("image_url")
-        } ?: emptyList()
-
-        //새 이미지 업로드
         val uploadedPaths = mutableListOf<String>()
 
-        val imageResult = post.imageUris.mapIndexed { index, uri ->
-            async {
-                //post_images 컬렉션 문서 생성
-                val imgRef = db.collection("post_images").document()
-                val imgId = imgRef.id
+        val imgDocs: List<Pair<DocumentReference, Map<String, Any>>> = try {
+            post.imageUris.mapIndexed { index, uri ->
+                async {
+                    val imgRef = db.collection("post_images").document()
+                    val imgId = imgRef.id
 
-                //Storage에 저장할 경로 정의
-                val path = "post_images/$postId/$imgId.jpg"
-                storage.reference.child(path).putFile(uri).await()
-                uploadedPaths += path
+                    val path = "post_images/$postId/$imgId.jpg"
+                    val storageRef = storage.reference.child(path)
 
-                //Firestore에 넣을 데이터
-                imgRef to mapOf(
-                    "image_id" to imgId,
-                    "post_id" to postId,
-                    "image_path" to path,
-                    "image_order" to index.toLong(),
-                    "created_at" to now
-                )
+                    storageRef.putFile(uri).await()
+                    uploadedPaths += path
+                    val imgUrl = storageRef.downloadUrl.await().toString()
+                    imgRef to mapOf(
+                        "image_id" to imgId,
+                        "post_id" to postId,
+                        "image_url" to imgUrl,
+                        "image_order" to index.toLong(),
+                        "created_at" to now
+                    )
+                }
+            }.awaitAll()
+        } catch (e: Exception) {
+            uploadedPaths.forEach { p ->
+                runCatching {
+                    storage.reference.child(p).delete().await()
+                }
             }
-        }.awaitAll()// 모든 이미지 업로드가 완료될 때까지 대기
+            throw e
+        }
 
         //interview slot 데이터 생성
         val slotDocs = post.interviewSlot.flatMap { (date, times) ->
-            times.map { time ->
-                val slotRef = db.collection("interview_slots").document()
-                val slotId = slotRef.id
-                slotRef to mapOf(
-                    "slot_id" to slotId,
-                    "post_id" to postId,
-                    "interview_date" to date,
-                    "interview_time" to time,
-                    "max_capacity" to post.maxCapacity,
-                    "current_reservations" to 0,
-                    "created_at" to now
-                )
+            val formattedDate = date.toTimestamp()
+            times.flatMap { timeslot ->
+                timeslot.separate(post.interviewSlotStep).map { time ->
+                    val slotRef = db.collection("interview_slots").document()
+                    val slotId = slotRef.id
+                    slotRef to mapOf(
+                        "slot_id" to slotId,
+                        "post_id" to postId,
+                        "interview_date" to formattedDate,
+                        "interview_time" to time,
+                        "max_capacity" to post.maxCapacity,
+                        "current_reservations" to 0,
+                        "created_at" to now
+                    )
+                }
             }
         }
 
@@ -215,23 +218,18 @@ object PostRemote {
         }
 
         try {
-            db.runBatch { b ->
-                b.set(postRef, post.toResponse(postId, now, createdAt, isUpdate))
+            val writes = buildList {
+                add(postRef to post.toResponse(postId, user, now))
+                addAll(imgDocs)
+                addAll(slotDocs)
+                addAll(questionDocs)
+            }
 
-                oldImgsSnap?.documents?.forEach { b.delete(it.reference) }
-                oldSlotsSnap?.documents?.forEach { b.delete(it.reference) }
-                oldQuestionsSnap?.documents?.forEach { b.delete(it.reference) }
-
-                imageResult.forEach { (ref, data) -> b.set(ref, data) }
-                slotDocs.forEach { (ref, data) -> b.set(ref, data) }
-                questionDocs.forEach { (ref, data) -> b.set(ref, data) }
-            }.await()
-            oldImagePaths.forEach { p ->
-                val ref = if (p.startsWith("gs://") || p.startsWith("http"))
-                    storage.getReferenceFromUrl(p)
-                else
-                    storage.reference.child(p)
-                runCatching { ref.delete().await() }
+            //배치 한도 500 제한 -> chunk 처리
+            writes.chunked(450).forEach { chunk ->
+                db.runBatch { b ->
+                    chunk.forEach { (ref, data) -> b.set(ref, data) }
+                }.await()
             }
         } catch (e: Exception) {
             // Firestore 실패 시 업로드 롤백
@@ -242,5 +240,408 @@ object PostRemote {
         }
 
         postId
+    }
+
+    suspend fun getPostForRead(postId: String, userId: String?): PostRead = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        //post 조회
+        val postDoc = db.collection("posts")
+            .document(postId)
+            .get()
+            .await()
+
+        require(postDoc.exists()) { "존재하지 않는 게시글입니다." }
+        //Firestore 스냅샷 -> 서버 모델 (PostResponse)
+        val postResponse = requireNotNull(postDoc.toObject(PostResponse::class.java)) {
+            "PostResponse 매핑 실패"
+        }
+
+        //----- 연관 데이터 병렬 조회 -----
+
+        //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
+        val imagesDef = async {
+            db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .sortedBy { it.getLong("image_order") ?: 0L }
+                .mapNotNull { it.getString("image_url")?.toUri() }
+        }
+
+        //interview_slots 조회: 마찬가지로 직접 정렬
+        val slotsDef = async {
+            db.collection("interview_slots")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .mapNotNull { it.toObject(InterviewSlotResponse::class.java) }
+        }
+        val appliedDef: Deferred<Boolean>? =
+            if (userId == null) null
+            else async {
+                db.collection("applications")
+                    .whereEqualTo("post_id", postId)
+                    .whereEqualTo("applicant_user_id", userId)
+                    .limit(1)
+                    .get().await()
+                    .isEmpty.not()   // 1건이라도 있으면 true
+            }
+
+        //----- 조회 결과 -----
+        val imageUris = imagesDef.await()
+        val interviewSlot = slotsDef.await()
+        val isApplied = appliedDef?.await() ?: false
+
+        postResponse.toPostRead(imageUris, interviewSlot, userId, isApplied)
+    }
+
+    suspend fun getPostForEdit(postId: String): PostWrite = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        //post 조회
+        val postDoc = db.collection("posts")
+            .document(postId)
+            .get()
+            .await()
+
+        require(postDoc.exists()) { "존재하지 않는 게시글입니다." }
+        //Firestore 스냅샷 -> 서버 모델 (PostResponse)
+        val postResponse = requireNotNull(postDoc.toObject(PostResponse::class.java)) {
+            "PostResponse 매핑 실패"
+        }
+
+        //----- 연관 데이터 병렬 조회 -----
+
+        //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
+        val imagesDef = async {
+            db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+                .documents
+                .sortedBy { it.getLong("image_order") ?: 0L }
+                .mapNotNull { it.getString("image_url")?.toUri() }
+        }
+
+
+        //----- 조회 결과 -----
+        val imageUris = imagesDef.await()
+
+        postResponse.toPostWrite(imageUris)
+    }
+
+    suspend fun editPost(post: PostWrite): String = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+        val storage = FirebaseStorage.getInstance("gs://muje_storage")
+        val now = Timestamp.now()
+        val postId = requireNotNull(post.postId)
+
+        val updates = mutableMapOf<String, Any?>().apply {
+            post.title?.let { put("title", it) }
+            post.organization?.let { put("organization", it) }
+            post.content?.let { put("content", it) }
+            post.interviewLocation?.let { put("interview_location", it) }
+            post.recruitmentEnd?.let { put("recruitment_end", it.toTimestamp()) }
+            put("updated_at", now)
+        }
+        val postJob = async {
+            db.collection("posts").document(postId)
+                .update(updates)
+                .await()
+        }
+        //----------post.isImageChanged = true이면
+
+        val imageJob = async {
+            if (!post.isImageChanged) return@async
+
+            val prevImages = db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get()
+                .await()
+                .documents
+
+            prevImages.map { doc ->
+                async {
+                    val imageId = doc.id
+                    val path = "post_images/$postId/$imageId.jpg"
+                    runCatching { storage.reference.child(path).delete().await() }
+                }
+            }.awaitAll()
+
+            val uploadedPaths = mutableListOf<String>()
+
+            val imgDocs: List<Pair<DocumentReference, Map<String, Any>>> = try {
+                post.imageUris.mapIndexed { index, uri ->
+                    async {
+                        val imgRef = db.collection("post_images").document()
+                        val imgId = imgRef.id
+
+                        val path = "post_images/$postId/$imgId.jpg"
+                        val storageRef = storage.reference.child(path)
+
+                        storageRef.putFile(uri).await()
+                        uploadedPaths += path
+                        val imgUrl = storageRef.downloadUrl.await().toString()
+                        imgRef to mapOf(
+                            "image_id" to imgId,
+                            "post_id" to postId,
+                            "image_url" to imgUrl,
+                            "image_order" to index.toLong(),
+                            "created_at" to now
+                        )
+                    }
+                }.awaitAll()
+            } catch (e: Exception) {
+                uploadedPaths.forEach { p ->
+                    runCatching {
+                        storage.reference.child(p).delete().await()
+                    }
+                }
+                throw e
+            }
+            db.runBatch { b ->
+                prevImages.forEach { b.delete(it.reference) }      // 삭제
+                imgDocs.forEach { (ref, data) -> b.set(ref, data) } // 생성 (merge 불필요)
+            }.await()
+        }
+        awaitAll(postJob, imageJob)
+        postId
+    }
+
+    //TODO: 삭제 구현 => 어디까지 삭제..?
+    //posts, posts_images(storage까지), custom_questions, interview_slots, applications, question_answers
+    suspend fun deletePost(postId: String): String = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+        val storage = FirebaseStorage.getInstance("gs://muje_storage").reference
+        val sem = Semaphore(10)
+
+        //------------ 대상 문서 병렬 조회
+        val postRef = db.collection("posts").document(postId)
+
+
+        val postImageDef = async {
+            db.collection("post_images")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+        }
+
+        val customQuestionsDef = async {
+            db.collection("custom_questions")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+        }
+
+        val interviewSlotDef = async {
+            db.collection("interview_slots")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+        }
+
+        val applicationsDef = async {
+            db.collection("applications")
+                .whereEqualTo("post_id", postId)
+                .get().await()
+        }
+
+
+        val postImages = postImageDef.await()
+        val customQuestions = customQuestionsDef.await()
+        val interviewSlots = interviewSlotDef.await()
+        val applications = applicationsDef.await()
+
+        // application_id 리스트 확보 후 answers 병렬 조회
+        val applicationIds = applications.documents.map { it.id }
+        val questionAnswers = applicationIds
+            .chunked(10)
+            .map { idsChunked ->
+                async {
+                    db.collection("question_answers")
+                        .whereIn("application_id", idsChunked)
+                        .get().await().documents
+                }
+            }.awaitAll().flatten()
+
+        //------------- storage 폴더 삭제
+        try {
+            val dirRef = storage.child("post_images/$postId")
+
+            val listResult = dirRef.listAll().await()
+
+            // 현재 폴더의 파일(items) 삭제
+            listResult.items.map { item ->
+                async {
+                    sem.withPermit {
+                        try {
+                            item.delete().await()
+                        } catch (_: Exception) {
+                        }
+                    }
+                }
+            }.awaitAll()
+
+        } catch (_: Exception) {
+        }
+
+        //questions_answers 삭제
+        run {
+            val refs = questionAnswers.map { it.reference }
+            if (refs.isNotEmpty()) {
+                var count = 0
+                var batch = db.batch()
+                for (ref in refs) {
+                    batch.delete(ref)
+                    count++
+                    if (count % 450 == 0) {
+                        batch.commit().await()
+                        batch = db.batch()
+                    }
+                }
+                if (count % 450 != 0) batch.commit().await()
+            }
+        }
+
+        // applications 삭제
+        run {
+            val refs = applications.documents.map { it.reference }
+            if (refs.isNotEmpty()) {
+                var count = 0
+                var batch = db.batch()
+                for (ref in refs) {
+                    batch.delete(ref)
+                    count++
+                    if (count % 450 == 0) {
+                        batch.commit().await()
+                        batch = db.batch()
+                    }
+                }
+                if (count % 450 != 0) batch.commit().await()
+            }
+        }
+
+        run {
+            val refs =
+                customQuestions.documents.map { it.reference } +
+                        interviewSlots.documents.map { it.reference } +
+                        postImages.documents.map { it.reference }
+            if (refs.isNotEmpty()) {
+                var count = 0
+                var batch = db.batch()
+                for (ref in refs) {
+                    batch.delete(ref)
+                    count++
+                    if (count % 450 == 0) {
+                        batch.commit().await()
+                        batch = db.batch()
+                    }
+                }
+                if (count % 450 != 0) batch.commit().await()
+            }
+        }
+
+        run {
+            val batch = db.batch()
+            batch.delete(postRef)
+            batch.commit().await()
+        }
+        postId
+    }
+
+    suspend fun getInterviewSlots(postId: String): List<InterviewSlot> {
+        val db = FirebaseFirestore.getInstance()
+        val slotDocs = db.collection("interview_slots")
+            .whereEqualTo("post_id", postId)
+            .get()
+            .await()
+        val response = slotDocs.documents.mapNotNull { doc ->
+            doc.toObject(InterviewSlotResponse::class.java)
+        }
+        return response.map {
+            it.toDomain()
+        }
+    }
+
+    suspend fun editInterviewSlot(
+        interviewSlots: List<InterviewSlotResponse>,
+        deleteSlotId: List<String>
+    ) = coroutineScope {
+        val db = FirebaseFirestore.getInstance()
+
+        val applicationCollection = db.collection("applications")
+        val slotCollection = db.collection("interview_slots")
+
+        //삭제할 slot이 있다면
+        if (deleteSlotId.isNotEmpty()) {
+            val chunkSizeForIn = 10 //firestore wherein 제약
+            val deleteChunks = deleteSlotId.chunked(chunkSizeForIn)
+
+            //예약자 상태 수정
+            for (chunk in deleteChunks) {
+                val snapshot = applicationCollection
+                    .whereIn("interview_slot_id", chunk)
+                    .get()
+                    .await()
+
+                var batch = db.batch()
+                var opsInBatch = 0
+
+                for (doc in snapshot.documents) {
+                    val docRef = doc.reference
+
+                    val updates = mapOf<String, Any?>(
+                        "status" to "submitted",
+                        "interview_slot_id" to null,
+                        "interview_reservation_status" to null
+                    )
+                    batch.update(docRef, updates)
+                    opsInBatch++
+
+                    if (opsInBatch >= 500) { // Firestore 배치 최대 500 ops
+                        batch.commit().await()
+                        batch = db.batch()
+                        opsInBatch = 0
+                    }
+                }
+                if (opsInBatch > 0) {
+                    batch.commit().await()
+                }
+            }
+            //interview_slots 컬렉션에서 문서 삭제
+            deleteSlotId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (id in chunk) {
+                    val docRef = slotCollection.document(id)
+                    batch.delete(docRef)
+                }
+                batch.commit().await()
+            }
+        }
+
+        //interview_slot컬렉션에 슬롯 넣기
+        if (interviewSlots.isNotEmpty()) {
+
+            val existsId = interviewSlots.filter { !it.slot_id.isNullOrBlank() }
+            val newId = interviewSlots.filter { it.slot_id.isNullOrBlank() }
+
+            existsId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (slot in chunk) {
+                    val docRef = slotCollection.document(slot.slot_id!!)
+                    batch.set(docRef, slot, SetOptions.merge())
+                }
+                batch.commit().await()
+            }
+
+            newId.chunked(500).forEach { chunk ->
+                val batch = db.batch()
+                for (slot in chunk) {
+                    val docRef = slotCollection.document()
+                    val slotId = docRef.id
+
+                    val slotWithId = slot.copy(slot_id = slotId)
+                    batch.set(docRef, slotWithId)
+                }
+                batch.commit().await()
+            }
+        }
     }
 }

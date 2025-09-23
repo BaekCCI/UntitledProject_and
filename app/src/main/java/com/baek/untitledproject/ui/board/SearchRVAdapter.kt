@@ -50,7 +50,7 @@ class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
 
         fun bind(item: PostSummary) = with(binding) {
 
-            val color = root.context.getColor(R.color.point_purple)
+            val color = root.context.getColor(R.color.point_skyblue)
             organizationTxt.text = item.organization.highlightQuery(highlightQuery, color)
             titleTxt.text = item.title.highlightQuery(highlightQuery, color)
             root.setOnClickListener { onItemClick(item) }

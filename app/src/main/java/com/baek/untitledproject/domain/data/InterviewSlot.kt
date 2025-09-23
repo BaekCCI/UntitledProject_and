@@ -16,6 +16,7 @@ data class InterviewSlot(
     val interviewTime: LocalTime,
     val maxCapacity: Int,
     val currentReservations: Int,
+    val duration : Int = 30,
     val isAvailable: Boolean = currentReservations < maxCapacity
 ) {
 

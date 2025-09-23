@@ -10,8 +10,14 @@ import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
+import com.baek.untitledproject.domain.data.InterviewSlot
+import com.baek.untitledproject.domain.data.PostRead
+import com.baek.untitledproject.domain.data.PostWrite
+import com.baek.untitledproject.domain.data.TimeSlot
+import com.baek.untitledproject.domain.data.User
 import com.google.firebase.Timestamp
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 fun PostResponse.toDomain(
@@ -49,7 +55,7 @@ fun PostResponse.toDomain(
     )
 }
 
-//submitPost용(수정시엔 사용 X)
+//submitPost용
 fun Post.toResponse(
     postId: String,
     now: Timestamp,
@@ -59,12 +65,11 @@ fun Post.toResponse(
 
     return PostResponse(
         post_id = postId,
-        author_user_id = "text_and1",
         title = title ?: "",
         organization = organization ?: "",
         content = content ?: "",
-        recruitment_start = recruitmentStart?.toTimestamp(),
-        recruitment_end = recruitmentEnd?.toTimestamp(),
+        recruitment_start = recruitmentStart!!.toTimestamp(),
+        recruitment_end = recruitmentEnd!!.toTimestamp(),
 
         has_interview = hasInterview ?: false,
         interview_location = interviewLocation,
@@ -119,4 +124,162 @@ fun PostResponse.toApplicationRequirement(customQuestions: List<CustomQuestionRe
         customQuestions = customQuestions.sortedBy { it.question_order }
             .map { CustomQuestion(questionId = it.question_id, questionText = it.question_text) }
     )
+}
+
+fun PostResponse.toMyRecruitSummary(
+    thumbnailUrl: String? = null,
+    applicantCount: Int = 0
+): MyRecruitSummary {
+    return MyRecruitSummary(
+        id = post_id,
+        title = title,
+        category = organization,
+        recruitStatus = mapPostStatusToText(status),
+        thumbnailUrl = thumbnailUrl,
+        hasInterview = has_interview,
+        applicantCount = applicantCount,
+        recruitmentEnd = recruitment_end?.toLocalDate()?.format(
+            DateTimeFormatter.ofPattern("MM/dd")
+        )
+    )
+}
+
+// ------리팩 중
+
+//읽기 전용으로 변환
+fun PostResponse.toPostRead(
+    images: List<Uri>,
+    interviewSlots: List<InterviewSlotResponse>,
+    userId: String?,
+    isApplied: Boolean = false
+): PostRead {
+    return PostRead(
+        postId = post_id,
+        authorUserId = author_user_id,
+        title = title,
+        organization = organization,
+        content = content,
+        recruitmentStart = recruitment_start.toLocalDate(),
+        recruitmentEnd = recruitment_end?.toLocalDate(),
+        status = status,
+        imageUris = images,
+
+        hasInterview = has_interview,
+        interviewStart = interviewSlots.getEarliestDate(),
+        interviewEnd = interviewSlots.getLatestDate(),
+        interviewLocation = interview_location,
+
+        requiresName = requires_name,
+        requiresStudentId = requires_student_id,
+        requiresDepartment = requires_department,
+        requiresGender = requires_gender,
+        requiresAge = requires_age,
+        //requiresPhone = requires_phone
+
+        isAuthor = userId == author_user_id,
+        isApplied = isApplied
+    )
+}
+
+fun PostResponse.toPostWrite(
+    images: List<Uri>
+): PostWrite {
+    return PostWrite(
+        postId = post_id,
+
+        title = title,
+        organization = organization,
+        content = content,
+        recruitmentStart = recruitment_start.toLocalDate(),
+        recruitmentEnd = recruitment_end?.toLocalDate(),
+        imageUris = images,
+        hasInterview = has_interview,
+        interviewLocation = interview_location,
+
+        )
+}
+
+fun List<InterviewSlotResponse>.getEarliestDate(): LocalDate? {
+    return this.mapNotNull { it.interview_date }.minOrNull()?.toLocalDate()
+}
+
+fun List<InterviewSlotResponse>.getLatestDate(): LocalDate? {
+    return this.mapNotNull { it.interview_date }.maxOrNull()?.toLocalDate()
+}
+
+//게시글 업로드용
+fun PostWrite.toResponse(id: String, user: User, now: Timestamp): PostResponse {
+    return PostResponse(
+        post_id = postId ?: id,
+
+        author_user_id = user.userId!!,
+        title = title ?: "",
+        organization = organization ?: "",
+        content = content ?: "",
+        recruitment_start = recruitmentStart?.toTimestamp() ?: now,
+        recruitment_end = recruitmentEnd?.toTimestamp(),
+        has_interview = hasInterview ?: false,
+        interview_location = interviewLocation,
+        status = "recruiting",
+
+        requires_name = requiresName,
+        requires_student_id = requiresStudentId,
+        requires_department = requiresDepartment,
+        requires_gender = requiresGender,
+        requires_age = requiresAge,
+
+        author_name = user.name,
+        author_organization = organization ?: "",
+
+        created_at = now,
+        updated_at = now
+    )
+}
+
+fun InterviewSlotResponse.toDomain():InterviewSlot{
+    return InterviewSlot(
+        slotId = slot_id!!,
+        postId=post_id!!,
+        interviewDate = interview_date!!.toLocalDate(),
+        interviewTime = interview_time.toLocalTime(),
+        maxCapacity = max_capacity,
+        currentReservations = current_reservations,
+        duration = duration
+    )
+}
+
+fun InterviewSlot.toResponse():InterviewSlotResponse{
+    return InterviewSlotResponse(
+        slot_id = if(slotId.isEmpty()) null else slotId,
+        post_id = postId,
+        interview_date = interviewDate.toTimestamp(),
+        interview_time = interviewTime.toString(),
+        max_capacity = maxCapacity,
+        current_reservations = currentReservations,
+        duration = duration
+    )
+}
+
+fun String.toLocalTime(): LocalTime {
+    return LocalTime.parse(this, DateTimeFormatter.ofPattern("HH:mm"))
+}
+fun TimeSlot.separate(step: Int): List<String> {
+    val list = mutableListOf<String>()
+    val fmt = DateTimeFormatter.ofPattern("HH:mm")
+    var t = start
+    while (t.isBefore(end)) {
+        list += t.format(fmt)
+        t = t.plusMinutes(step.toLong())
+    }
+    return list
+}
+
+// 공고 상태를 한글로 변환
+//TODO: 삭제 예정
+private fun mapPostStatusToText(status: String): String {
+    return when (status) {
+        "recruiting" -> "모집중"
+        "completed" -> "모집완료"
+        else -> "알 수 없음"
+    }
 }

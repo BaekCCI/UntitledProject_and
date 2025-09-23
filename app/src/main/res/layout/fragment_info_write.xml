@@ -21,6 +21,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/pageIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -68,6 +69,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/pageTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="48dp"
@@ -87,7 +89,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
-                    android:text="공고 제목"
+                    android:text="모집글 제목"
                     android:textColor="@color/gray_700"
                     android:textSize="14sp" />
 
@@ -98,11 +100,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/input_selector_bg"
                     android:hint="공고 제목을 적어주세요"
-                    android:inputType="textMultiLine"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:inputType="textMultiLine" />
 
             </LinearLayout>
 
@@ -127,13 +125,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/input_selector_bg"
-                    android:hint="단체 이름을 적어주세요"
+                    android:hint="단체명을 적어주세요"
                     android:inputType="text"
-                    android:maxLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:maxLines="1" />
 
             </LinearLayout>
 
@@ -144,48 +138,88 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="16dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:text="모집 기간"
-                    android:textColor="@color/gray_700"
-                    android:textSize="14sp" />
-
                 <LinearLayout
-                    android:id="@+id/recruitDateSelectBtn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_bg"
-                    android:backgroundTint="@color/gray_50"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="18dp">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:src="@drawable/ic_calender" />
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/recruitDate"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="시작일 ~ 마감일 선택"
-                        android:textColorHint="@color/gray_500"
-                        android:textColor="@color/gray_700"
-                        android:textSize="16sp" />
-
-                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/gray_500" />
+                        android:layout_marginBottom="8dp"
+                        android:text="모집 마감일"
+                        android:textColor="@color/gray_700"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="추후 설정 가능"
+                        android:textColor="@color/gray_500"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/recruitDateSelectBtn"
+                    style="@style/Widget.Untitled.Button.Base"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray_50"
+                    android:text="마감일 선택"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/gray_500"
+                    android:textSize="16sp"
+                    app:icon="@drawable/ic_calender"
+                    app:iconGravity="end"
+                    app:iconSize="24dp"
+                    app:iconTint="@color/gray_500" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/interviewLocLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="면접 장소"
+                        android:textColor="@color/gray_700"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="추후 설정 가능"
+                        android:textColor="@color/gray_500"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/interviewLocInput"
+                    style="@style/EditTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_selector_bg"
+                    android:hint="장소를 입력해주세요"
+                    android:inputType="text"
+                    android:maxLines="1" />
 
             </LinearLayout>
 
@@ -297,11 +331,7 @@
                     android:gravity="start"
                     android:hint="활동 목적, 모집 인원, 활동 일정, 지원 자격 등을 자유롭게 작성해주세요"
                     android:inputType="textMultiLine"
-                    android:minHeight="246dp"
-                    android:padding="18dp"
-                    android:textColor="@color/gray_700"
-                    android:textColorHint="@color/gray_500"
-                    android:textSize="16sp" />
+                    android:minHeight="246dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -317,7 +347,7 @@
                     android:id="@+id/nextBtn"
                     style="@style/Widget.Untitled.Button.StateToggle"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
                     android:enabled="false"
                     android:text="다음" />
             </LinearLayout>

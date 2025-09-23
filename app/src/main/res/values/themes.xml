@@ -11,4 +11,12 @@
     <style name="Theme.UntitledProject" parent="Base.Theme.UntitledProject" />
 
 
+    <style name="ThemeOverlay.NumberPicker" parent="Base.Theme.UntitledProject">
+        <!-- NumberPicker divider color -->
+        <item name="colorControlNormal">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/gray_700</item>
+        <item name="android:textSize">20sp</item>
+        <item name="backgroundTint">@color/point_skyblue</item>
+    </style>
+
 </resources>

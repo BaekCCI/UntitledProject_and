@@ -2,11 +2,11 @@
 <resources>
 
     <!-- Point -->
-    <color name="point_purple">#5593FF</color>
-    <color name="point_purple_tinted">#265593FF</color>
+    <color name="point_skyblue">#00B7DB</color>
+    <color name="point_skyblue_tinted">#2600B7DB</color>
 
     <!-- Gray Scale -->
-    <color name="black">#FF000000</color>
+    <color name="gray_black">#FF000000</color>
     <color name="gray_800">#2B2B31</color>
     <color name="gray_700">#404048</color>
     <color name="gray_600">#696E7C</color>
@@ -18,10 +18,16 @@
     <color name="gray_50">#F7F9FC</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Accent -->
     <color name="accent_red">#F26B6B</color>
-
-    <!-- Primary -->
     <color name="primary_black">#1c1d1c</color>
 
+    <color name="chip_blue_container">#E1EEF9</color>
+    <color name="chip_blue_text">#487CE3</color>
+    <color name="chip_red_container">#FAE1E1</color>
+    <color name="chip_red_text">#D75E5E</color>
+    <color name="chip_green_container">#DFEFE5</color>
+    <color name="chip_green_text">#249C7A</color>
+
+    <color name="layers_20">#33000000</color>
+    <color name="layers_40">#66000000</color>
 </resources>

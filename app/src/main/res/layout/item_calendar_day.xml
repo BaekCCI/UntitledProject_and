@@ -6,11 +6,11 @@
 
     <!-- 저장된 날짜-->
     <View
-        android:id="@+id/savedBg"
+        android:id="@+id/todayBg"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_gravity="center"
-        android:background="@drawable/day_saved_bg"
+        android:background="@drawable/day_today_bg"
         android:visibility="gone" />
 
     <!-- 선택된 날짜 -->

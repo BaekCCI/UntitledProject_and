@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="로그인하기"
-            android:textColor="@color/point_purple" />
+            android:textColor="@color/point_skyblue" />
     </LinearLayout>
 
 
