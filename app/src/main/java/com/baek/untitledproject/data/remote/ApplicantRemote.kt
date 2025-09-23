@@ -8,18 +8,13 @@ import kotlinx.coroutines.tasks.await
 
 object ApplicantRemote {
 
-    private const val currentUserId = "author1" // 임시 하드코딩
-
-    /**
-     * 특정 공고의 지원자 목록 조회
-     */
-    suspend fun getApplicants(postId: String): List<ApplicantSummary> {
+    suspend fun getApplicants(postId: String, currentUserId: String): List<ApplicantSummary> {
         val db = FirebaseFirestore.getInstance()
 
         Log.d("ApplicantRemote", "currentUserId: $currentUserId")
 
         val applicationsSnap = db.collection("applications")
-            .whereEqualTo("post_id", "43470D45-5C9B-4B35-9F6A-452DC240D14D")
+            .whereEqualTo("post_id", postId)
             .whereEqualTo("post_author_user_id", currentUserId)
             .get()
             .await()
@@ -48,7 +43,7 @@ object ApplicantRemote {
                         data["status"] as? String ?: "submitted",
                         data["is_passed"] as? Boolean
                     ),
-                    customQuestionAnswers = emptyList() // 목록에서는 빈 리스트
+                    customQuestionAnswers = emptyList()
                 )
 
                 Log.d("ApplicantRemote", "변환 성공: ${applicant.name}, 상태: ${applicant.statusText}")
@@ -66,9 +61,6 @@ object ApplicantRemote {
         }
     }
 
-    /**
-     * 지원자 상세 정보 조회
-     */
     suspend fun getApplicantDetail(applicationId: String): ApplicantSummary {
         val db = FirebaseFirestore.getInstance()
 
@@ -149,14 +141,14 @@ object ApplicantRemote {
             hasSlots
         } catch (e: Exception) {
             Log.e("ApplicantRemote", "면접 슬롯 확인 실패: $postId", e)
-            false  // 에러 발생 시 false 반환 (안전한 기본값)
+            false
         }
     }
 
     /**
      * 지원자들을 면접 대기 상태로 변경 (면접 일정 체크 포함)
      */
-    suspend fun scheduleInterviews(applicationIds: List<String>) {
+    suspend fun scheduleInterviews(applicationIds: List<String>, currentUserId: String) {
         val db = FirebaseFirestore.getInstance()
 
         // 첫 번째 지원서를 통해 postId 확인
@@ -300,7 +292,7 @@ object ApplicantRemote {
     /**
      * 지원자들에게 결과 알림 발송
      */
-    suspend fun notifyResults(applicationIds: List<String>) {
+    suspend fun notifyResults(applicationIds: List<String>, currentUserId: String) {
         val db = FirebaseFirestore.getInstance()
 
         applicationIds.forEach { applicationId ->

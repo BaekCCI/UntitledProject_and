@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_myRecruitsFragment_to_interviewEditFragment"
             app:destination="@id/interviewEditFragment" />
+         <action
+            android:id="@+id/action_myRecruitsFragment_to_boardDetailFragment"
+            app:destination="@id/boardDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/messageFragment"
