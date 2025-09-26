@@ -8,20 +8,23 @@
         <item name="cornerRadius">10dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textAppearance">@style/Body1_18semibold</item>
     </style>
 
     <!-- 버튼 활성화 여부에 따라 배경색이 바뀌는 버튼 -->
     <style name="Widget.Untitled.Button.StateToggle" parent="Widget.Untitled.Button.Base">
         <item name="backgroundTint">@color/btn_state_toggle_bg</item>
         <item name="android:textColor">@color/btn_text_state_toggle</item>
-        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.Untitled.Button.ReportStateToggle" parent="Widget.Untitled.Button.Base">
+        <item name="backgroundTint">@color/btn_report_toggle_bg</item>
+        <item name="android:textColor">@color/btn_text_state_toggle</item>
     </style>
 
     <style name="Widget.Untitled.Button.ClickedToggle" parent="Widget.Untitled.Button.Base">
         <item name="backgroundTint">@color/btn_clicked_toggle_bg</item>
         <item name="android:textColor">@color/btn_text_clicked_toggle</item>
-        <item name="android:textStyle">bold</item>
         <item name="strokeWidth">1dp</item>
         <item name="strokeColor">@color/btn_stroke_clicked_toggle</item>
     </style>
@@ -78,7 +81,7 @@
         <item name="android:padding">16dp</item>
         <item name="android:textColor">@color/gray_700</item>
         <item name="android:textColorHint">@color/gray_500</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textAppearance">@style/Body2_16medium</item>
         <item name="android:gravity">start</item>
     </style>
 
@@ -120,21 +123,21 @@
     <style name="Headline_28bold">
         <item name="fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">28sp</item>
-        <item name="android:lineSpacingMultiplier">1.4</item>
+        <item name="lineHeight">39.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Headline_24bold">
         <item name="fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">31.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Headline_24semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">24sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">31.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -142,28 +145,28 @@
     <style name="SubHeadline_22bold">
         <item name="fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">28.6sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="SubHeadline_22semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">28.6sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="SubHeadline_20medium">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">26sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="SubHeadline_20semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">20sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">26sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -172,44 +175,44 @@
     <style name="Body1_18semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
-        <item name="android:letterSpacing">-1</item>
+        <item name="lineHeight">27sp</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body1_18medium">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="lineHeight">27sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body1_18regular">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
-        <item name="android:letterSpacing">-1</item>
+        <item name="lineHeight">27sp</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body1_16semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="lineHeight">24sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body1_16medium">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="lineHeight">24sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body1_16regular">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.5</item>
+        <item name="lineHeight">24sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -217,24 +220,24 @@
     <style name="Body2_16semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.85</item>
-        <item name="android:letterSpacing">-1</item>
+        <item name="lineHeight">29.6sp</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body2_16medium">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.85</item>
-        <item name="android:letterSpacing">-1</item>
+        <item name="lineHeight">29.6sp</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Body2_16regular">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">16sp</item>
-        <item name="android:lineSpacingMultiplier">1.85</item>
-        <item name="android:letterSpacing">-1</item>
+        <item name="lineHeight">29.6sp</item>
+        <item name="android:letterSpacing">-0.01</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -243,35 +246,35 @@
     <style name="Caption_14semibold">
         <item name="fontFamily">@font/pretendard_semibold</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">18.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Caption_14medium">
         <item name="fontFamily">@font/pretendard_medium</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">18.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Caption_14regular">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">18.2sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Caption_12bold">
         <item name="fontFamily">@font/pretendard_bold</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">15.6sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
     <style name="Caption_12regular">
         <item name="fontFamily">@font/pretendard_regular</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:lineSpacingMultiplier">1.3</item>
+        <item name="lineHeight">15.6sp</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
