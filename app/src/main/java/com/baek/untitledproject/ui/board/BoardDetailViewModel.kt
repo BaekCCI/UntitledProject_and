@@ -28,11 +28,16 @@ class BoardDetailViewModel @Inject constructor(
     private val _deleteState = MutableStateFlow<Result<Unit>>(Result.None)
     val deleteState: StateFlow<Result<Unit>> = _deleteState
 
+    var authorId:String =""
+
     fun loadBoardData(id: String) {
         viewModelScope.launch {
             _board.value = Result.Loading
             val result = boardRepository.getPostForRead(id, userId)
             Log.d("BoardDetailViewModel", "getBoard: $id 결과 = $result")
+            if(result is Result.Success){
+                authorId = result.data.authorUserId
+            }
             _board.value = result
         }
     }
@@ -45,4 +50,5 @@ class BoardDetailViewModel @Inject constructor(
             _deleteState.value = result
         }
     }
+
 }

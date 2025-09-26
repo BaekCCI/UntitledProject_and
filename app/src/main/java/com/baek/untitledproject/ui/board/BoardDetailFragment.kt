@@ -33,6 +33,7 @@ import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_REPORT
 import com.baek.untitledproject.ui.board.dialogs.ConfirmDeleteFragment
 import com.baek.untitledproject.ui.board.dialogs.MoreActionBottomSheetFragment
 import com.baek.untitledproject.ui.board.dialogs.ReportBottomSheetFragment
+import com.baek.untitledproject.ui.board.report.ReportTopic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -269,7 +270,13 @@ class BoardDetailFragment : Fragment() {
             viewLifecycleOwner
         ) { _, bundle ->
             if (bundle.getBoolean(KEY_REPORTED, false)) {
-                // 신고 화면으로 이동
+                val action = BoardDetailFragmentDirections
+                    .actionBoardDetailFragmentToReportNavGraph(
+                        reportTopic = ReportTopic.POST,
+                        targetId = args.id,
+                        reportedUserId = viewModel.authorId
+                    )
+                findNavController().navigate(action)
             }
         }
         parentFragmentManager.setFragmentResultListener(

@@ -68,6 +68,19 @@
         <action
             android:id="@+id/action_boardDetailFragment_to_editPostFragment"
             app:destination="@id/editPostFragment" />
+        <action
+            android:id="@+id/action_boardDetailFragment_to_report_nav_graph"
+            app:destination="@id/report_nav_graph" >
+            <argument
+                android:name="reportTopic"
+                app:argType="com.baek.untitledproject.ui.board.report.ReportTopic" />
+            <argument
+                android:name="targetId"
+                app:argType="string" />
+            <argument
+                android:name="reportedUserId"
+                app:argType="string" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -133,4 +146,5 @@
             android:name="postId"
             app:argType="string" />
     </fragment>
+    <include app:graph="@navigation/report_nav_graph" />
 </navigation>

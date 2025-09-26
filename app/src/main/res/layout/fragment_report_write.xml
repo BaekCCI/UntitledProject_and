@@ -79,7 +79,6 @@
             style="@style/Widget.Untitled.Button.ReportStateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:enabled="false"
             android:text="신고하기" />
     </LinearLayout>
 </LinearLayout>
