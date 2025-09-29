@@ -23,6 +23,7 @@ class ReportCompleteFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)?.setToolbar()

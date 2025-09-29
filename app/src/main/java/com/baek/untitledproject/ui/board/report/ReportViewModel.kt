@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.Report
+import com.baek.untitledproject.domain.repository.ReportRepository
 import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReportViewModel @Inject constructor(
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
+    private val reportRepository: ReportRepository
 ) : ViewModel() {
 
     private val reportContent = MutableStateFlow(Report())
@@ -27,7 +29,7 @@ class ReportViewModel @Inject constructor(
     val reportState: StateFlow<Result<String>> = _reportState
 
     fun initInfo(topic: ReportTopic, targetId: String, reportedUserId: String) {
-        Log.d("ReportViewModel", "$topic, $targetId")
+        Log.d("ReportViewModel", "$topic")
 
         viewModelScope.launch {
             _state.value = Result.Loading
@@ -37,7 +39,6 @@ class ReportViewModel @Inject constructor(
                 return@launch
             }
 
-            //TODO: 타입
             when (topic) {
                 ReportTopic.POST -> initForPostReport(userId, targetId, reportedUserId)
                 ReportTopic.CONVERSATION -> initForConversationReport(
@@ -108,8 +109,10 @@ class ReportViewModel @Inject constructor(
                     reason = content
                 )
             }
-            _reportState.value = Result.Success("D")
-            //TODO: 서버에 저장
+            Log.d("ReportViewModel", reportContent.value.toString())
+            val result = reportRepository.sendReport(reportContent.value)
+            Log.d("ReportViewModel", result.toString())
+            _reportState.value = result
         }
     }
 }
