@@ -138,9 +138,7 @@ fun PostResponse.toMyRecruitSummary(
         thumbnailUrl = thumbnailUrl,
         hasInterview = has_interview,
         applicantCount = applicantCount,
-        recruitmentEnd = recruitment_end?.toLocalDate()?.format(
-            DateTimeFormatter.ofPattern("MM/dd")
-        )
+        recruitmentEnd = recruitment_end?.toLocalDate()
     )
 }
 

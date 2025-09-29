@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/report_nav_graph"
+    app:startDestination="@id/reportSelectFragment">
+
+    <argument
+        android:name="reportTopic"
+        app:argType="com.baek.untitledproject.ui.board.report.ReportTopic"
+        app:nullable="false" />
+    <argument
+        android:name="targetId"
+        app:argType="string"
+        app:nullable="false" />
+    <argument
+        android:name="reportedUserId"
+        app:argType="string" />
+
+    <fragment
+        android:id="@+id/reportSelectFragment"
+        android:name="com.baek.untitledproject.ui.board.report.ReportSelectFragment"
+        android:label="fragment_report_select"
+        tools:layout="@layout/fragment_report_select">
+        <action
+            android:id="@+id/action_reportSelectFragment_to_reportWriteFragment"
+            app:destination="@id/reportWriteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportWriteFragment"
+        android:name="com.baek.untitledproject.ui.board.report.ReportWriteFragment"
+        android:label="fragment_report_write"
+        tools:layout="@layout/fragment_report_write">
+        <action
+            android:id="@+id/action_reportWriteFragment_to_reportCompleteFragment"
+            app:destination="@id/reportCompleteFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportCompleteFragment"
+        android:name="com.baek.untitledproject.ui.board.report.ReportCompleteFragment"
+        android:label="fragment_report_complete"
+        tools:layout="@layout/fragment_report_complete" />
+</navigation>

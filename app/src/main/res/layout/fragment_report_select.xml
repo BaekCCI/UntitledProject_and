@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.board.report.ReportSelectFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp">
+
+        <ImageView
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close_black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="신고하기"
+            android:textAppearance="@style/Body1_18semibold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:text="신고사유를 선택해주세요"
+                android:textAppearance="@style/SubHeadline_22semibold" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/insultBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="1. 욕설 및 비하(종교, 장애, 성별 등)"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/hateBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="2. 폭력 및 혐오표현"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/sexualBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="3. 음란물 및 성적인 표현"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/gamblingBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="4. 도박 및 사행성 조장"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/spamBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="5. 스팸 및 광고"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/personalBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="6. 개인정보 유포"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/impersonationBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="7. 사칭 및 허위 정보"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="@color/gray_300" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/otherBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="16dp"
+                android:text="8. 기타"
+                android:textAlignment="textStart"
+                android:textAppearance="@style/Body2_16medium"
+                android:textColor="@color/gray_700"
+                app:cornerRadius="0dp" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

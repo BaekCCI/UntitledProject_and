@@ -10,12 +10,14 @@ import com.baek.untitledproject.data.repository.ApplyRepositoryImpl
 import com.baek.untitledproject.data.repository.AuthRepositoryImpl
 import com.baek.untitledproject.data.repository.EmailVerityRepositoryImpl
 import com.baek.untitledproject.data.repository.NotificationRepositoryImpl
+import com.baek.untitledproject.data.repository.ReportRepositoryImpl
 import com.baek.untitledproject.data.repository.SessionRepositoryImpl
 import com.baek.untitledproject.data.repository.UserRepositoryImpl
 import com.baek.untitledproject.domain.repository.ApplyRepository
 import com.baek.untitledproject.domain.repository.AuthRepository
 import com.baek.untitledproject.domain.repository.EmailVerifyRepository
 import com.baek.untitledproject.domain.repository.NotificationRepository
+import com.baek.untitledproject.domain.repository.ReportRepository
 import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.repository.UserRepository
 import dagger.Binds
@@ -81,4 +83,10 @@ abstract class AppModule {
     abstract fun bindSessionRepository(
         sessionRepositoryImpl: SessionRepositoryImpl
     ): SessionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReportRepository(
+        reportRepositoryImpl: ReportRepositoryImpl
+    ): ReportRepository
 }
