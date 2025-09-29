@@ -129,6 +129,9 @@
         <action
             android:id="@+id/action_settingFragment_to_blockListFragment"
             app:destination="@id/blockListFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_alertSettingFragment"
+            app:destination="@id/alertSettingFragment" />
     </fragment>
     <fragment
         android:id="@+id/deleteAccountFragment"
@@ -163,4 +166,9 @@
         android:name="com.baek.untitledproject.ui.setting.block.BlockListFragment"
         android:label="fragment_block_list"
         tools:layout="@layout/fragment_block_list" />
+    <fragment
+        android:id="@+id/alertSettingFragment"
+        android:name="com.baek.untitledproject.ui.setting.alert.AlertSettingFragment"
+        android:label="fragment_alert_setting"
+        tools:layout="@layout/fragment_alert_setting" />
 </navigation>

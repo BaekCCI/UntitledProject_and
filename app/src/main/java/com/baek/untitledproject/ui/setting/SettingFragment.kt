@@ -50,6 +50,11 @@ class SettingFragment : Fragment() {
             val action = SettingFragmentDirections.actionSettingFragmentToLoginNavGraph()
             findNavController().navigate(action)
         }
+
+        binding.setAlarmBtn.setOnClickListener {
+            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun observeUserData() {
@@ -83,6 +88,7 @@ class SettingFragment : Fragment() {
         organizationTxt.text = user.department
         binding.studentIdTxt.text = user.studentId
     }
+
 
     private fun setCommunityFieldBtn() {
         binding.reportListBtn.setOnClickListener {
