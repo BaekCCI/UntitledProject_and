@@ -12,6 +12,7 @@
         android:id="@+id/rootToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:visibility="gone"
         app:titleTextAppearance="@style/SubHeadline_22semibold" />
 
     <com.google.android.material.appbar.MaterialToolbar
@@ -21,9 +22,16 @@
         android:visibility="gone"
         app:navigationIcon="@drawable/ic_chevron_left"
         app:titleCentered="true"
-        app:titleTextAppearance="@style/Body1_18semibold">
+        app:titleTextAppearance="@style/Body1_18semibold" />
 
-    </com.google.android.material.appbar.MaterialToolbar>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/xToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/ic_close_black"
+        app:titleCentered="true"
+        android:visibility="gone"
+        app:titleTextAppearance="@style/Body1_18semibold" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"

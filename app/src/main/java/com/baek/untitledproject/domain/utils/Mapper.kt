@@ -14,6 +14,7 @@ import java.util.Locale
 enum class DateUiStyle(val pattern: (Char) -> String) {
     YMD_WITH_WEEKDAY({ sep -> "yy${sep}MM${sep}dd${sep}E" }),//  yy/MM/dd/E
     MD_WITH_WEEKDAY({ sep -> "MM${sep}dd${sep}E" }),// MM/dd/E
+    YMD({sep -> "yyyy${sep}MM${sep}dd"}),
     MD_KR({ _ -> "MM'월' dd'일'" })
 }
 

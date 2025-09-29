@@ -86,7 +86,8 @@ class SettingFragment : Fragment() {
 
     private fun setCommunityFieldBtn() {
         binding.reportListBtn.setOnClickListener {
-            //TODO: 신고 내역 이동
+            val action = SettingFragmentDirections.actionSettingFragmentToReportListFragment()
+            findNavController().navigate(action)
         }
         binding.blockListBtn.setOnClickListener {
             //TODO: 차단 내역 이동

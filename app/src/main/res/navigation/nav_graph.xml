@@ -73,7 +73,7 @@
             app:destination="@id/report_nav_graph" >
             <argument
                 android:name="reportTopic"
-                app:argType="com.baek.untitledproject.ui.board.report.ReportTopic" />
+                app:argType="com.baek.untitledproject.domain.utils.ReportTopic" />
             <argument
                 android:name="targetId"
                 app:argType="string" />
@@ -123,6 +123,9 @@
         <action
             android:id="@+id/action_settingFragment_to_deleteAccountFragment"
             app:destination="@id/deleteAccountFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_reportListFragment"
+            app:destination="@id/reportListFragment" />
     </fragment>
     <fragment
         android:id="@+id/deleteAccountFragment"
@@ -147,4 +150,9 @@
             app:argType="string" />
     </fragment>
     <include app:graph="@navigation/report_nav_graph" />
+    <fragment
+        android:id="@+id/reportListFragment"
+        android:name="com.baek.untitledproject.ui.setting.report.ReportListFragment"
+        android:label="fragment_report_list"
+        tools:layout="@layout/fragment_report_list" />
 </navigation>

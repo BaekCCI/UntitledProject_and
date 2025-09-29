@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -15,16 +14,9 @@ import androidx.navigation.fragment.navArgs
 import com.baek.untitledproject.R
 import com.baek.untitledproject.ReportNavGraphArgs
 import com.baek.untitledproject.databinding.FragmentReportSelectBinding
+import com.baek.untitledproject.domain.utils.ReportType
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.ui.MainActivity
-import com.baek.untitledproject.ui.board.report.ReportType.GAMBLING
-import com.baek.untitledproject.ui.board.report.ReportType.HATE_SPEECH
-import com.baek.untitledproject.ui.board.report.ReportType.IMPERSONATION
-import com.baek.untitledproject.ui.board.report.ReportType.INSULT
-import com.baek.untitledproject.ui.board.report.ReportType.OTHER
-import com.baek.untitledproject.ui.board.report.ReportType.PERSONAL
-import com.baek.untitledproject.ui.board.report.ReportType.SEXUAL
-import com.baek.untitledproject.ui.board.report.ReportType.SPAM
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -76,37 +68,37 @@ class ReportSelectFragment : Fragment() {
 
     private fun setupBtn() = with(binding) {
         insultBtn.setOnClickListener {
-            viewModel.saveType(INSULT)
+            viewModel.saveType(ReportType.INSULT)
             navigate()
         }
         hateBtn.setOnClickListener {
-            viewModel.saveType(HATE_SPEECH)
+            viewModel.saveType(ReportType.HATE_SPEECH)
             navigate()
         }
 
         sexualBtn.setOnClickListener {
-            viewModel.saveType(SEXUAL)
+            viewModel.saveType(ReportType.SEXUAL)
             navigate()
         }
         gamblingBtn.setOnClickListener {
-            viewModel.saveType(GAMBLING)
+            viewModel.saveType(ReportType.GAMBLING)
             navigate()
         }
         spamBtn.setOnClickListener {
-            viewModel.saveType(SPAM)
+            viewModel.saveType(ReportType.SPAM)
             navigate()
         }
         personalBtn.setOnClickListener {
-            viewModel.saveType(PERSONAL)
+            viewModel.saveType(ReportType.PERSONAL)
             navigate()
         }
 
         impersonationBtn.setOnClickListener {
-            viewModel.saveType(IMPERSONATION)
+            viewModel.saveType(ReportType.IMPERSONATION)
             navigate()
         }
         otherBtn.setOnClickListener {
-            viewModel.saveType(OTHER)
+            viewModel.saveType(ReportType.OTHER)
             navigate()
         }
     }
