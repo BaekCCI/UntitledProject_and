@@ -6,6 +6,7 @@ import com.baek.untitledproject.data.model.mapper.toDomain
 import com.baek.untitledproject.data.model.mapper.toEntity
 import com.baek.untitledproject.data.model.mapper.toResponse
 import com.baek.untitledproject.data.remote.UserRemote
+import com.baek.untitledproject.domain.data.Block
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.UserRepository
 import javax.inject.Inject
@@ -90,6 +91,26 @@ class UserRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Log.e("UserRepository", "유저 정보 삭제 실패", e)
             Result.Error("유저 데이터 삭제를 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun getBlockedUsers(userId: String): Result<List<Block>> {
+        return try {
+            val result = userRemote.getBlockedUser(userId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "차단 내역 가져오기 실패", e)
+            Result.Error("차단 내역 가져오기에 실패하였습니다.", e)
+        }
+    }
+
+    override suspend fun unBlockUser(userId: String, blockId: String): Result<Unit> {
+        return try {
+            userRemote.unBlockUser(userId, blockId)
+            Result.Success(Unit)
+        } catch (e: Exception) {
+            Log.e("UserRepository", "차단 해제 실패", e)
+            Result.Error("차단을 해제하는 데 실패하였습니다.", e)
         }
     }
 

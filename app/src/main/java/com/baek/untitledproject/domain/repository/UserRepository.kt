@@ -1,5 +1,6 @@
 package com.baek.untitledproject.domain.repository
 
+import com.baek.untitledproject.domain.data.Block
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.utils.Result
 import kotlinx.coroutines.flow.Flow
@@ -25,4 +26,10 @@ interface UserRepository {
     suspend fun clearLocal(): Result<Unit>
 
     suspend fun deleteUser(userId: String): Result<Unit>
+
+
+    //차단 관리
+    suspend fun getBlockedUsers(userId:String):Result<List<Block>>
+
+    suspend fun unBlockUser(userId:String, blockId:String):Result<Unit>
 }

@@ -90,7 +90,8 @@ class SettingFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.blockListBtn.setOnClickListener {
-            //TODO: 차단 내역 이동
+            val action = SettingFragmentDirections.actionSettingFragmentToBlockListFragment()
+            findNavController().navigate(action)
         }
         binding.communityGuidelineBtn.setOnClickListener {
             //TODO: 커뮤니티 이용 규칙 이동

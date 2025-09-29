@@ -11,26 +11,30 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/rootToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:paddingVertical="16dp"
         app:titleTextAppearance="@style/SubHeadline_22semibold" />
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/detailToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingVertical="10dp"
         android:visibility="gone"
-        app:navigationIcon="@drawable/ic_chevron_left"
+        app:navigationIcon="@drawable/ic_chevron_left_active"
         app:titleCentered="true"
         app:titleTextAppearance="@style/Body1_18semibold" />
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/xToolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
         app:navigationIcon="@drawable/ic_close_black"
         app:titleCentered="true"
-        android:visibility="gone"
         app:titleTextAppearance="@style/Body1_18semibold" />
 
     <androidx.fragment.app.FragmentContainerView

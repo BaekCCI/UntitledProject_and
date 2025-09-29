@@ -126,6 +126,9 @@
         <action
             android:id="@+id/action_settingFragment_to_reportListFragment"
             app:destination="@id/reportListFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_blockListFragment"
+            app:destination="@id/blockListFragment" />
     </fragment>
     <fragment
         android:id="@+id/deleteAccountFragment"
@@ -155,4 +158,9 @@
         android:name="com.baek.untitledproject.ui.setting.report.ReportListFragment"
         android:label="fragment_report_list"
         tools:layout="@layout/fragment_report_list" />
+    <fragment
+        android:id="@+id/blockListFragment"
+        android:name="com.baek.untitledproject.ui.setting.block.BlockListFragment"
+        android:label="fragment_block_list"
+        tools:layout="@layout/fragment_block_list" />
 </navigation>
