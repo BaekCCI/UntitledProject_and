@@ -46,7 +46,8 @@ class LoginFragment : Fragment() {
         observeLoginState()
 
         binding.findAccountBtn.setOnClickListener {
-            //TODO: 계정 찾기
+            val action = LoginFragmentDirections.actionLoginFragmentToFindAccountFragment()
+            findNavController().navigate(action)
         }
     }
 
