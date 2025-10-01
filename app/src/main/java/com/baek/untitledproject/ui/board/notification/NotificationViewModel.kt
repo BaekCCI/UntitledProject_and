@@ -27,7 +27,7 @@ class NotificationViewModel @Inject constructor(
         viewModelScope.launch {
             _notifications.value = Result.Loading
             if (userId == null) {
-                _notifications.value = Result.None
+                _notifications.value = Result.Error("로그인 후 이용해주세요")
                 return@launch
             }
             val result = notificationRepository.getNotifications(userId)

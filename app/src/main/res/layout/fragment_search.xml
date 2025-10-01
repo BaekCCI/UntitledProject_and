@@ -17,23 +17,22 @@
 
         <ImageButton
             android:id="@+id/backBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:background="@null"
-            android:src="@drawable/ic_chevron_left" />
+            android:src="@drawable/ic_chevron_left_active" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="47dp"
+            android:layout_height="wrap_content"
             android:background="@drawable/rounded_search_bg"
             android:gravity="center_vertical"
-            android:padding="11dp">
+            android:padding="12dp">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_search" />
 
             <EditText
@@ -44,14 +43,16 @@
                 android:hint="제목, 단체명"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
+                android:paddingStart="8dp"
+                android:textAppearance="@style/Body2_16regular"
                 android:textColor="@color/gray_700"
-                android:textColorHint="@color/gray_500"
-                android:textSize="16sp" />
+                android:textColorHint="@color/gray_500" />
         </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingHorizontal="16dp" />
 </LinearLayout>

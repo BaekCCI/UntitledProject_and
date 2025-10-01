@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_alert"
-        android:icon="@drawable/ic_alarm_off"
-        android:title="알림"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
         android:title="검색"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_alert"
+        android:icon="@drawable/ic_alarm_off"
+        android:title="알림"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_setting"

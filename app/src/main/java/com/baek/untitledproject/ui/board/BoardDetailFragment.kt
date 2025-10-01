@@ -70,11 +70,9 @@ class BoardDetailFragment : Fragment() {
         setupDialogs()
         setupBottomBtn()
         observeDeleteState()
-        //toolbar 적용
-        val navController = findNavController()
 
-        binding.detailToolbar.setNavigationOnClickListener {
-            navController.popBackStack()
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

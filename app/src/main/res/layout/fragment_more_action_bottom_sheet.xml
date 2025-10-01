@@ -13,24 +13,22 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="14dp"
         android:background="@drawable/rounded_bg"
         android:backgroundTint="@color/gray_50"
-        android:orientation="vertical"
-        android:padding="18dp">
+        android:orientation="vertical">
 
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editBtn"
+            style="@style/Widget.Untitled.Button.Base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@null"
+            android:backgroundTint="@android:color/transparent"
             android:text="수정하기"
+            android:textAppearance="@style/Body1_18semibold"
             android:textColor="@color/gray_700"
-            android:textSize="18sp"
-            app:icon="@drawable/ic_pen"
+            app:icon="@drawable/ic_pen_white"
             app:iconGravity="textStart"
             app:iconSize="24dp"
             app:iconTint="@color/gray_700" />
@@ -38,18 +36,17 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginBottom="10dp"
             android:background="@color/gray_300" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteBtn"
+            style="@style/Widget.Untitled.Button.Base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:backgroundTint="@null"
+            android:backgroundTint="@android:color/transparent"
             android:text="삭제하기"
+            android:textAppearance="@style/Body1_18semibold"
             android:textColor="@color/accent_red"
-            android:textSize="18sp"
             app:icon="@drawable/ic_trash"
             app:iconGravity="textStart"
             app:iconSize="24dp"
@@ -63,7 +60,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:text="닫기"
-        android:textColor="@color/gray_500"
-        android:textSize="18sp" />
+        android:textAppearance="@style/Body1_18medium"
+        android:textColor="@color/gray_500" />
 
 </LinearLayout>

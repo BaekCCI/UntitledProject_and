@@ -67,7 +67,7 @@ class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
         fun bind(item: PostSummary) = with(binding) {
             organizationTxt.text = item.organization
             titleTxt.text = item.title
-            recruitStateTxt.text = item.status
+            recruitStateTxt.text = if (item.status == "recruiting") "모집 중" else "모집완료"
             Glide.with(binding.thumbnailImg)
                 .load(item.imgUri)
                 .transform(CenterCrop(), RoundedCorners(radiusPx))
@@ -81,8 +81,8 @@ class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
 
     //검색중/완료에 따라서 SearchFragment에서 호출
     private var isSearching: Boolean = true
-    fun setSearchingMode(searching:Boolean){
-        if(isSearching == searching) return
+    fun setSearchingMode(searching: Boolean) {
+        if (isSearching == searching) return
         isSearching = searching
         notifyDataSetChanged()
     }
@@ -99,6 +99,7 @@ class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
                 val b = ItemSearchBoardLayoutBinding.inflate(inf, parent, false)
                 SearchingVH(b, onItemClick)
             }
+
             else -> {
                 val b = ItemBoardLayoutBinding.inflate(inf, parent, false)
                 ResultVH(b, onItemClick)
@@ -110,7 +111,7 @@ class SearchRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
         val item = getItem(position)
         when (holder) {
             is SearchingVH -> holder.bind(item)
-            is ResultVH    -> holder.bind(item)
+            is ResultVH -> holder.bind(item)
         }
     }
 }

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    android:paddingVertical="28dp">
+    android:paddingVertical="24dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,15 +17,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:textColor="@color/gray_500"
-            android:textSize="14dp" />
+            android:textAppearance="@style/Caption_14semibold"
+            android:textColor="@color/gray_500" />
 
         <TextView
             android:id="@+id/timeTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/gray_500"
-            android:textSize="14dp" />
+            android:textAppearance="@style/Caption_14regular"
+            android:textColor="@color/gray_500" />
 
     </LinearLayout>
 
@@ -33,15 +33,14 @@
         android:id="@+id/titleTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/gray_700"
-        android:textSize="18dp" />
+        android:layout_marginBottom="8dp"
+        android:textAppearance="@style/Body1_18semibold" />
 
     <TextView
         android:id="@+id/contentTxt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray_600"
-        android:textSize="16dp" />
+        android:textAppearance="@style/Body1_16regular"
+        android:textColor="@color/gray_600" />
 
 </LinearLayout>

@@ -5,14 +5,13 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
     android:paddingVertical="20dp">
 
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
@@ -20,10 +19,9 @@
             android:id="@+id/organizationTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
             android:text="category"
-            android:textColor="@color/gray_500"
-            android:textSize="14sp" />
+            android:textAppearance="@style/Caption_14medium"
+            android:textColor="@color/gray_500" />
 
         <TextView
             android:id="@+id/titleTxt"
@@ -31,16 +29,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:text="title"
-            android:textColor="@color/gray_700"
-            android:textSize="16sp" />
+            android:textAppearance="@style/Body2_16semibold"
+            android:textColor="@color/gray_700" />
 
         <TextView
             android:id="@+id/recruitStateTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="recuite state"
-            android:textColor="@color/gray_400"
-            android:textSize="14sp" />
+            android:textAppearance="@style/Caption_14regular"
+            android:textColor="@color/gray_400" />
 
     </LinearLayout>
 
