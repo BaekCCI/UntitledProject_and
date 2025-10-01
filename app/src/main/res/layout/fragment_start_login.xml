@@ -34,7 +34,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_action_container_bg"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
         android:paddingVertical="20dp">
@@ -44,19 +44,22 @@
             style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:text="시작하기" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이미 가입하신 적이 있으신가요?" />
+            android:text="이미 가입하신 적이 있으신가요?"
+            android:textAppearance="@style/Caption_14medium" />
 
         <TextView
-            android:layout_marginBottom="100dp"
             android:id="@+id/loginBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="4dp"
             android:text="로그인하기"
+            android:textAppearance="@style/Caption_14medium"
             android:textColor="@color/point_skyblue" />
     </LinearLayout>
 

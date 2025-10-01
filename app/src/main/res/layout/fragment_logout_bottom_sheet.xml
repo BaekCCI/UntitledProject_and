@@ -15,14 +15,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="로그아웃 하시겠습니까?" />
+        android:text="로그아웃 하시겠습니까?"
+        android:textAppearance="@style/SubHeadline_20semibold" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutBtn"
         style="@style/Widget.Untitled.Button.StateToggle"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_marginBottom="24dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:text="로그아웃" />
 
     <com.google.android.material.button.MaterialButton
@@ -31,8 +32,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
-        android:text="닫기"
-        android:textColor="@color/gray_500"
-        android:textSize="18sp" />
+        android:text="취소"
+        android:textAppearance="@style/Body1_18medium"
+        android:textColor="@color/gray_600" />
 
 </LinearLayout>

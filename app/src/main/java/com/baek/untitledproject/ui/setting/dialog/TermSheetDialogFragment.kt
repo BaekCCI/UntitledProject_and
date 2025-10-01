@@ -10,7 +10,6 @@ import androidx.core.os.bundleOf
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentTermSheetDialogBinding
 import com.baek.untitledproject.domain.utils.TermsType
-import com.baek.untitledproject.ui.MainActivity
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

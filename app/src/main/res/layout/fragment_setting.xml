@@ -28,14 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="제이콥"
                 android:textAppearance="@style/Headline_24semibold" />
 
             <TextView
                 android:id="@+id/organizationTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="전북대학교 커뮤니케이션디자인"
                 android:textAppearance="@style/Body2_16regular"
                 android:textColor="@color/gray_600" />
 
@@ -43,7 +41,6 @@
                 android:id="@+id/studentIdTxt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="200000000"
                 android:textAppearance="@style/Body2_16regular"
                 android:textColor="@color/gray_600" />
         </LinearLayout>

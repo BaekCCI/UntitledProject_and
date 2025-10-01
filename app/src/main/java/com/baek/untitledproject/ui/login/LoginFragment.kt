@@ -44,6 +44,10 @@ class LoginFragment : Fragment() {
         watchPasswordTextChanged()
         setLoginBtn()
         observeLoginState()
+
+        binding.findAccountBtn.setOnClickListener {
+            //TODO: 계정 찾기
+        }
     }
 
     private fun setEmailInputFormat() {

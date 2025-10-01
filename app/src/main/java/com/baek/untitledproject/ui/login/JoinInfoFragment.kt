@@ -56,7 +56,6 @@ class JoinInfoFragment : Fragment() {
         setupAgreementCheckBox()
         setupTermSheet()
         setupCompleteBtn()
-
         observeJoinState()
     }
 
