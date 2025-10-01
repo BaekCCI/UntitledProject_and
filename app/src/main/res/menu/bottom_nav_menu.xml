@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
-        android:id="@+id/boardFragment"
-        android:title="홈" />
+
     <item
         android:id="@+id/myRecruitsFragment"
-        android:title="나의공고" />
+        android:icon="@drawable/ic_party"
+        android:title="내 모임" />
+    <item
+        android:id="@+id/boardFragment"
+        android:icon="@drawable/ic_home"
+        android:title="홈" />
     <item
         android:id="@+id/messageFragment"
+        android:icon="@drawable/ic_chat"
         android:title="쪽지" />
-    <item
-        android:id="@+id/myPageFragment"
-        android:title="마이페이지" />
 
 </menu>

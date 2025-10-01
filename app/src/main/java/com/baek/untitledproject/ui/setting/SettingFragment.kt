@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.databinding.FragmentSettingBinding
 import com.baek.untitledproject.domain.data.User
+import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.TermsType
 import com.baek.untitledproject.ui.MainActivity
 import com.baek.untitledproject.ui.setting.dialog.TermSheetDialogFragment
@@ -64,6 +66,10 @@ class SettingFragment : Fragment() {
                 settingViewModel.userData.collect { user ->
                     if (user == null) {
                         showGuestUi()
+                        binding.settingScroll.doOnNextLayout {
+                            binding.settingScroll.scrollTo(0, 0)
+                        }
+
                     } else {
                         showLoggedInUi(user)
                     }

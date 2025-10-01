@@ -118,6 +118,12 @@
         <item name="cornerSize">0dp</item>
     </style>
 
+
+    <style name="ShapeAppearance.Untitled.ActiveIndicator"
+        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/point_skyblue_tinted</item>
+    </style>
+
     <!-- textStyle -->
     <!-- headline -->
     <style name="Headline_28bold">

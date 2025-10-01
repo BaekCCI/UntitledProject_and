@@ -8,6 +8,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
@@ -33,6 +34,8 @@ class BoardFragment : Fragment() {
 
     private lateinit var boardAdapter: BoardRVAdapter
 
+    private var lastBackPressed = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -54,6 +57,23 @@ class BoardFragment : Fragment() {
         observeBoardList()
         setToolbar()
         setupWriteBoardBtn()
+        setupDoubleBackToExit()
+    }
+
+    private fun setupDoubleBackToExit(){
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val now = System.currentTimeMillis()
+                    if (now - lastBackPressed <= 2000L) {
+                        requireActivity().finish()
+                    } else {
+                        lastBackPressed = now
+                    }
+                }
+            }
+        )
     }
 
     //위로 당겨서 새로고침

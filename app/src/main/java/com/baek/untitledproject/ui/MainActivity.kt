@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val sessionViewModel: SessionViewModel by viewModels()
 
     private val rootDestinations = setOf(
-        R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment
+        R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment
     )
 
     private val navController by lazy {

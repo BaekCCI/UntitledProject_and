@@ -44,11 +44,6 @@
         android:label="fragment_message"
         tools:layout="@layout/fragment_message" />
     <fragment
-        android:id="@+id/myPageFragment"
-        android:name="com.baek.untitledproject.ui.mypage.MyPageFragment"
-        android:label="fragment_mypage"
-        tools:layout="@layout/fragment_mypage" />
-    <fragment
         android:id="@+id/boardDetailFragment"
         android:name="com.baek.untitledproject.ui.board.BoardDetailFragment"
         android:label="fragment_board_detail"
