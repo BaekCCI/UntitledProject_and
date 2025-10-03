@@ -37,13 +37,15 @@ class CompleteApplyFragment : Fragment() {
         val clearGraph = navOptions {
             popUpTo(R.id.nav_graph) { inclusive = true }
             launchSingleTop = true
+            anim { enter = 0; exit = 0; popEnter = 0; popExit = 0 }
         }
         binding.toHomeBtn.setOnClickListener {
             rootNavController.navigate(R.id.boardFragment, null, clearGraph)
             bottomNav?.selectedItemId = R.id.boardFragment
         }
         binding.toMyApplicationBtn.setOnClickListener {
-            rootNavController.navigate(R.id.myRecruitsFragment, null, clearGraph)
+            rootNavController.navigate(R.id.boardFragment, null, clearGraph)
+            rootNavController.navigate(R.id.myRecruitsFragment)
             bottomNav?.selectedItemId = R.id.myRecruitsFragment
         }
     }
