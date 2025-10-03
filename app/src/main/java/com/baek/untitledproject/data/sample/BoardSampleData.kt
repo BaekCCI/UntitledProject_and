@@ -142,21 +142,8 @@ object BoardSampleData {
         )
     )
 
-    val images = listOf(
-        PostImageResponse(
-            "https://cdn.dailyvet.co.kr/wp-content/uploads/2024/05/15231647/20240515ceva_experts4.jpg",
-            0
-        ),
-        PostImageResponse(
-            "https://i.namu.wiki/i/d1A_wD4kuLHmOOFqJdVlOXVt1TWA9NfNt_HA0CS0Y_N0zayUAX8olMuv7odG2FiDLDQZIRBqbPQwBSArXfEJlQ.webp",
-            1
-        ),
-        PostImageResponse(
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT74p0-GFNquBzzGLN9SazH22Wrus46aPPqYQ&s",
-            2
-        ),
 
-    )
+    
     val interviewSlots = listOf(
         InterviewSlotResponse(
             interview_date = Timestamp(Date(2025 - 1900, 7, 1)), // 2025-08-01

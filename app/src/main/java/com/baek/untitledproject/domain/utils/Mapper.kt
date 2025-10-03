@@ -44,6 +44,10 @@ fun Long.toLocalDate():LocalDate{
         .toLocalDate()
 }
 
+fun LocalDate.toLong():Long{
+    return this.atStartOfDay(KST).toInstant().toEpochMilli()
+}
+
 fun Notification.timeText(now: Long): String {
     val diff = (now - createdAt).coerceAtLeast(0)
     val min = diff / 60_000

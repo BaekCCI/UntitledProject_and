@@ -11,6 +11,7 @@ import androidx.core.net.toUri
 import com.baek.untitledproject.common.utils.toTimestamp
 import com.baek.untitledproject.data.model.CustomQuestionResponse
 import com.baek.untitledproject.data.model.InterviewSlotResponse
+import com.baek.untitledproject.data.model.PostImageResponse
 import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.data.model.mapper.separate
 import com.baek.untitledproject.data.model.mapper.toDomain
@@ -28,6 +29,7 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageException
 import com.google.firebase.storage.storage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -163,7 +165,7 @@ object PostRemote {
                     val path = "post_images/$postId/$imgId.jpg"
                     val storageRef = storage.reference.child(path)
 
-                    storageRef.putFile(uri).await()
+                    storageRef.putFile(uri.imageUri).await()
                     uploadedPaths += path
                     val imgUrl = storageRef.downloadUrl.await().toString()
                     imgRef to mapOf(
@@ -315,14 +317,17 @@ object PostRemote {
 
         //이미지 조회: 서버 정렬 대신 직접 정렬로 우회(인덱스가 없어서 orderBy 안됨..)
         val imagesDef = async {
-            db.collection("post_images")
+            val docs = db.collection("post_images")
                 .whereEqualTo("post_id", postId)
-                .get().await()
+                .get()
+                .await()
                 .documents
-                .sortedBy { it.getLong("image_order") ?: 0L }
-                .mapNotNull { it.getString("image_url")?.toUri() }
-        }
 
+            docs.mapNotNull { doc ->
+                val dto = doc.toObject(PostImageResponse::class.java)
+                dto?.copy(image_id = dto.image_id.ifBlank { doc.id })
+            }.sortedBy { it.image_order }
+        }
 
         //----- 조회 결과 -----
         val imageUris = imagesDef.await()
@@ -354,34 +359,46 @@ object PostRemote {
         val imageJob = async {
             if (!post.isImageChanged) return@async
 
-            val prevImages = db.collection("post_images")
+            val prevDocs = db.collection("post_images")
                 .whereEqualTo("post_id", postId)
-                .get()
-                .await()
-                .documents
+                .get().await().documents
+            val prevById = prevDocs.associateBy { it.id }
 
-            prevImages.map { doc ->
+            val keepIds: Set<String> = post.imageUris.mapNotNull { it.imageId }.toSet()
+
+            val toDelete = prevDocs.filter { it.id !in keepIds }
+
+            //삭제
+            toDelete.map { doc ->
                 async {
                     val imageId = doc.id
                     val path = "post_images/$postId/$imageId.jpg"
-                    runCatching { storage.reference.child(path).delete().await() }
+                    runCatching {
+                        storage.reference.child(path).delete().await()
+                    }.onFailure { e ->
+                        val code = (e as? StorageException)?.errorCode
+                        if (code != StorageException.ERROR_OBJECT_NOT_FOUND) throw e
+                    }
                 }
             }.awaitAll()
 
+            //신규 업로드
             val uploadedPaths = mutableListOf<String>()
 
-            val imgDocs: List<Pair<DocumentReference, Map<String, Any>>> = try {
-                post.imageUris.mapIndexed { index, uri ->
+            val newDocs = try {
+                post.imageUris.mapIndexedNotNull { index, postImage ->
+                    if (!postImage.imageId.isNullOrBlank()) return@mapIndexedNotNull null
+
                     async {
                         val imgRef = db.collection("post_images").document()
                         val imgId = imgRef.id
-
                         val path = "post_images/$postId/$imgId.jpg"
-                        val storageRef = storage.reference.child(path)
 
-                        storageRef.putFile(uri).await()
+                        val storageRef = storage.reference.child(path)
+                        storageRef.putFile(postImage.imageUri).await()
                         uploadedPaths += path
                         val imgUrl = storageRef.downloadUrl.await().toString()
+
                         imgRef to mapOf(
                             "image_id" to imgId,
                             "post_id" to postId,
@@ -390,20 +407,28 @@ object PostRemote {
                             "created_at" to now
                         )
                     }
+
                 }.awaitAll()
-            } catch (e: Exception) {
-                uploadedPaths.forEach { p ->
-                    runCatching {
-                        storage.reference.child(p).delete().await()
-                    }
-                }
+            }catch (e: Exception) {
+                // 업로드 중 실패 → 이미 올린 파일 롤백
+                uploadedPaths.forEach { p -> runCatching { storage.reference.child(p).delete().await() } }
                 throw e
             }
+
             db.runBatch { b ->
-                prevImages.forEach { b.delete(it.reference) }      // 삭제
-                imgDocs.forEach { (ref, data) -> b.set(ref, data) } // 생성 (merge 불필요)
+
+                toDelete.forEach { b.delete(it.reference) }
+
+                post.imageUris.forEachIndexed { index, item ->
+                    val id = item.imageId ?: return@forEachIndexed
+                    val ref = prevById[id]?.reference ?: return@forEachIndexed
+                    b.set(ref, mapOf("image_order" to index), SetOptions.merge())
+                }
+
+                newDocs.forEach { (ref, data) -> b.set(ref, data) }
             }.await()
         }
+
         awaitAll(postJob, imageJob)
         postId
     }

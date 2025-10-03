@@ -93,7 +93,7 @@ abstract class InfoWriteBaseFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.images.collect { uris ->
                     Log.d("InfoWriteBaseFragment", uris.toString())
-                    renderImages(uris)
+                    renderImages(uris.map{it.imageUri})
                 }
             }
         }

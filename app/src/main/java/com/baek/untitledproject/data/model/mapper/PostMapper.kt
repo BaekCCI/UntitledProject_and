@@ -1,16 +1,19 @@
 package com.baek.untitledproject.data.model.mapper
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.baek.untitledproject.common.utils.toLocalDate
 import com.baek.untitledproject.data.model.InterviewSlotResponse
 import com.baek.untitledproject.data.model.PostResponse
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.common.utils.toTimestamp
 import com.baek.untitledproject.data.model.CustomQuestionResponse
+import com.baek.untitledproject.data.model.PostImageResponse
 import com.baek.untitledproject.domain.data.MyRecruitSummary
 import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.data.CustomQuestion
 import com.baek.untitledproject.domain.data.InterviewSlot
+import com.baek.untitledproject.domain.data.PostImage
 import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.TimeSlot
@@ -180,21 +183,26 @@ fun PostResponse.toPostRead(
 }
 
 fun PostResponse.toPostWrite(
-    images: List<Uri>
+    images: List<PostImageResponse>
 ): PostWrite {
     return PostWrite(
         postId = post_id,
-
         title = title,
         organization = organization,
         content = content,
         recruitmentStart = recruitment_start.toLocalDate(),
         recruitmentEnd = recruitment_end?.toLocalDate(),
-        imageUris = images,
+        imageUris = images.map { it.toPostImage() },
         hasInterview = has_interview,
         interviewLocation = interview_location,
+    )
+}
 
-        )
+fun PostImageResponse.toPostImage(): PostImage {
+    return PostImage(
+        imageId = image_id,
+        imageUri = image_url.toUri()
+    )
 }
 
 fun List<InterviewSlotResponse>.getEarliestDate(): LocalDate? {
@@ -234,10 +242,10 @@ fun PostWrite.toResponse(id: String, user: User, now: Timestamp): PostResponse {
     )
 }
 
-fun InterviewSlotResponse.toDomain():InterviewSlot{
+fun InterviewSlotResponse.toDomain(): InterviewSlot {
     return InterviewSlot(
         slotId = slot_id!!,
-        postId=post_id!!,
+        postId = post_id!!,
         interviewDate = interview_date!!.toLocalDate(),
         interviewTime = interview_time.toLocalTime(),
         maxCapacity = max_capacity,
@@ -246,9 +254,9 @@ fun InterviewSlotResponse.toDomain():InterviewSlot{
     )
 }
 
-fun InterviewSlot.toResponse():InterviewSlotResponse{
+fun InterviewSlot.toResponse(): InterviewSlotResponse {
     return InterviewSlotResponse(
-        slot_id = if(slotId.isEmpty()) null else slotId,
+        slot_id = if (slotId.isEmpty()) null else slotId,
         post_id = postId,
         interview_date = interviewDate.toTimestamp(),
         interview_time = interviewTime.toString(),
@@ -261,6 +269,7 @@ fun InterviewSlot.toResponse():InterviewSlotResponse{
 fun String.toLocalTime(): LocalTime {
     return LocalTime.parse(this, DateTimeFormatter.ofPattern("HH:mm"))
 }
+
 fun TimeSlot.separate(step: Int): List<String> {
     val list = mutableListOf<String>()
     val fmt = DateTimeFormatter.ofPattern("HH:mm")
