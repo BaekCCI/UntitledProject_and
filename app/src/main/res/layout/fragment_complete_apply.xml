@@ -10,22 +10,24 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="신청서가 제출되었어요!" />
+            android:layout_marginBottom="10dp"
+            android:text="신청서가 제출되었어요!"
+            android:textAppearance="@style/Headline_24semibold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="모집자에게 신청이 전달되었어요" />
+            android:text="모집자에게 신청이 전달되었어요\n합격 발표 알림을 기다려주세요"
+            android:textAppearance="@style/Body1_16regular"
+            android:textColor="@color/gray_500" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="합격 발표 알림을 기다려주세요" />
 
         <LinearLayout
             android:layout_width="match_parent"

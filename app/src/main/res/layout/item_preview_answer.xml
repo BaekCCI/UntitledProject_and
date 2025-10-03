@@ -18,7 +18,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="asdfsdfasdfdsa?" />
+            android:textAppearance="@style/Body1_18semibold"
+            android:textColor="@color/gray_800" />
 
         <ImageView
             android:id="@+id/expendBtn"
@@ -39,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:maxLines="2" />
+        android:maxLines="2"
+        android:textAppearance="@style/Body2_16medium" />
 
 </LinearLayout>

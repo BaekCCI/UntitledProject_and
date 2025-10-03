@@ -33,6 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
+        android:padding="0dp"
         android:text="계속 작성하기"
         android:textAppearance="@style/Body1_18medium"
         android:textColor="@color/gray_600" />
