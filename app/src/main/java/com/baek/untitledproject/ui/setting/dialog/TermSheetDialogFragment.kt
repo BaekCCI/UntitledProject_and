@@ -2,6 +2,7 @@ package com.baek.untitledproject.ui.setting.dialog
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,6 +45,7 @@ class TermSheetDialogFragment : BottomSheetDialogFragment() {
         val content = requireContext().resources.openRawResource(type.resId)
             .bufferedReader()
             .use { it.readText() }
+        Log.d("TermSheetDialogFragment","${type.title}-${type.resId}:\n$content")
         binding.contentTxt.text = content
         binding.closeBtn.setOnClickListener { dismiss() }
     }
@@ -66,7 +68,7 @@ class TermSheetDialogFragment : BottomSheetDialogFragment() {
             state = BottomSheetBehavior.STATE_EXPANDED
             skipCollapsed = true
             isFitToContents = true
-            isDraggable = true
+            isDraggable = false
         }
 
         val bottomSheet =
