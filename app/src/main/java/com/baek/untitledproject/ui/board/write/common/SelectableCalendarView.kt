@@ -109,11 +109,31 @@ class SelectableCalendarView @JvmOverloads constructor(
 
     private fun applyStyle(container: DayViewContainer, date: LocalDate) {
         when (date.dayOfWeek) {
-            DayOfWeek.SATURDAY -> container.dayText.setTextColor("#007AFF".toColorInt())
-            DayOfWeek.SUNDAY -> container.dayText.setTextColor("#D93D3D".toColorInt())
-            else -> container.dayText.setTextColor(ContextCompat.getColor(context, R.color.gray_700))
+            DayOfWeek.SATURDAY -> container.dayText.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.chip_blue_text
+                )
+            )
+
+            DayOfWeek.SUNDAY -> container.dayText.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.chip_red_text
+                )
+            )
+
+            else -> container.dayText.setTextColor(
+                ContextCompat.getColor(
+                    context,
+                    R.color.gray_700
+                )
+            )
         }
-        container.today.isVisible = (LocalDate.now() == date)
+        if(date == LocalDate.now()){
+            container.today.visibility = View.VISIBLE
+            container.dayText.setTextColor(ContextCompat.getColor(context, R.color.point_skyblue))
+        }
         if (selectedDate == date) {
             container.selectedBg.isVisible = true
             container.dayText.setTextColor(ContextCompat.getColor(context, R.color.white))

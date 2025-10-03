@@ -7,36 +7,6 @@
     android:orientation="vertical"
     tools:context=".ui.board.write.InterviewScheduleFragment">
 
-    <!--ToolBar-->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="10dp">
-
-        <!-- 아이콘으로 바꿀 예정-->
-        <ImageView
-            android:id="@+id/cancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_close_black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="면접 일정"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -48,17 +18,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingVertical="16dp">
 
             <com.baek.untitledproject.ui.board.write.common.SelectableCalendarView
                 android:id="@+id/calendarWidget"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp" />
 
             <LinearLayout
                 android:id="@+id/initialLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -66,20 +39,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
-                    android:text="날짜를 선택하세요" />
+                    android:text="날짜를 선택하세요"
+                    android:textAppearance="@style/Body2_16medium" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
                     android:gravity="center"
-                    android:text="공고 작성을 완료한 후에도\n면접일정을 설정할 수 있어요" />
+                    android:text="공고 작성을 완료한 후에도\n면접일정을 설정할 수 있어요"
+                    android:textAppearance="@style/Body1_16medium" />
 
                 <TextView
                     android:id="@+id/doNextBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="16dp"
                     android:text="다음에 하기"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/point_skyblue" />
 
             </LinearLayout>
@@ -97,7 +73,6 @@
                     android:layout_marginVertical="16dp"
                     android:background="@color/gray_50" />
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -114,6 +89,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
                             android:gravity="center_vertical"
                             android:orientation="horizontal">
 
@@ -121,7 +97,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="4dp"
-                                android:text="면접 시간" />
+                                android:text="면접 시간"
+                                android:textAppearance="@style/Body1_18semibold" />
 
                             <ImageView
                                 android:id="@+id/toolTipBtn"
@@ -133,11 +110,13 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="한 면접을 진행하는 시간" />
+                            android:text="한 면접을 진행하는 시간"
+                            android:textAppearance="@style/Caption_14medium"
+                            android:textColor="@color/gray_600" />
                     </LinearLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="154dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rounded_bg"
                         android:backgroundTint="@color/gray_50"
@@ -168,12 +147,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="4dp"
-                                android:text="30" />
+                                android:text="30"
+                                android:textAppearance="@style/Body1_18medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="분" />
+                                android:text="분"
+                                android:textAppearance="@style/Body1_18medium" />
                         </LinearLayout>
 
                         <ImageView
@@ -205,17 +186,20 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="4dp"
-                            android:text="면접 인원" />
+                            android:layout_marginBottom="4dp"
+                            android:text="면접 인원"
+                            android:textAppearance="@style/Body1_18semibold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="한 면접에 참여하는 지원자 수" />
+                            android:text="한 면접에 참여하는 지원자 수"
+                            android:textAppearance="@style/Caption_14medium"
+                            android:textColor="@color/gray_600" />
                     </LinearLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="154dp"
+                        android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:background="@drawable/rounded_bg"
                         android:backgroundTint="@color/gray_50"
@@ -247,12 +231,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginEnd="4dp"
-                                android:text="1" />
+                                android:text="1"
+                                android:textAppearance="@style/Body1_18medium" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="명" />
+                                android:text="명"
+                                android:textAppearance="@style/Body1_18medium" />
                         </LinearLayout>
 
                         <ImageView

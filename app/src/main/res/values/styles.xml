@@ -38,6 +38,7 @@
         <item name="android:padding">0dp</item>
         <item name="android:textSize">18sp</item>
         <item name="backgroundTint">@color/gray_100</item>
+        <item name="android:textAppearance">@style/Body1_18medium</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -100,9 +101,26 @@
 
 
         <item name="errorTextColor">@color/accent_red</item>
+        <item name="errorTextAppearance">@style/Caption_14medium</item>
         <item name="boxStrokeErrorColor">@color/accent_red</item>
         <item name="errorIconDrawable">@null</item>
     </style>
+
+    <style name="Widget.Untitled.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textColorHint">@color/gray_500</item>
+        <item name="hintTextAppearance">@style/Body2_16medium</item>
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textAppearance">@style/Body2_16medium</item>
+    </style>
+
+
+    <!-- DatePicker 스타일 -->
+    <style name="Widget.Untitled.DatePicker" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="android:background">@color/white</item>
+        <item name="colorAccent">@color/point_skyblue</item>
+        <item name="colorPrimary">@color/point_skyblue</item>
+    </style>
+
 
     <!--이용약관용 다이얼로그 스타일-->
     <style name="ThemeOverlay.Untitled.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
@@ -120,8 +138,7 @@
     </style>
 
 
-    <style name="ShapeAppearance.Untitled.ActiveIndicator"
-        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+    <style name="ShapeAppearance.Untitled.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/point_skyblue_tinted</item>
     </style>
 

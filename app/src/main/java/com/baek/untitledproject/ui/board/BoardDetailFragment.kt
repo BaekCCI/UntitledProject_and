@@ -117,6 +117,7 @@ class BoardDetailFragment : Fragment() {
         //면접 여부에 따른 ui 설정
         if (post.hasInterview) {
             interviewChip.visibility = View.VISIBLE
+            interviewLayout.visibility = View.VISIBLE
             //면접 일정 UI 설정
             if (post.interviewStart != null && post.interviewEnd != null) {
                 interviewScheduleTxt.text =

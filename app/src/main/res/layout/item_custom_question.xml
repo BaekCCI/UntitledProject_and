@@ -1,44 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/questionCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="16dp">
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/questionCard"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/questionInputLayout"
+        style="@style/Widget.Untitled.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        app:cardCornerRadius="10dp"
-        app:strokeColor="#C7CEDE"
-        app:strokeWidth="1dp">
+        app:endIconDrawable="@drawable/ic_remove_circle_filled_inset"
+        app:endIconMode="custom"
+        app:endIconTint="@color/accent_red"
+        app:hintEnabled="false">
 
-        <LinearLayout
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/questionInput"
+            style="@style/Widget.Untitled.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="18dp">
+            android:backgroundTint="@null"
+            android:hint="자기 소개 300자를 작성해주세요"
+            android:inputType="textMultiLine" />
 
-            <EditText
-                android:id="@+id/questionInput"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:hint="자기소개 300자를 작성해주세요"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/gray_black" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageButton
-                android:id="@+id/removeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:src="@drawable/ic_remove_circle_filled" />
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

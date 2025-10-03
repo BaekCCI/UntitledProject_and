@@ -15,14 +15,16 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="지금까지 작성한 내용이 저장되지 않습니다\n나가시겠어요?" />
+        android:text="지금까지 작성한 내용이 저장되지 않습니다\n나가시겠어요?"
+        android:textAppearance="@style/SubHeadline_20semibold"
+        android:textColor="@color/gray_black" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/exitBtn"
         style="@style/Widget.Untitled.Button.StateToggle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="14dp"
         android:text="중단하고 나가기" />
 
     <com.google.android.material.button.MaterialButton
@@ -31,7 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
+        android:paddingVertical="0dp"
         android:text="계속 작성하기"
+        android:textAppearance="@style/Body1_18medium"
         android:textColor="@color/gray_600" />
 
 </LinearLayout>

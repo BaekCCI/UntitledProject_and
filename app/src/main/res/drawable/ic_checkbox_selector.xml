@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:drawable="@drawable/ic_checkbox_filled" android:state_checked="true" />
-    <item android:drawable="@drawable/ic_checkbox_empty" />
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+android:insetRight="16dp">   <!-- ← 오른쪽 여백 추가 -->
+<selector>
+    <item android:drawable="@drawable/ic_checkbox_filled" android:state_checked="true"/>
+    <item android:drawable="@drawable/ic_checkbox_empty"/>
 </selector>
+</inset>

@@ -7,22 +7,30 @@
     android:orientation="vertical"
     tools:context=".ui.board.write.PostCompleteFragment">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="20dp"
+        android:text="모입이 등록되었어요!"
+        android:textAppearance="@style/Headline_24semibold"
+        android:textColor="@color/gray_800" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:text="모집 기간동안 공고가 노출돼요\n작성한 내용은 공고 현황 탭에서 관리할 수 있어요"
+        android:textAppearance="@style/Body1_16regular"
+        android:textColor="@color/gray_500" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="공고가 등록되었어요!" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="모집 기간동안 공고가 노출돼요\n작성한 내용은 공고 현황 탭에서 관리할 수 있어요" />
 
         <ImageView
             android:layout_width="215dp"
@@ -32,28 +40,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="162dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        android:background="@drawable/bottom_action_container_bg"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toMyPostBtn"
+            style="@style/Widget.Untitled.Button.Base"
             android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1"
+            android:backgroundTint="@color/gray_50"
             android:text="나의 공고 페이지"
-            android:textColor="@color/white"
-            app:backgroundTint="@null" />
+            android:textColor="@color/gray_700" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/toHomeBtn"
             style="@style/Widget.Untitled.Button.StateToggle"
             android:layout_width="0dp"
-            android:layout_height="56dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="홈으로" />
     </LinearLayout>
