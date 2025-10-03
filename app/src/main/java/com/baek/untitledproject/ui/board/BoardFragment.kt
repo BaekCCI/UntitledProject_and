@@ -8,6 +8,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.activityViewModels
@@ -15,6 +17,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentBoardBinding
@@ -32,6 +35,8 @@ class BoardFragment : Fragment() {
     private val viewModel: BoardViewModel by activityViewModels()
 
     private lateinit var boardAdapter: BoardRVAdapter
+
+    private var lastBackPressed = 0L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +59,23 @@ class BoardFragment : Fragment() {
         observeBoardList()
         setToolbar()
         setupWriteBoardBtn()
+        setupDoubleBackToExit()
+    }
+
+    private fun setupDoubleBackToExit() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val now = System.currentTimeMillis()
+                    if (now - lastBackPressed <= 2000L) {
+                        requireActivity().finish()
+                    } else {
+                        lastBackPressed = now
+                    }
+                }
+            }
+        )
     }
 
     //위로 당겨서 새로고침
@@ -77,8 +99,13 @@ class BoardFragment : Fragment() {
             findNavController().navigate(action)
         }
         binding.boardRv.apply {
-            adapter = boardAdapter
-            layoutManager = LinearLayoutManager(requireContext())
+            adapter = this@BoardFragment.boardAdapter
+            if (itemDecorationCount == 0) {
+                val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+                ContextCompat.getDrawable(context, R.drawable.divider_line)
+                    ?.let(divider::setDrawable)
+                addItemDecoration(divider)
+            }
         }
     }
 
@@ -90,6 +117,12 @@ class BoardFragment : Fragment() {
                 viewModel.boardList.collect { state ->
                     when (state) {
                         is Result.Success -> {
+                            val list = state.data
+                            binding.emptyView.visibility =
+                                if (list.isEmpty()) View.VISIBLE else View.GONE
+                            binding.boardRv.visibility =
+                                if (list.isEmpty()) View.GONE else View.VISIBLE
+
                             boardAdapter.submitList(state.data)
                             binding.swipeRefresh.isRefreshing = false
                         }
@@ -176,7 +209,7 @@ class BoardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setToolbar(rootVisible = true, title = "전북대학교 구인공고")
+        (activity as? MainActivity)?.setToolbar(rootVisible = true, title = "전북대학교 모임 찾기")
     }
 
     override fun onDestroyView() {

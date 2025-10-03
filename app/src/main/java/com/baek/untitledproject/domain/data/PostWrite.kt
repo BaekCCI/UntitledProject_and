@@ -13,7 +13,7 @@ data class PostWrite(
     val content: String? = null, //모집 내용 상세 설명
     val recruitmentStart: LocalDate? = null, //모집 시작일
     val recruitmentEnd: LocalDate? = null, //모집 마감일
-    val imageUris: List<Uri> = emptyList(), //업로드한 이미지
+    val imageUris: List<PostImage> = emptyList(), //업로드한 이미지
     var isImageChanged : Boolean = false,
 
     val hasInterview: Boolean? = null, //면접 진행 여부

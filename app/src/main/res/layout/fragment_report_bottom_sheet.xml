@@ -14,12 +14,12 @@
         android:id="@+id/reportBtn"
         style="@style/Widget.Untitled.Button.Base"
         android:layout_width="match_parent"
-        android:layout_height="58dp"
-        android:layout_marginBottom="28dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="14dp"
         android:backgroundTint="@color/gray_50"
         android:text="신고하기"
+        android:textAppearance="@style/Body1_18semibold"
         android:textColor="@color/accent_red"
-        android:textSize="18sp"
         app:icon="@drawable/ic_report"
         app:iconGravity="textStart"
         app:iconSize="24dp"
@@ -32,8 +32,8 @@
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
         android:text="닫기"
-        android:textColor="@color/gray_500"
-        android:textSize="18sp" />
+        android:textAppearance="@style/Body1_18medium"
+        android:textColor="@color/gray_500" />
 
 
 </LinearLayout>

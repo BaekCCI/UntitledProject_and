@@ -19,6 +19,7 @@ import com.baek.untitledproject.databinding.FragmentBoardDetailBinding
 import com.baek.untitledproject.domain.data.Post
 import com.baek.untitledproject.domain.data.PostRead
 import com.baek.untitledproject.domain.utils.DateUiStyle
+import com.baek.untitledproject.domain.utils.ReportTopic
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.toDateRange
 import com.baek.untitledproject.ui.MainActivity
@@ -33,7 +34,6 @@ import com.baek.untitledproject.ui.board.dialogs.BoardDialogKeys.REQ_REPORT
 import com.baek.untitledproject.ui.board.dialogs.ConfirmDeleteFragment
 import com.baek.untitledproject.ui.board.dialogs.MoreActionBottomSheetFragment
 import com.baek.untitledproject.ui.board.dialogs.ReportBottomSheetFragment
-import com.baek.untitledproject.ui.board.report.ReportTopic
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -70,11 +70,9 @@ class BoardDetailFragment : Fragment() {
         setupDialogs()
         setupBottomBtn()
         observeDeleteState()
-        //toolbar 적용
-        val navController = findNavController()
 
-        binding.detailToolbar.setNavigationOnClickListener {
-            navController.popBackStack()
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -119,6 +117,7 @@ class BoardDetailFragment : Fragment() {
         //면접 여부에 따른 ui 설정
         if (post.hasInterview) {
             interviewChip.visibility = View.VISIBLE
+            interviewLayout.visibility = View.VISIBLE
             //면접 일정 UI 설정
             if (post.interviewStart != null && post.interviewEnd != null) {
                 interviewScheduleTxt.text =

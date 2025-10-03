@@ -19,4 +19,14 @@ class ReportRepositoryImpl @Inject constructor(
             Result.Error("신고하는데 실패하였습니다.", e)
         }
     }
+
+    override suspend fun getReportList(userId: String): Result<List<Report>> {
+        return try {
+            val result = reportRemote.getReportList(userId)
+            Result.Success(result)
+        } catch (e: Exception) {
+            Log.e("ReportRepository", "신고 내역 가져오기 실패", e)
+            Result.Error("신고 내역을 가져오는데 실패하였습니다.", e)
+        }
+    }
 }

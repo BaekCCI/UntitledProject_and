@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.login.FindAccountFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="가입한 대학교 이메일을 입력해주세요"
+            android:textAppearance="@style/Headline_24semibold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
+            android:text="입력한 이메일로 새로운 비밀번호를 보내드려요."
+            android:textAppearance="@style/Body1_16medium" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/emailLayout"
+            style="@style/Widget.Untitled.TextInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:boxBackgroundMode="outline"
+            app:helperText=" "
+            app:helperTextTextAppearance="@style/Caption_14medium"
+            app:helperTextTextColor="@color/point_skyblue"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@null"
+                android:hint="이메일 주소"
+                android:imeOptions="actionDone"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textColorHint="@color/gray_500"
+                app:hintTextAppearance="@style/Body2_16medium" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bottom_action_container_bg"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="53dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/resetBtn"
+            style="@style/Widget.Untitled.Button.StateToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="비밀번호 초기화" />
+
+    </LinearLayout>
+
+</LinearLayout>

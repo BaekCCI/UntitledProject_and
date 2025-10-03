@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:text="지원 동기는 무엇인가요?" />
+        android:text="지원 동기는 무엇인가요?"
+        android:textAppearance="@style/Body1_18semibold" />
 
     <EditText
         android:id="@+id/answerInput"
@@ -19,5 +20,6 @@
         android:layout_marginBottom="24dp"
         android:background="@drawable/input_selector_bg"
         android:hint="내용을 입력해주세요"
+        android:inputType="textMultiLine"
         android:minHeight="108dp" />
 </LinearLayout>

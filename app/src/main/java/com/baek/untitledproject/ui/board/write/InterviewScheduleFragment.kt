@@ -91,9 +91,7 @@ class InterviewScheduleFragment : Fragment() {
 
 
     private fun setupToolBarBtn() {
-        binding.cancelBtn.setOnClickListener {
-            findNavController().popBackStack()
-        }
+
 
         binding.doNextBtn.setOnClickListener {
 
@@ -272,7 +270,7 @@ class InterviewScheduleFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)
-            ?.setToolbar()
+            ?.setToolbar(xToolbarVisible = true, title = "면접 일정 열기")
     }
 
     override fun onDestroyView() {

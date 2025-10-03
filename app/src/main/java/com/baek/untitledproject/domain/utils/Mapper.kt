@@ -14,6 +14,7 @@ import java.util.Locale
 enum class DateUiStyle(val pattern: (Char) -> String) {
     YMD_WITH_WEEKDAY({ sep -> "yy${sep}MM${sep}dd${sep}E" }),//  yy/MM/dd/E
     MD_WITH_WEEKDAY({ sep -> "MM${sep}dd${sep}E" }),// MM/dd/E
+    YMD({ sep -> "yyyy${sep}MM${sep}dd" }),
     MD_KR({ _ -> "MM'월' dd'일'" })
 }
 
@@ -35,12 +36,17 @@ fun toDateRange(
     val formattedEnd = end.toUiString(style)
     return "$formattedStart ~ $formattedEnd"
 }
+
 private val KST: ZoneId = ZoneId.of("Asia/Seoul")
 
-fun Long.toLocalDate():LocalDate{
+fun Long.toLocalDate(): LocalDate {
     return Instant.ofEpochMilli(this)
         .atZone(KST)
         .toLocalDate()
+}
+
+fun LocalDate.toLong(): Long {
+    return this.atStartOfDay(KST).toInstant().toEpochMilli()
 }
 
 fun Notification.timeText(now: Long): String {
@@ -82,4 +88,16 @@ fun CharSequence.highlightQuery(
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
+}
+
+fun String.toKoreanGender(): String {
+    return when (this) {
+        "F" -> "여자"
+        "M" -> "남자"
+        else -> ""
+    }
+}
+
+fun Int.toKoreanAge(): String {
+    return "${LocalDate.now(KST).year - this + 1}세"
 }

@@ -12,39 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingVertical="16dp"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingTop="20dp"
+            android:paddingBottom="50dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="8dp">
+                android:paddingHorizontal="16dp">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    android:orientation="horizontal">
+                    android:drawableStart="@drawable/ic_checkbox_outlined"
+                    android:text="아래 정보가 함께 제출돼요"
+                    android:textAppearance="@style/Body2_16semibold"
+                    android:textColor="@color/point_skyblue" />
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="2dp"
-                        android:src="@drawable/ic_checkbox_default" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="아래 정보가 함께 제출돼요"
-                        android:textColor="@color/point_skyblue"
-                        android:textSize="16sp" />
-                </LinearLayout>
 
                 <include
                     android:id="@+id/chipGroupView"
@@ -73,10 +64,11 @@
                 android:gravity="center_vertical"
                 android:paddingHorizontal="0dp"
                 android:text="개인정보 제3자 동의"
+                android:textAppearance="@style/Caption_14medium"
                 android:textColor="@color/gray_500"
-                app:icon="@drawable/ic_chevron_right"
+                app:icon="@drawable/ic_chevron_right_active"
                 app:iconGravity="end"
-                app:iconTint="@color/gray_500" />
+                app:iconTint="@color/gray_black" />
         </LinearLayout>
 
     </ScrollView>
@@ -97,7 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:enabled="false"
-            android:text="지원서 작성 완료" />
+            android:text="신청서 작성 완료" />
 
     </LinearLayout>
 </LinearLayout>

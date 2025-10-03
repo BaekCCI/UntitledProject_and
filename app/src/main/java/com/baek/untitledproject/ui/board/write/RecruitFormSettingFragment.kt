@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.activity.OnBackPressedCallback
+import androidx.core.widget.doAfterTextChanged
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -87,7 +88,6 @@ class RecruitFormSettingFragment : Fragment() {
     private fun render(post: PostWrite) = with(binding) {
         if (viewModel.submitResult.value is Result.Loading) return
         // 체크 박스 초기화
-        nameCheckBox.isChecked = post.requiresName
         genderCheckBox.isChecked = post.requiresGender
         ageCheckBox.isChecked = post.requiresAge
         majorCheckBox.isChecked = post.requiresDepartment
@@ -95,13 +95,7 @@ class RecruitFormSettingFragment : Fragment() {
 
 
         // 완료 버튼 상태 : 1개 이상 선택 시
-        completeBtn.isEnabled = listOf(
-            post.requiresName,
-            post.requiresGender,
-            post.requiresAge,
-            post.requiresDepartment,
-            post.requiresStudentId
-        ).any { it }
+        updateCompleteBtnEnabled()
     }
 
     private fun setupCustomQuestions() {
@@ -118,9 +112,16 @@ class RecruitFormSettingFragment : Fragment() {
         val input = itemBinding.questionInput
         input.setText(question)
 
-        itemBinding.removeBtn.setOnClickListener {
+        itemBinding.questionInputLayout.setEndIconOnClickListener {
             binding.customQuestionContainer.removeView(itemBinding.root)
+            updateCompleteBtnEnabled()
         }
+
+        input.doAfterTextChanged {
+            updateCompleteBtnEnabled()
+        }
+
+        updateCompleteBtnEnabled()
 
         if (requestFocus) {
             input.post {
@@ -135,17 +136,26 @@ class RecruitFormSettingFragment : Fragment() {
     //완료 버튼 활성화 여부 설정
     private fun setCompleteBtnEnable() = with(binding) {
         val boxes = listOf(
-            nameCheckBox, genderCheckBox, ageCheckBox,
+            genderCheckBox, ageCheckBox,
             majorCheckBox, studentNumberCheckBox
         )
 
-        fun updateEnable() {
-            completeBtn.isEnabled = boxes.any { it.isChecked }
-        }
         // 체크 상태 변할 때마다 enable 갱신
         boxes.forEach { cb ->
-            cb.addOnCheckedStateChangedListener { _, _ -> updateEnable() }
+            cb.addOnCheckedStateChangedListener { _, _ -> updateCompleteBtnEnabled() }
         }
+        updateCompleteBtnEnabled()
+    }
+
+    private fun updateCompleteBtnEnabled() = with(binding) {
+        val anyBoxChecked = listOf(
+            genderCheckBox, ageCheckBox,
+            majorCheckBox, studentNumberCheckBox
+        ).any { it.isChecked }
+
+        val hasCustom = collectQuestions().isNotEmpty()
+        completeBtn.isEnabled = anyBoxChecked && hasCustom
+
     }
 
 

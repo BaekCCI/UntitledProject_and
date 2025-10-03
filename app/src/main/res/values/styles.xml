@@ -8,6 +8,7 @@
         <item name="cornerRadius">10dp</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingVertical">18dp</item>
         <item name="android:textAppearance">@style/Body1_18semibold</item>
     </style>
 
@@ -37,6 +38,7 @@
         <item name="android:padding">0dp</item>
         <item name="android:textSize">18sp</item>
         <item name="backgroundTint">@color/gray_100</item>
+        <item name="android:textAppearance">@style/Body1_18medium</item>
         <item name="android:textColor">@color/gray_700</item>
     </style>
 
@@ -52,7 +54,7 @@
     <style name="Widget.Untitled.Chip.StateBase" parent="Widget.Material3.Chip.Assist">
         <item name="cornerRadius">5dp</item>
         <item name="chipStrokeWidth">0dp</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textAppearance">@style/Caption_14semibold</item>
         <item name="checkedIconVisible">false</item>
         <item name="android:checkable">false</item>
         <item name="android:paddingHorizontal">10dp</item>
@@ -62,18 +64,18 @@
 
     <!--면접 진행 칩-->
     <style name="Widget.Untitled.Chip.Interview" parent="Widget.Untitled.Chip.StateBase">
-        <item name="chipBackgroundColor">#E1EEF9</item>
-        <item name="android:textColor">#487CE3</item>
+        <item name="chipBackgroundColor">@color/chip_blue_container</item>
+        <item name="android:textColor">@color/chip_blue_text</item>
     </style>
     <!--모집 마감 칩-->
     <style name="Widget.Untitled.Chip.Closed" parent="Widget.Untitled.Chip.StateBase">
-        <item name="chipBackgroundColor">#FAE1E1</item>
-        <item name="android:textColor">#D75E5E</item>
+        <item name="chipBackgroundColor">@color/chip_red_container</item>
+        <item name="android:textColor">@color/chip_red_text</item>
     </style>
-    <!--면접 진행 칩-->
+    <!--면접 중 칩-->
     <style name="Widget.Untitled.Chip.Open" parent="Widget.Untitled.Chip.StateBase">
-        <item name="chipBackgroundColor">#DFEFE5</item>
-        <item name="android:textColor">#249C7A</item>
+        <item name="chipBackgroundColor">@color/chip_green_container</item>
+        <item name="android:textColor">@color/chip_green_text</item>
     </style>
 
     <style name="EditTextStyle">
@@ -99,9 +101,26 @@
 
 
         <item name="errorTextColor">@color/accent_red</item>
+        <item name="errorTextAppearance">@style/Caption_14medium</item>
         <item name="boxStrokeErrorColor">@color/accent_red</item>
         <item name="errorIconDrawable">@null</item>
     </style>
+
+    <style name="Widget.Untitled.TextInputEditText" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textColorHint">@color/gray_500</item>
+        <item name="hintTextAppearance">@style/Body2_16medium</item>
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textAppearance">@style/Body2_16medium</item>
+    </style>
+
+
+    <!-- DatePicker 스타일 -->
+    <style name="Widget.Untitled.DatePicker" parent="ThemeOverlay.Material3.MaterialCalendar">
+        <item name="android:background">@color/white</item>
+        <item name="colorAccent">@color/point_skyblue</item>
+        <item name="colorPrimary">@color/point_skyblue</item>
+    </style>
+
 
     <!--이용약관용 다이얼로그 스타일-->
     <style name="ThemeOverlay.Untitled.BottomSheet" parent="ThemeOverlay.Material3.BottomSheetDialog">
@@ -116,6 +135,11 @@
     <style name="ShapeAppearance.Untitled.NoCorners" parent="ShapeAppearance.Material3.MediumComponent">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">0dp</item>
+    </style>
+
+
+    <style name="ShapeAppearance.Untitled.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/point_skyblue_tinted</item>
     </style>
 
     <!-- textStyle -->

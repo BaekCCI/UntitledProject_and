@@ -7,206 +7,191 @@
     android:orientation="vertical"
     tools:context=".ui.board.write.InfoWriteFragment">
 
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:scrollbars="none">
 
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:paddingTop="16dp"
-            android:scrollbars="none">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp">
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/indicator_dot_unselected" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp">
+
+                    <TextView
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:background="@drawable/indicator_dot_selected"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="@color/white" />
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp">
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/indicator_dot_unselected" />
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="면접을 진행하시나요?"
+                android:textAppearance="@style/Headline_24semibold"
+                android:textColor="@color/gray_800" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:drawablePadding="4dp"
+                android:text="면접 여부는 모집글 작성이 완료되면 수정할 수 없어요"
+                android:textAppearance="@style/Caption_14medium"
+                android:textColor="@color/gray_500"
+                app:drawableStartCompat="@drawable/ic_error" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/interviewYesBtn"
+                    style="@style/Widget.Untitled.Button.ClickedToggle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1"
+                    android:checkable="true"
+                    android:text="예" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/interviewNoBtn"
+                    style="@style/Widget.Untitled.Button.ClickedToggle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checkable="true"
+                    android:text="아니오" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/interviewSettingLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="10dp">
-
-                        <View
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:background="@drawable/indicator_dot_unselected" />
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp">
-
-                        <TextView
-                            android:layout_width="23dp"
-                            android:layout_height="23dp"
-                            android:background="@drawable/indicator_dot_selected"
-                            android:gravity="center"
-                            android:text="2"
-                            android:textColor="@color/white" />
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="10dp">
-
-                        <View
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:background="@drawable/indicator_dot_unselected" />
-                    </FrameLayout>
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="28dp"
-                    android:text="면접을 진행하시나요?"
-                    android:textSize="24sp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:orientation="horizontal">
 
-                    <ImageView
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_error" />
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="면접 일정"
+                        android:textAppearance="@style/Caption_14semibold" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="면접 여부는 모집글 작성이 완료되면 수정할 수 없어요" />
-
+                        android:text="추후 설정 가능"
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/gray_500" />
                 </LinearLayout>
 
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/interviewDateSelectBtn"
+                    style="@style/Widget.Untitled.Button.Base"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/interviewYesBtn"
-                        style="@style/Widget.Untitled.Button.ClickedToggle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:layout_weight="1"
-                        android:checkable="true"
-                        android:padding="20dp"
-                        android:text="예" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/interviewNoBtn"
-                        style="@style/Widget.Untitled.Button.ClickedToggle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checkable="true"
-                        android:padding="20dp"
-                        android:text="아니오" />
-
-                </LinearLayout>
+                    android:backgroundTint="@color/gray_50"
+                    android:text="시작일 ~ 마감일 설정"
+                    android:textAlignment="textStart"
+                    android:textAppearance="@style/Body2_16medium"
+                    android:textColor="@color/gray_500"
+                    app:icon="@drawable/ic_calender"
+                    app:iconGravity="end"
+                    app:iconSize="24dp"
+                    app:iconTint="@color/gray_500" />
 
                 <LinearLayout
-                    android:id="@+id/interviewSettingLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="면접 장소"
+                        android:textAppearance="@style/Caption_14semibold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="추후 설정 가능"
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/gray_500" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/interviewLocInput"
+                    style="@style/EditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="8dp">
+                    android:hint="장소를 입력해주세요"
+                    android:inputType="text" />
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="면접 일정"
-                            android:textColor="@color/gray_700"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="추후 설정 가능"
-                            android:textColor="@color/gray_500"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/interviewDateSelectBtn"
-                        style="@style/Widget.Untitled.Button.Base"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@color/gray_50"
-                        android:text="시작일 ~ 마감일 설정"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/gray_500"
-                        android:textSize="16sp"
-                        app:icon="@drawable/ic_calender"
-                        app:iconGravity="end"
-                        app:iconSize="24dp"
-                        app:iconTint="@color/gray_500" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:text="면접 장소"
-                            android:textColor="@color/gray_700"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="추후 설정 가능"
-                            android:textColor="@color/gray_500"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <EditText
-                        android:id="@+id/interviewLocInput"
-                        style="@style/EditTextStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/input_selector_bg"
-                        android:hint="장소를 입력해주세요"
-                        android:inputType="text"
-                        android:padding="18dp" />
-
-                </LinearLayout>
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -221,9 +206,9 @@
             android:id="@+id/prevBtn"
             style="@style/Widget.Untitled.Button.ClickedToggle"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginEnd="20dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
             android:text="이전" />
 
         <com.google.android.material.button.MaterialButton
@@ -233,7 +218,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="다음"/>
+            android:text="다음" />
     </LinearLayout>
 
 </LinearLayout>

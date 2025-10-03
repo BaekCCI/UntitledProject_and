@@ -9,6 +9,7 @@ import com.baek.untitledproject.domain.repository.SessionRepository
 import com.baek.untitledproject.domain.repository.UserRepository
 import com.baek.untitledproject.domain.utils.Result
 import com.baek.untitledproject.domain.utils.toLocalDate
+import com.baek.untitledproject.domain.utils.toLong
 import com.baek.untitledproject.ui.board.write.common.BaseWriteViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,6 +40,7 @@ class EditPostViewModel @Inject constructor(
             if (result is Result.Success) {
                 _post.value = result.data
                 _images.value = result.data.imageUris
+                result.data.recruitmentEnd?.let { endMillis = it.toLong() }
             }
             Log.d("EditPostViewModel",result.toString())
             _postState.value = result

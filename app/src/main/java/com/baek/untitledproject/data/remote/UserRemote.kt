@@ -1,11 +1,15 @@
 package com.baek.untitledproject.data.remote
 
+import com.baek.untitledproject.common.utils.toLocalDate
 import com.baek.untitledproject.data.model.UserResponse
+import com.baek.untitledproject.domain.data.Block
 import com.baek.untitledproject.domain.data.User
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -49,6 +53,37 @@ class UserRemote @Inject constructor(
 
     suspend fun deleteUser(userId: String) {
         users.document(userId).delete().await()
+    }
+
+    suspend fun getBlockedUser(userId: String): List<Block> = coroutineScope {
+
+        val snap = users.document(userId)
+            .collection("blocks")
+            .get().await()
+
+        val docs = snap.documents.sortedByDescending { it.getTimestamp("created_at") }
+
+        docs.mapNotNull { doc ->
+            val blockId = doc.id
+            val blockedUserId = doc.getString("blocked_user_id") ?: ""
+            val createdAt = doc.getTimestamp("created_at")?.toLocalDate()
+
+            if (blockedUserId.isBlank()) return@mapNotNull null
+
+            async {
+                val userSnap = users.document(blockedUserId).get().await()
+
+                val blockedUserName = userSnap.getString("name") ?: ""
+                Block(blockId, blockedUserId, blockedUserName, createdAt)
+            }
+        }.map { it.await() }
+    }
+
+    suspend fun unBlockUser(userId: String, blockId: String) {
+        users.document(userId)
+            .collection("blocks")
+            .document(blockId)
+            .delete().await()
     }
 
 }

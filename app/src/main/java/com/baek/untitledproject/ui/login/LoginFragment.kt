@@ -44,6 +44,11 @@ class LoginFragment : Fragment() {
         watchPasswordTextChanged()
         setLoginBtn()
         observeLoginState()
+
+        binding.findAccountBtn.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToFindAccountFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun setEmailInputFormat() {

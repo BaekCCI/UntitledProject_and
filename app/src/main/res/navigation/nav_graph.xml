@@ -44,11 +44,6 @@
         android:label="fragment_message"
         tools:layout="@layout/fragment_message" />
     <fragment
-        android:id="@+id/myPageFragment"
-        android:name="com.baek.untitledproject.ui.mypage.MyPageFragment"
-        android:label="fragment_mypage"
-        tools:layout="@layout/fragment_mypage" />
-    <fragment
         android:id="@+id/boardDetailFragment"
         android:name="com.baek.untitledproject.ui.board.BoardDetailFragment"
         android:label="fragment_board_detail"
@@ -73,7 +68,7 @@
             app:destination="@id/report_nav_graph" >
             <argument
                 android:name="reportTopic"
-                app:argType="com.baek.untitledproject.ui.board.report.ReportTopic" />
+                app:argType="com.baek.untitledproject.domain.utils.ReportTopic" />
             <argument
                 android:name="targetId"
                 app:argType="string" />
@@ -123,6 +118,15 @@
         <action
             android:id="@+id/action_settingFragment_to_deleteAccountFragment"
             app:destination="@id/deleteAccountFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_reportListFragment"
+            app:destination="@id/reportListFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_blockListFragment"
+            app:destination="@id/blockListFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_alertSettingFragment"
+            app:destination="@id/alertSettingFragment" />
     </fragment>
     <fragment
         android:id="@+id/deleteAccountFragment"
@@ -147,4 +151,19 @@
             app:argType="string" />
     </fragment>
     <include app:graph="@navigation/report_nav_graph" />
+    <fragment
+        android:id="@+id/reportListFragment"
+        android:name="com.baek.untitledproject.ui.setting.report.ReportListFragment"
+        android:label="fragment_report_list"
+        tools:layout="@layout/fragment_report_list" />
+    <fragment
+        android:id="@+id/blockListFragment"
+        android:name="com.baek.untitledproject.ui.setting.block.BlockListFragment"
+        android:label="fragment_block_list"
+        tools:layout="@layout/fragment_block_list" />
+    <fragment
+        android:id="@+id/alertSettingFragment"
+        android:name="com.baek.untitledproject.ui.setting.alert.AlertSettingFragment"
+        android:label="fragment_alert_setting"
+        tools:layout="@layout/fragment_alert_setting" />
 </navigation>

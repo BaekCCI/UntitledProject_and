@@ -3,6 +3,7 @@ package com.baek.untitledproject.ui.board.write.common
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.baek.untitledproject.domain.data.PostImage
 import com.baek.untitledproject.domain.data.PostWrite
 import com.baek.untitledproject.domain.data.User
 import com.baek.untitledproject.domain.repository.SessionRepository
@@ -42,13 +43,13 @@ abstract class BaseWriteViewModel(
         }
     }
 
-    protected val _images = MutableStateFlow<List<Uri>>(emptyList())
-    val images: StateFlow<List<Uri>> = _images
+    protected val _images = MutableStateFlow<List<PostImage>>(emptyList())
+    val images: StateFlow<List<PostImage>> = _images
 
     open fun addImage(uri: Uri) {
         val cur = _images.value
         if (cur.size >= 5) return
-        _images.value = cur + uri
+        _images.value = cur + PostImage(imageUri = uri)
     }
 
     open fun removeImage(idx: Int) {

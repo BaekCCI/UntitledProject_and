@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.ItemImageSliderBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -21,8 +22,8 @@ class ImageSliderAdapter(
                 .load(uri)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .dontTransform()
-                .placeholder(android.R.color.transparent) //TODO: 로딩 중 표시할 뷰 설정
-                .error(android.R.color.darker_gray) //TODO: 로딩 실패시 표시할 뷰 설정
+                .placeholder(R.drawable.placeholder_bg) //TODO: 로딩 중 표시할 뷰 설정
+                .error(R.drawable.placeholder_bg) //TODO: 로딩 실패시 표시할 뷰 설정
                 .into(imageView)
 
 

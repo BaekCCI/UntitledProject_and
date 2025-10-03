@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.baek.untitledproject.domain.data.Report
 import com.baek.untitledproject.domain.repository.ReportRepository
 import com.baek.untitledproject.domain.repository.SessionRepository
+import com.baek.untitledproject.domain.utils.ReportTopic
+import com.baek.untitledproject.domain.utils.ReportType
 import com.baek.untitledproject.domain.utils.Result
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,10 +95,10 @@ class ReportViewModel @Inject constructor(
         }
     }
 
-    fun saveType(type: String) {
+    fun saveType(type: ReportType) {
         reportContent.update {
             it.copy(
-                reportType = type
+                reportType = type.code
             )
         }
     }

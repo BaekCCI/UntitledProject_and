@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnNextLayout
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -12,9 +13,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.baek.untitledproject.databinding.FragmentSettingBinding
 import com.baek.untitledproject.domain.data.User
+import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.domain.utils.TermsType
 import com.baek.untitledproject.ui.MainActivity
+import com.baek.untitledproject.ui.setting.dialog.TermSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -50,6 +53,11 @@ class SettingFragment : Fragment() {
             val action = SettingFragmentDirections.actionSettingFragmentToLoginNavGraph()
             findNavController().navigate(action)
         }
+
+        binding.setAlarmBtn.setOnClickListener {
+            val action = SettingFragmentDirections.actionSettingFragmentToAlertSettingFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun observeUserData() {
@@ -58,6 +66,10 @@ class SettingFragment : Fragment() {
                 settingViewModel.userData.collect { user ->
                     if (user == null) {
                         showGuestUi()
+                        binding.settingScroll.doOnNextLayout {
+                            binding.settingScroll.scrollTo(0, 0)
+                        }
+
                     } else {
                         showLoggedInUi(user)
                     }
@@ -84,33 +96,40 @@ class SettingFragment : Fragment() {
         binding.studentIdTxt.text = user.studentId
     }
 
+
     private fun setCommunityFieldBtn() {
         binding.reportListBtn.setOnClickListener {
-            //TODO: 신고 내역 이동
+            val action = SettingFragmentDirections.actionSettingFragmentToReportListFragment()
+            findNavController().navigate(action)
         }
         binding.blockListBtn.setOnClickListener {
-            //TODO: 차단 내역 이동
+            val action = SettingFragmentDirections.actionSettingFragmentToBlockListFragment()
+            findNavController().navigate(action)
         }
         binding.communityGuidelineBtn.setOnClickListener {
-            //TODO: 커뮤니티 이용 규칙 이동
+            TermSheetDialogFragment.newInstance(TermsType.COMMUNITY_RULES)
+                .show(parentFragmentManager, "terms_sheet")
         }
     }
 
     private fun setServiceGuideLinesFieldBtn() {
         binding.contactUsBtn.setOnClickListener {
-            //TODO: 문의하기 이동
         }
         binding.termsOfServiceBtn.setOnClickListener {
-            //TODO: 서비스 이용약관 이동
+            TermSheetDialogFragment.newInstance(TermsType.SERVICE)
+                .show(parentFragmentManager, "terms_sheet")
         }
         binding.privacyPolicyBtn.setOnClickListener {
-            //TODO: 개인정보 처리 방침 이동
+            TermSheetDialogFragment.newInstance(TermsType.PRIVACY)
+                .show(parentFragmentManager, "terms_sheet")
         }
         binding.youthProtectionPolicyBtn.setOnClickListener {
-            //TODO: 청소년 보호 정책 이동
+            TermSheetDialogFragment.newInstance(TermsType.YOUTH_POLICY)
+                .show(parentFragmentManager, "terms_sheet")
         }
         binding.openSourceLicensesBtn.setOnClickListener {
-            //TODO: 오픈 소스 라이선스 이동
+            TermSheetDialogFragment.newInstance(TermsType.OPEN_SOURCE)
+                .show(parentFragmentManager, "terms_sheet")
         }
     }
 

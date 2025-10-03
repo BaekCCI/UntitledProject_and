@@ -60,7 +60,6 @@ class InterviewEditFragment : Fragment() {
         setupAdapter()
         observeTimeSlot()
 
-        setupToolBarBtn()
         setupBottomAction()
         setupBackPressHandler()
         setupDialogs()
@@ -299,18 +298,8 @@ class InterviewEditFragment : Fragment() {
         }
     }
 
-    //-----버튼 설정 ---
-
-    private fun setupToolBarBtn() {
-        binding.cancelBtn.setOnClickListener {
-            showExitConfirmDialog()
-        }
-    }
 
     private fun setupBottomAction() {
-        binding.prevBtn.setOnClickListener {
-            showExitConfirmDialog()
-        }
         binding.completeBtn.setOnClickListener {
             viewModel.save(args.postId)
         }
@@ -388,7 +377,7 @@ class InterviewEditFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         (activity as? MainActivity)
-            ?.setToolbar()
+            ?.setToolbar(xToolbarVisible = true, title = "면접 일정 열기")
     }
 
     override fun onDestroyView() {

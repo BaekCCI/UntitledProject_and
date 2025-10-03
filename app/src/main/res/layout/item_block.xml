@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="16dp">
+
+    <TextView
+        android:id="@+id/nameTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="@style/Body1_16semibold" />
+
+    <TextView
+        android:id="@+id/cancelBtn"
+        android:layout_width="92dp"
+        android:layout_height="40dp"
+        android:background="@drawable/rounded_bg"
+        android:backgroundTint="@color/gray_50"
+        android:gravity="center"
+        android:text="차단 해제"
+        android:textAppearance="@style/Body1_16semibold"
+        android:textColor="@color/accent_red" />
+</LinearLayout>

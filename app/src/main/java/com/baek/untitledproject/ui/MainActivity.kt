@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     private val sessionViewModel: SessionViewModel by viewModels()
 
     private val rootDestinations = setOf(
-        R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment, R.id.myPageFragment
+        R.id.boardFragment, R.id.myRecruitsFragment, R.id.messageFragment
     )
 
     private val navController by lazy {
@@ -61,6 +61,9 @@ class MainActivity : AppCompatActivity() {
         binding.detailToolbar.setNavigationOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
+        binding.xToolbar.setNavigationOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val isRoot = destination.id in rootDestinations
@@ -76,14 +79,17 @@ class MainActivity : AppCompatActivity() {
     fun setToolbar(
         rootVisible: Boolean = false,
         detailVisible: Boolean = false,
+        xToolbarVisible: Boolean = false,
         title: String? = null
     ) {
         binding.rootToolbar.visibility = if (rootVisible) View.VISIBLE else View.GONE
         binding.detailToolbar.visibility = if (detailVisible) View.VISIBLE else View.GONE
+        binding.xToolbar.visibility = if (xToolbarVisible) View.VISIBLE else View.GONE
         title?.let {
             when {
                 rootVisible -> binding.rootToolbar.title = it
                 detailVisible -> binding.detailToolbar.title = it
+                xToolbarVisible -> binding.xToolbar.title = it
             }
         }
     }

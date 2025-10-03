@@ -17,6 +17,7 @@ import androidx.navigation.navOptions
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentJoinInfoBinding
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.domain.utils.TermsType
 import com.baek.untitledproject.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -55,7 +56,6 @@ class JoinInfoFragment : Fragment() {
         setupAgreementCheckBox()
         setupTermSheet()
         setupCompleteBtn()
-
         observeJoinState()
     }
 
@@ -164,8 +164,7 @@ class JoinInfoFragment : Fragment() {
     private fun setupTermSheet() {
         binding.termsDetailsBtn.setOnClickListener {
             TermSheet.newInstance(
-                title = "서비스 이용약관",
-                content = "이용약관 내용"//getString("이용약관 내용")
+                TermsType.SERVICE
             ).apply {
                 onConfirm = {
                     binding.agreeTerms.isChecked = true
@@ -175,8 +174,7 @@ class JoinInfoFragment : Fragment() {
         }
         binding.privacyDetailsBtn.setOnClickListener {
             TermSheet.newInstance(
-                title = "개인정보 처리방침",
-                content = "개인정보 처리방침 내용"//getString("이용약관 내용")
+                TermsType.PRIVACY
             ).apply {
                 onConfirm = {
                     binding.agreePrivacyBtn.isChecked = true

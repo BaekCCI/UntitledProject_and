@@ -10,49 +10,63 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="일" />
+        android:text="일"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="월" />
+        android:text="월"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="화" />
+        android:text="화"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="수" />
+        android:text="수"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="목" />
+        android:text="목"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="금" />
+        android:text="금"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="토" />
+        android:text="토"
+        android:textAppearance="@style/Caption_14medium"
+        android:textColor="@color/gray_600" />
 
 
 </LinearLayout>

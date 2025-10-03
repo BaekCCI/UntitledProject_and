@@ -10,13 +10,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp">
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/closeBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
             android:src="@drawable/ic_close_black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="개인정보 제 3자 제공 동의"
+            android:textAppearance="@style/Body1_18semibold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,12 +50,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="개인정보 제 3자 제공 동의" />
+                android:text="개인정보 제 3자 제공 동의"
+                android:textAppearance="@style/Body2_16semibold" />
 
             <TextView
                 android:id="@+id/contentTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Body2_16medium" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

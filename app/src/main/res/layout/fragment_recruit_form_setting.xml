@@ -18,12 +18,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingVertical="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="50dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp">
+                android:layout_height="wrap_content">
 
                 <FrameLayout
                     android:layout_width="wrap_content"
@@ -70,59 +71,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:paddingHorizontal="16dp"
                 android:text="지원자로부터\n수집할 정보를 선택해주세요"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/Headline_24semibold"
+                android:textColor="@color/gray_800" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="4dp"
-                    android:src="@drawable/ic_error" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="모집글 작성이 완료되면 수정할 수 없어요" />
-            </LinearLayout>
+                android:drawablePadding="4dp"
+                android:text="모집글 작성이 완료되면 수정할 수 없어요"
+                android:textAppearance="@style/Caption_14medium"
+                android:textColor="@color/gray_500"
+                app:drawableStartCompat="@drawable/ic_error" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:orientation="horizontal"
-                android:paddingHorizontal="16dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:layout_marginEnd="8dp"
                     android:text="기본 정보"
-                    android:textColor="@color/gray_700"
-                    android:textSize="14sp" />
+                    android:textAppearance="@style/Caption_14semibold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1개 이상"
-                    android:textColor="@color/gray_500"
-                    android:textSize="14sp" />
+                    android:textAppearance="@style/Caption_14regular"
+                    android:textColor="@color/gray_500" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:layout_marginBottom="32dp"
+                android:orientation="vertical">
 
                 <!-- 수집 정보 버튼들 -->
                 <com.google.android.material.checkbox.MaterialCheckBox
@@ -132,13 +121,16 @@
                     android:layout_marginBottom="12dp"
                     android:background="@drawable/checkbox_bg_selector"
                     android:button="@drawable/ic_checkbox_selector"
+                    android:checked="true"
+                    android:clickable="false"
+                    android:enabled="false"
                     android:layoutDirection="rtl"
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="14dp"
                     android:text="지원자 이름"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/check_box_text_selector"
-                    android:textSize="16sp"
-                    app:buttonTint="@null" />
+                    app:buttonTint="@color/point_skyblue_tinted" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
                     android:id="@+id/genderCheckBox"
@@ -151,8 +143,8 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="14dp"
                     android:text="성별"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/check_box_text_selector"
-                    android:textSize="16sp"
                     app:buttonTint="@null" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
@@ -166,8 +158,8 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="14dp"
                     android:text="나이"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/check_box_text_selector"
-                    android:textSize="16sp"
                     app:buttonTint="@null" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
@@ -181,8 +173,8 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="14dp"
                     android:text="학과/전공"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/check_box_text_selector"
-                    android:textSize="16sp"
                     app:buttonTint="@null" />
 
                 <com.google.android.material.checkbox.MaterialCheckBox
@@ -195,41 +187,56 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="14dp"
                     android:text="학번"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/check_box_text_selector"
-                    android:textSize="16sp"
                     app:buttonTint="@null" />
 
-                <!--                    <com.google.android.material.checkbox.MaterialCheckBox-->
-                <!--                        android:id="@+id/phoneCheckBox"-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginBottom="12dp"-->
-                <!--                        android:background="@drawable/checkbox_bg_selector"-->
-                <!--                        android:button="@drawable/ic_checkbox_selector"-->
-                <!--                        android:layoutDirection="rtl"-->
-                <!--                        android:paddingHorizontal="16dp"-->
-                <!--                        android:paddingVertical="14dp"-->
-                <!--                        android:text="연락처"-->
-                <!--                        android:textColor="@color/check_box_text_selector"-->
-                <!--                        android:textSize="16sp"-->
-                <!--                        app:buttonTint="@null" />-->
+                <!--                <com.google.android.material.checkbox.MaterialCheckBox-->
+                <!--                    android:id="@+id/phoneCheckBox"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="12dp"-->
+                <!--                    android:background="@drawable/checkbox_bg_selector"-->
+                <!--                    android:button="@drawable/ic_checkbox_selector"-->
+                <!--                    android:layoutDirection="rtl"-->
+                <!--                    android:paddingHorizontal="16dp"-->
+                <!--                    android:paddingVertical="14dp"-->
+                <!--                    android:text="연락처"-->
+                <!--                    android:textAppearance="@style/Body2_16medium"-->
+                <!--                    android:textColor="@color/check_box_text_selector"-->
+                <!--                    app:buttonTint="@null" />-->
+
             </LinearLayout>
 
             <!-- 커스텀 질문 레이아웃 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
-                    android:text="필수 질문"
-                    android:textColor="@color/gray_700"
-                    android:textSize="14sp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="필수 질문"
+                        android:textAppearance="@style/Caption_14semibold"
+                        android:textColor="@color/gray_700" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1개 이상"
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/gray_500" />
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/customQuestionContainer"
@@ -252,8 +259,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:text="커스텀 질문 추가하기"
-                        android:textColor="@color/point_skyblue"
-                        android:textSize="16sp" />
+                        android:textAppearance="@style/Body1_16medium"
+                        android:textColor="@color/point_skyblue" />
 
                     <ImageView
                         android:layout_width="24dp"
@@ -261,7 +268,6 @@
                         android:src="@drawable/ic_add_circle_filled" />
 
                 </LinearLayout>
-
 
             </LinearLayout>
         </LinearLayout>

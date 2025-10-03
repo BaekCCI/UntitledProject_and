@@ -40,7 +40,7 @@ class BoardRVAdapter(private val onItemClick: (PostSummary) -> Unit) :
             val radiusPx = (10f * binding.root.resources.displayMetrics.density).roundToInt()
             binding.organizationTxt.text = item.organization
             binding.titleTxt.text = item.title
-            binding.recruitStateTxt.text = if (item.status == "recruiting") "모집중" else ""
+            binding.recruitStateTxt.text = if (item.status == "recruiting") "모집 중" else "모집완료"
             Glide.with(binding.thumbnailImg)
                 .load(item.imgUri)
                 .transform(CenterCrop(), RoundedCorners(radiusPx))

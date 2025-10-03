@@ -48,22 +48,22 @@
                 android:id="@+id/curPg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_50"
-                android:textSize="18sp" />
+                android:textAppearance="@style/Body1_18semibold"
+                android:textColor="@color/gray_50" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="/"
-                android:textColor="@color/gray_300"
-                android:textSize="18sp" />
+                android:textAppearance="@style/Body1_18semibold"
+                android:textColor="@color/gray_300" />
 
             <TextView
                 android:id="@+id/totalPg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray_300"
-                android:textSize="18sp" />
+                android:textAppearance="@style/Body1_18semibold"
+                android:textColor="@color/gray_300" />
 
         </LinearLayout>
 

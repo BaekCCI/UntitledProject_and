@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.core.os.bundleOf
 import com.baek.untitledproject.databinding.DialogTermsSheetBinding
+import com.baek.untitledproject.domain.utils.TermsType
 import com.google.android.material.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -15,16 +16,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class TermSheet : BottomSheetDialogFragment() {
 
-    companion object{
-        private const val ARG_TITLE = "arg_title"
-        private const val ARG_CONTENT = "arg_content"
+    companion object {
+        private const val ARG_TYPE = "arg_type"
 
-        fun newInstance(title:String, content:String):TermSheet{
+        fun newInstance(type: TermsType): TermSheet {
             return TermSheet().apply {
-                arguments = bundleOf(
-                    ARG_TITLE to title,
-                    ARG_CONTENT to content
-                )
+                arguments = bundleOf(ARG_TYPE to type.name)
             }
         }
     }
@@ -52,10 +49,15 @@ class TermSheet : BottomSheetDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val title = requireArguments().getString(ARG_TITLE).orEmpty()
-        val content = requireArguments().getString(ARG_CONTENT).orEmpty()
 
-        binding.titleTxt.text = title
+        val typeName = requireArguments().getString(ARG_TYPE) ?: TermsType.SERVICE.name
+        val type = TermsType.valueOf(typeName)
+
+        binding.titleTxt.text = type.title
+
+        val content = requireContext().resources.openRawResource(type.resId)
+            .bufferedReader()
+            .use { it.readText() }
         binding.contentTxt.text = content
 
         binding.closeBtn.setOnClickListener { dismiss() }

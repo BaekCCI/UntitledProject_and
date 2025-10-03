@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="면접 시간은 설정한 전체 시간을\n나누어 배정하는 단위입니다" />
+        android:text="면접 시간은 설정한 전체 시간을\n나누어 배정하는 단위입니다"
+        android:textAppearance="@style/SubHeadline_20semibold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="30분"
+                    android:textAppearance="@style/Body1_18semibold"
                     android:textColor="@color/point_skyblue" />
 
                 <View
@@ -65,6 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="30분"
+                    android:textAppearance="@style/Body1_18semibold"
                     android:textColor="@color/point_skyblue" />
 
                 <View
@@ -86,6 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="30분"
+                    android:textAppearance="@style/Body1_18semibold"
                     android:textColor="@color/point_skyblue" />
 
                 <View
@@ -106,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:text="30분"
+                    android:textAppearance="@style/Body1_18semibold"
                     android:textColor="@color/point_skyblue" />
 
                 <View
@@ -129,6 +134,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="12:00"
+                android:textAppearance="@style/Body1_18semibold"
                 android:textColor="@color/gray_300"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -137,6 +143,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="12:00"
+                android:textAppearance="@style/Body1_18semibold"
                 android:textColor="@color/gray_300"
                 app:layout_constraintEnd_toEndOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

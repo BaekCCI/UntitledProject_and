@@ -4,24 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="9dp">
+    android:paddingVertical="16dp">
 
     <TextView
         android:id="@+id/organizationTxt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="category"
-        android:textColor="@color/gray_600"
-        android:textSize="14dp" />
+        android:layout_marginBottom="4dp"
+        android:textAppearance="@style/Caption_14regular"
+        android:textColor="@color/gray_600" />
 
     <TextView
         android:id="@+id/titleTxt"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="title"
-        android:textColor="@color/gray_700"
-        android:textSize="16dp" />
-
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textAppearance="@style/Body2_16semibold"
+        android:textColor="@color/gray_700" />
 
 </LinearLayout>

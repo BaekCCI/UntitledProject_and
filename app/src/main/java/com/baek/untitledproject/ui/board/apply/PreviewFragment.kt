@@ -15,11 +15,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentPreviewBinding
+import com.baek.untitledproject.domain.data.ApplicationRequirements
 import com.baek.untitledproject.domain.utils.Result
+import com.baek.untitledproject.domain.utils.toKoreanAge
+import com.baek.untitledproject.domain.utils.toKoreanGender
 import com.baek.untitledproject.ui.MainActivity
 import com.google.android.material.divider.MaterialDividerItemDecoration
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,11 +49,52 @@ class PreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeState()
         bindInfo()
         setAdapter()
         bindPreview()
         setBottomAction()
         observeSubmitState()
+    }
+
+    private fun observeState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.applicationRequirement.collect { state ->
+                    when (state) {
+                        is Result.Success -> {
+                            setUiVisiblity(state.data)
+                        }
+
+                        else -> {} //None일 때는 아무 처리도 하지 않음
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setUiVisiblity(data: ApplicationRequirements) = with(binding) {
+        if (data.requiresGender) {
+            genderTxt.visibility = View.VISIBLE
+        }
+        if (data.requiresAge) {
+            ageTxt.visibility = View.VISIBLE
+        }
+        if (data.requiresGender && data.requiresAge) {
+            comma.visibility = View.VISIBLE
+        }
+
+        if (data.requiresStudentId) {
+            studentIdLayout.visibility = View.VISIBLE
+        }
+        if (data.requiresDepartment) {
+            departmentLayout.visibility = View.VISIBLE
+        }
+
+        if(!data.requiresStudentId && !data.requiresDepartment){
+            space.visibility = View.GONE
+        }
+
     }
 
     private fun bindInfo() {
@@ -60,8 +105,8 @@ class PreviewFragment : Fragment() {
                         is Result.Success -> {
                             val user = state.data
                             binding.name.text = user.name
-                            //TODO: format
-                            binding.genderAgeTxt.text = "${user.gender}, ${user.birthYear}"
+                            binding.genderTxt.text = user.gender.toKoreanGender()
+                            binding.ageTxt.text = user.birthYear.toKoreanAge()
                             binding.studentId.text = user.studentId
                             binding.department.text = user.department
 
@@ -76,16 +121,16 @@ class PreviewFragment : Fragment() {
 
     private fun setAdapter() {
         previewAdapter = PreviewAdapter()
-        binding.previewRv.layoutManager = LinearLayoutManager(requireContext())
-        val deco =
-            MaterialDividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL).apply {
-                isLastItemDecorated = false
-                dividerThickness = (0.5 * resources.displayMetrics.density).toInt()
-                dividerColor = ContextCompat.getColor(requireContext(), R.color.gray_200)
-            }
-        binding.previewRv.addItemDecoration(deco)
 
-        binding.previewRv.adapter = previewAdapter
+        binding.previewRv.apply {
+            adapter = this@PreviewFragment.previewAdapter
+            if (itemDecorationCount == 0) {
+                val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+                ContextCompat.getDrawable(context, R.drawable.divider_line)
+                    ?.let(divider::setDrawable)
+                addItemDecoration(divider)
+            }
+        }
     }
 
     private fun bindPreview() {

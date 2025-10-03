@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.baek.untitledproject.R
 import com.baek.untitledproject.databinding.FragmentNotificationBinding
@@ -86,19 +87,14 @@ class NotificationFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        binding.notificationList.adapter = adapter
-        binding.notificationList.layoutManager = LinearLayoutManager(requireContext())
-        if (binding.notificationList.itemDecorationCount == 0) {
-            val dec = com.google.android.material.divider.MaterialDividerItemDecoration(
-                requireContext(),
-                LinearLayoutManager.VERTICAL
-            ).apply {
-                dividerThickness =
-                    maxOf(1, (0.5f * resources.displayMetrics.density).roundToInt()) // 0.5dp
-                setDividerColor(ContextCompat.getColor(requireContext(), R.color.gray_300))
-                isLastItemDecorated = false
+        binding.notificationList.apply {
+            adapter = this@NotificationFragment.adapter
+            if (itemDecorationCount == 0) {
+                val divider = DividerItemDecoration(context, LinearLayoutManager.VERTICAL)
+                ContextCompat.getDrawable(context, R.drawable.divider_line)
+                    ?.let(divider::setDrawable)
+                addItemDecoration(divider)
             }
-            binding.notificationList.addItemDecoration(dec)
         }
     }
 

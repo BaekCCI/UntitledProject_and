@@ -10,12 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="대학교 이메일" />
+            android:layout_marginBottom="8dp"
+            android:text="대학교 이메일"
+            android:textAppearance="@style/Caption_14semibold" />
 
 
         <EditText
@@ -23,6 +27,7 @@
             style="@style/EditTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:autofillHints="emailAddress"
             android:hint="@jbnu.ac.kr"
             android:imeOptions="actionDone"
@@ -32,18 +37,56 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="비밀번호" />
+            android:layout_marginBottom="8dp"
+            android:text="비밀번호"
+            android:textAppearance="@style/Caption_14semibold" />
 
         <EditText
             android:id="@+id/pwInput"
             style="@style/EditTextStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:autofillHints="emailAddress"
             android:hint="비밀번호 6자리 이상 입력해주세요"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:maxLines="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="비밀번호가 기억나지 않으시나요?"
+                android:textAppearance="@style/Caption_14medium"
+                android:textColor="@color/gray_500" />
+
+            <LinearLayout
+                android:id="@+id/findAccountBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:paddingHorizontal="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내 계정찾기"
+                    android:textAppearance="@style/Caption_14medium"
+                    android:textColor="@color/gray_500" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/gray_500" />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 

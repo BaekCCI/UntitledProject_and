@@ -91,9 +91,10 @@ class BoardWriteViewModel @Inject constructor(
                     return@launch
                 }
             _submitResult.value = Result.Loading
-            val result = boardRepository.submitPost(post.value, currentUser)
-            _submitResult.value = result
-            Log.d("BoardWriteViewModel", "completePost 결과: $result")
+//            val result = boardRepository.submitPost(post.value, currentUser)
+//            _submitResult.value = result
+            _submitResult.value = Result.Success("asd")
+           // Log.d("BoardWriteViewModel", "completePost 결과: $result")
         }
     }
 

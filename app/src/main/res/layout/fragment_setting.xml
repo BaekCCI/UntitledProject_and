@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/settingScroll"
     tools:context=".ui.setting.SettingFragment">
 
     <LinearLayout
@@ -12,71 +13,78 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="16dp"
-        android:paddingVertical="16dp">
+        android:paddingTop="20dp"
+        android:paddingBottom="50dp">
 
         <LinearLayout
             android:id="@+id/profileLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:orientation="vertical"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/nameTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:textAppearance="@style/Headline_24semibold" />
 
             <TextView
                 android:id="@+id/organizationTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Body2_16regular"
+                android:textColor="@color/gray_600" />
 
             <TextView
                 android:id="@+id/studentIdTxt"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/Body2_16regular"
+                android:textColor="@color/gray_600" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/loginBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="20dp"
+            android:paddingBottom="20dp"
             android:text="로그인 해주세요"
-            app:drawableRightCompat="@drawable/ic_chevron_right" />
+            android:textAppearance="@style/Headline_24semibold"
+            app:drawableRightCompat="@drawable/ic_chevron_right_active" />
 
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/setAlarmBtn"
+            style="@style/Widget.Untitled.Button.Base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_bg"
+            android:layout_marginBottom="40dp"
             android:backgroundTint="@color/gray_50"
-            android:orientation="horizontal"
             android:paddingHorizontal="18dp"
-            android:paddingVertical="20dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="알림 설정" />
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_chevron_right" />
-        </LinearLayout>
-
+            android:paddingVertical="20dp"
+            android:text="알림 설정"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/Body2_16medium"
+            android:textColor="@color/gray_700"
+            app:icon="@drawable/ic_chevron_right_active"
+            app:iconGravity="end"
+            app:iconSize="24dp"
+            app:iconTint="@color/gray_black" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="커뮤니티" />
+            android:layout_marginBottom="8dp"
+            android:text="커뮤니티"
+            android:textAppearance="@style/Body1_18semibold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/rounded_bg"
             android:backgroundTint="@color/gray_50"
             android:orientation="vertical"
@@ -95,7 +103,8 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="20dp"
                     android:text="신고 내역"
-                    app:drawableEndCompat="@drawable/ic_chevron_right" />
+                    android:textAppearance="@style/Body2_16medium"
+                    app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
                 <View
                     android:layout_width="match_parent"
@@ -108,7 +117,8 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="20dp"
                     android:text="차단 내역"
-                    app:drawableEndCompat="@drawable/ic_chevron_right" />
+                    android:textAppearance="@style/Body2_16medium"
+                    app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
                 <View
                     android:layout_width="match_parent"
@@ -122,7 +132,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="커뮤니티 이용 규칙"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
         </LinearLayout>
 
@@ -130,11 +141,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="이용 안내" />
+            android:layout_marginBottom="8dp"
+            android:text="이용 안내"
+            android:textAppearance="@style/Body1_18semibold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/rounded_bg"
             android:backgroundTint="@color/gray_50"
             android:orientation="vertical"
@@ -150,13 +164,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="앱 버전" />
+                    android:text="앱 버전"
+                    android:textAppearance="@style/Body2_16medium" />
 
                 <TextView
                     android:id="@+id/versionTxt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="1.0.0" />
+                    android:text="1.0.0"
+                    android:textAppearance="@style/Body2_16medium" />
             </LinearLayout>
 
             <View
@@ -170,7 +186,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="문의하기"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
             <View
                 android:layout_width="match_parent"
@@ -183,7 +200,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="서비스 이용약관"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
 
             <View
@@ -197,7 +215,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="개인정보 처리 방침"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
             <View
                 android:layout_width="match_parent"
@@ -210,7 +229,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="청소년 보호 정책"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
             <View
                 android:layout_width="match_parent"
@@ -223,8 +243,8 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="20dp"
                 android:text="오픈 소스 라이선스"
-                app:drawableEndCompat="@drawable/ic_chevron_right" />
-
+                android:textAppearance="@style/Body2_16medium"
+                app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
         </LinearLayout>
 
@@ -238,7 +258,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="기타" />
+                android:layout_marginBottom="8dp"
+                android:text="기타"
+                android:textAppearance="@style/Body1_18semibold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -254,7 +276,8 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="20dp"
                     android:text="정보 동의 설정"
-                    app:drawableEndCompat="@drawable/ic_chevron_right" />
+                    android:textAppearance="@style/Body2_16medium"
+                    app:drawableEndCompat="@drawable/ic_chevron_right_active" />
 
                 <View
                     android:layout_width="match_parent"
@@ -266,7 +289,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingVertical="20dp"
-                    android:text="로그아웃" />
+                    android:text="로그아웃"
+                    android:textAppearance="@style/Body2_16medium" />
 
                 <View
                     android:layout_width="match_parent"
@@ -279,6 +303,7 @@
                     android:layout_height="wrap_content"
                     android:paddingVertical="20dp"
                     android:text="회원 탈퇴"
+                    android:textAppearance="@style/Body2_16medium"
                     android:textColor="@color/accent_red" />
 
             </LinearLayout>

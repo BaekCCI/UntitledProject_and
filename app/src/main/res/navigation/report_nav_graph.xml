@@ -7,7 +7,7 @@
 
     <argument
         android:name="reportTopic"
-        app:argType="com.baek.untitledproject.ui.board.report.ReportTopic"
+        app:argType="com.baek.untitledproject.domain.utils.ReportTopic"
         app:nullable="false" />
     <argument
         android:name="targetId"

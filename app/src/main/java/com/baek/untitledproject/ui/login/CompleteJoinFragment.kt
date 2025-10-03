@@ -42,23 +42,21 @@ class CompleteJoinFragment : Fragment() {
         setBtn()
     }
 
-    private fun setBtn(){
+    private fun setBtn() {
         val navController = findNavController()
 
         val navOptions = navOptions {
             popUpTo(R.id.login_nav_graph) { inclusive = true }
             launchSingleTop = true
         }
-        binding.closeBtn.setOnClickListener {
-            navController.navigate(R.id.settingFragment, null, navOptions)
-        }
         binding.completeBtn.setOnClickListener {
             navController.navigate(R.id.settingFragment, null, navOptions)
         }
     }
+
     override fun onResume() {
         super.onResume()
-        (activity as? MainActivity)?.setToolbar(detailVisible = true, title = "회원가입")
+        (activity as? MainActivity)?.setToolbar(xToolbarVisible = true, title = "회원가입")
     }
 
     override fun onDestroyView() {

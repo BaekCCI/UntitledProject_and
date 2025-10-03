@@ -31,7 +31,7 @@
                     android:id="@+id/imagePager"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:background="@color/gray_300"
+                    android:background="@color/gray_800"
                     android:overScrollMode="never"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="1:1"
@@ -48,6 +48,7 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="13dp"
                     android:paddingVertical="2dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
@@ -55,22 +56,22 @@
                         android:id="@+id/curPg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/white" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="/"
-                        android:textColor="@color/gray_200"
-                        android:textSize="14sp" />
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/gray_200" />
 
                     <TextView
                         android:id="@+id/totalPg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_200"
-                        android:textSize="14sp" />
+                        android:textAppearance="@style/Caption_14regular"
+                        android:textColor="@color/gray_200" />
 
 
                 </LinearLayout>
@@ -87,21 +88,21 @@
                     android:id="@+id/organizationTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_600"
-                    android:textSize="14sp" />
+                    android:layout_marginBottom="4dp"
+                    android:textAppearance="@style/Caption_14medium"
+                    android:textColor="@color/gray_400" />
 
                 <TextView
                     android:id="@+id/titleTxt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray_700"
-                    android:textSize="22sp" />
-
+                    android:textAppearance="@style/SubHeadline_22semibold"
+                    android:textColor="@color/gray_700" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="28dp"
+                    android:layout_marginBottom="24dp"
                     android:orientation="horizontal">
                     <!--TODO: 상태 칩-->
                     <com.google.android.material.chip.Chip
@@ -144,26 +145,28 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
                         android:text="모집 기간"
-                        android:textColor="@color/gray_400"
-                        android:textSize="16sp" />
+                        android:textAppearance="@style/Body2_16semibold"
+                        android:textColor="@color/gray_400" />
 
                     <TextView
                         android:id="@+id/recruitDateTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/gray_700"
-                        android:textSize="16sp" />
+                        android:textAppearance="@style/Body2_16semibold"
+                        android:textColor="@color/gray_700" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/interviewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -171,16 +174,16 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="면접 일정"
-                            android:textColor="@color/gray_400"
-                            android:textSize="16sp" />
+                            android:textAppearance="@style/Body2_16semibold"
+                            android:textColor="@color/gray_400" />
 
                         <TextView
                             android:id="@+id/interviewScheduleTxt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="추후 공지 예정"
-                            android:textColor="@color/gray_700"
-                            android:textSize="16sp" />
+                            android:textAppearance="@style/Body2_16semibold"
+                            android:textColor="@color/gray_700" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -193,16 +196,16 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:text="면접 장소"
-                            android:textColor="@color/gray_400"
-                            android:textSize="16sp" />
+                            android:textAppearance="@style/Body2_16semibold"
+                            android:textColor="@color/gray_400" />
 
                         <TextView
                             android:id="@+id/interviewLoc"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="추후 공지 예정"
-                            android:textColor="@color/gray_700"
-                            android:textSize="16sp" />
+                            android:textAppearance="@style/Body2_16semibold"
+                            android:textColor="@color/gray_700" />
                     </LinearLayout>
 
 
@@ -221,15 +224,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="16dp"
-                android:textColor="@color/gray_700"
-                android:textSize="16sp" />
+                android:textAppearance="@style/Body2_16regular" />
 
             <LinearLayout
                 android:id="@+id/submitInfoView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="vertical">
 
                 <View
                     android:layout_width="match_parent"
@@ -253,14 +254,15 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginEnd="2dp"
-                            android:src="@drawable/ic_checkbox_filled" />
+                            android:src="@drawable/ic_checkbox_outlined" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="아래 정보를 제출 받아요"
-                            android:textColor="@color/point_skyblue"
-                            android:textSize="16sp" />
+                            android:layout_marginBottom="16dp"
+                            android:text="아래 정보가 함께 제출돼요"
+                            android:textAppearance="@style/Body2_16semibold"
+                            android:textColor="@color/point_skyblue" />
                     </LinearLayout>
 
                     <include
@@ -279,11 +281,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomBarContainer"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_action_container_bg"
         android:paddingHorizontal="16dp"
         android:paddingVertical="20dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <com.google.android.material.button.MaterialButton
@@ -325,28 +327,34 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <com.google.android.material.appbar.MaterialToolbar
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detailToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_chevron_left">
+        android:background="@drawable/toolbar_gradient_bg"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <FrameLayout
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:src="@drawable/ic_chevron_left_active"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <ImageView
+            android:id="@+id/moreBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="10dp">
-
-            <ImageView
-                android:id="@+id/moreBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="10dp"
-                android:background="@null"
-                android:src="@drawable/ic_more" />
-        </FrameLayout>
-    </com.google.android.material.appbar.MaterialToolbar>
+            android:background="@null"
+            android:padding="12dp"
+            android:src="@drawable/ic_more"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -49,7 +49,8 @@ abstract class InfoWriteBaseFragment : Fragment() {
     protected open fun onExitConfirmed() {         // 뒤로가기 confirm 후
         findNavController().popBackStack()
     }
-    protected open fun setupNextBtn(){}
+
+    protected open fun setupNextBtn() {}
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,8 +92,8 @@ abstract class InfoWriteBaseFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.images.collect { uris ->
-                    Log.d("InfoWriteBaseFragment",uris.toString())
-                    renderImages(uris)
+                    Log.d("InfoWriteBaseFragment", uris.toString())
+                    renderImages(uris.map{it.imageUri})
                 }
             }
         }
@@ -135,8 +136,9 @@ abstract class InfoWriteBaseFragment : Fragment() {
 
             //TODO: Style 적용하기 ->.setTheme(R.style.~~)
             val builder = MaterialDatePicker.Builder.datePicker()
-                .setTitleText("Select date")
+                .setTitleText(null)
                 .setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
+                .setTheme(R.style.Widget_Untitled_DatePicker)
                 .setCalendarConstraints(constraints)
 
             // 이전에 선택한 날짜 유지
@@ -221,9 +223,26 @@ abstract class InfoWriteBaseFragment : Fragment() {
     }
 
     private fun validateInputs() {
-        val ok = !binding.titleInput.text.isNullOrBlank() &&
-                !binding.groupNameInput.text.isNullOrBlank() &&
-                !binding.contentInput.text.isNullOrBlank()
+        val titleLen = binding.titleInput.text.toString().length
+        if (titleLen != 0 && titleLen < 5) {
+            binding.titleInputLayout.error = "5자 이상 입력해주세요"
+        } else {
+            binding.titleInputLayout.error = null
+        }
+        val groupNameLen = binding.groupNameInput.text.toString().length
+        if (groupNameLen != 0 && groupNameLen < 2) {
+            binding.groupNameInputLayout.error = "2자 이상 입력해주세요"
+        } else {
+            binding.groupNameInputLayout.error = null
+        }
+        val contentLen = binding.contentInput.text.toString().length
+        if (contentLen != 0 && contentLen < 20) {
+            binding.contentInputLayout.error = "20자 이상 입력해주세요"
+        } else {
+            binding.contentInputLayout.error = null
+        }
+
+        val ok = titleLen >= 5 && groupNameLen >= 2 && contentLen >= 20
         binding.nextBtn.isEnabled = ok
     }
 
